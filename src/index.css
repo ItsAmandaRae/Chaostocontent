@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 1 0 0;
+    --foreground: 0 0 0;
+    --halo: 1 0 0;
+
+    --card: 1 0 0;
+    --card-foreground: 0 0 0;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0 0 0;
+
+    /* Hot Pink #F9D4F4 */
+    --primary: 0.91 0.05 330;
+    --primary-foreground: 0 0 0;
+
+    /* Sunshine Yellow #ffe730 */
+    --secondary: 0.93 0.19 95;
+    --secondary-foreground: 0 0 0;
+
+    /* Mint Green #49ffcb */
+    --accent: 0.92 0.16 165;
+    --accent-foreground: 0 0 0;
+
+    /* Orange - warmer, brighter */
+    --highlight: 0.70 0.22 50;
+    --highlight-foreground: 1 0 0;
+
+    --muted: 0.97 0 0;
+    --muted-foreground: 0.55 0 0;
+
+    --destructive: 0.65 0.25 25;
+    --destructive-foreground: 1 0 0;
+
+    --border: 0 0 0;
+    --input: 0 0 0;
+    --ring: 0 0 0;
+
+    --radius: 0px;
+
+    /* Neo-brutalist specific */
+    --border-width: 4px;
+    --shadow-offset: 6px;
+    --shadow-color: 0 0 0;
+  }
+
+  .dark {
+    --background: 0.15 0 0;
+    --foreground: 1 0 0;
+    --halo: 1 0 0;
+    --card: 0.20 0 0;
+    --card-foreground: 1 0 0;
+    --popover: 0.20 0 0;
+    --popover-foreground: 1 0 0;
+    /* Hot Pink #F9D4F4 */
+    --primary: 0.91 0.05 330;
+    --primary-foreground: 0 0 0;
+    /* Sunshine Yellow #ffe730 */
+    --secondary: 0.93 0.19 95;
+    --secondary-foreground: 0 0 0;
+    /* Mint Green #49ffcb */
+    --accent: 0.92 0.16 165;
+    --accent-foreground: 0 0 0;
+    /* Orange - warmer, brighter */
+    --highlight: 0.70 0.22 50;
+    --highlight-foreground: 1 0 0;
+    --muted: 0.25 0 0;
+    --muted-foreground: 0.65 0 0;
+    --border: 1 0 0;
+    --input: 1 0 0;
+    --ring: 1 0 0;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  ::selection {
+    background: oklch(var(--secondary));
+    color: oklch(var(--secondary-foreground));
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+
+  .font-display {
+    font-variation-settings: 'opsz' 112, 'wdth' 112, 'GRAD' 0, 'ROND' 0, 'slnt' 0;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  /* Neo-brutalist button styles */
+  .neo-button {
+    @apply relative inline-flex items-center justify-center px-6 py-3 font-display font-bold text-foreground bg-background border-4 border-foreground transition-all duration-150;
+    box-shadow: 6px 6px 0 0 oklch(var(--foreground));
+  }
+
+  .neo-button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 0 oklch(var(--foreground));
+  }
+
+  .neo-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0 0 oklch(var(--foreground));
+  }
+
+  .neo-button-primary {
+    @apply neo-button bg-primary;
+  }
+
+  .neo-button-secondary {
+    @apply neo-button bg-secondary;
+  }
+
+  .neo-button-accent {
+    @apply neo-button bg-accent;
+  }
+
+  /* CTA pill button */
+  .cta-pill {
+    @apply h-16 px-6 inline-flex items-center justify-center rounded-full bg-foreground border-2 border-foreground overflow-hidden;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+    /* order matters: drop shadow, outer spread (white), inner spread (white) */
+    box-shadow: 6px 8px 0 0 oklch(var(--foreground)), 0 0 0 2px oklch(var(--halo)), inset 0 0 0 2px oklch(var(--halo));
+  }
+
+  .cta-pill:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 7px 9px 0 0 oklch(var(--foreground)), 0 0 0 2px oklch(var(--halo)), inset 0 0 0 2px oklch(var(--halo));
+  }
+
+  .cta-pill:active {
+    transform: translate(3px, 4px);
+    box-shadow: 3px 4px 0 0 oklch(var(--foreground)), 0 0 0 2px oklch(var(--halo)), inset 0 0 0 2px oklch(var(--halo));
+  }
+
+  /* Neo-brutalist card styles */
+  .neo-card {
+    @apply relative bg-card border-4 border-foreground p-6;
+    box-shadow: 6px 6px 0 0 oklch(var(--foreground));
+  }
+
+  .neo-card-primary {
+    @apply neo-card bg-primary;
+  }
+
+  .neo-card-secondary {
+    @apply neo-card bg-secondary;
+  }
+
+  .neo-card-accent {
+    @apply neo-card bg-accent;
+  }
+
+  /* Neo-brutalist input styles */
+  .neo-input {
+    @apply w-full px-4 py-3 bg-background border-4 border-foreground font-body focus:outline-none;
+    box-shadow: 4px 4px 0 0 oklch(var(--foreground));
+  }
+
+  .neo-input:focus {
+    box-shadow: 2px 2px 0 0 oklch(var(--foreground));
+    transform: translate(2px, 2px);
+  }
+
+  /* Squiggly underline effect */
+  .squiggly {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-underline-offset: 4px;
+  }
+
+  /* Section titles */
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase leading-tight tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply font-display text-xl md:text-2xl font-bold uppercase tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

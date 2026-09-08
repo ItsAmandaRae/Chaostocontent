@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 257 257" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="decoration">
+<path id="square-rounded" d="M0.5 192.5H64.5V256.5H32.5C14.8269 256.5 0.5 242.173 0.5 224.5V192.5Z" stroke="var(--stroke-0, black)"/>
+<rect id="square" x="0.5" y="128.5" width="64" height="64" fill="var(--fill-0, white)" stroke="var(--stroke-0, black)"/>
+<rect id="square_2" x="64.5" y="192.5" width="64" height="64" fill="var(--fill-0, white)" stroke="var(--stroke-0, black)"/>
+<rect id="square_3" x="192.5" y="0.5" width="64" height="64" fill="var(--fill-0, white)" stroke="var(--stroke-0, black)"/>
+<path id="spark-black" d="M32.5 192.5C50.1731 192.5 64.5 206.827 64.5 224.5C64.5 206.827 78.8269 192.5 96.5 192.5C78.8269 192.5 64.5 178.173 64.5 160.5C64.5 178.173 50.1731 192.5 32.5 192.5Z" fill="var(--fill-0, black)"/>
+</g>
+</svg>
