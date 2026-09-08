@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      brand_profiles: {
+        Row: {
+          audience: string | null
+          audience_problem: string | null
+          banned_words: string[]
+          created_at: string
+          cta_style: string | null
+          id: string
+          links: string | null
+          offers: string | null
+          platforms: string[]
+          tone_traits: string[]
+          updated_at: string
+          user_id: string
+          voice_samples: string[]
+          what_you_do: string | null
+        }
+        Insert: {
+          audience?: string | null
+          audience_problem?: string | null
+          banned_words?: string[]
+          created_at?: string
+          cta_style?: string | null
+          id?: string
+          links?: string | null
+          offers?: string | null
+          platforms?: string[]
+          tone_traits?: string[]
+          updated_at?: string
+          user_id: string
+          voice_samples?: string[]
+          what_you_do?: string | null
+        }
+        Update: {
+          audience?: string | null
+          audience_problem?: string | null
+          banned_words?: string[]
+          created_at?: string
+          cta_style?: string | null
+          id?: string
+          links?: string | null
+          offers?: string | null
+          platforms?: string[]
+          tone_traits?: string[]
+          updated_at?: string
+          user_id?: string
+          voice_samples?: string[]
+          what_you_do?: string | null
+        }
+        Relationships: []
+      }
       channels: {
         Row: {
           connected_at: string
@@ -44,45 +95,170 @@ export type Database = {
         }
         Relationships: []
       }
-      posts: {
+      dump_assets: {
         Row: {
-          channel_id: string | null
-          content: string | null
           created_at: string
-          external_url: string | null
+          dump_id: string
+          extracted_text: string | null
+          file_mime: string | null
+          file_path: string
+          file_size: number | null
           id: string
-          project_id: string
-          published_at: string | null
-          scheduled_at: string | null
-          status: string
           updated_at: string
           user_id: string
         }
         Insert: {
-          channel_id?: string | null
-          content?: string | null
           created_at?: string
-          external_url?: string | null
+          dump_id: string
+          extracted_text?: string | null
+          file_mime?: string | null
+          file_path: string
+          file_size?: number | null
           id?: string
-          project_id: string
-          published_at?: string | null
-          scheduled_at?: string | null
-          status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          created_at?: string
+          dump_id?: string
+          extracted_text?: string | null
+          file_mime?: string | null
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dump_assets_dump_id_fkey"
+            columns: ["dump_id"]
+            isOneToOne: false
+            referencedRelation: "dumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dumps: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          file_mime: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string
+          kind: string
+          legacy_project_id: string | null
+          link_url: string | null
+          processing_error: string | null
+          processing_state: string
+          raw_text: string | null
+          status: string
+          summary: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          file_mime?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          kind?: string
+          legacy_project_id?: string | null
+          link_url?: string | null
+          processing_error?: string | null
+          processing_state?: string
+          raw_text?: string | null
+          status?: string
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          file_mime?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          kind?: string
+          legacy_project_id?: string | null
+          link_url?: string | null
+          processing_error?: string | null
+          processing_state?: string
+          raw_text?: string | null
+          status?: string
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      posts: {
+        Row: {
+          channel_id: string | null
+          char_count: number | null
+          content: string | null
+          created_at: string
+          dump_id: string | null
+          external_url: string | null
+          id: string
+          platform: string | null
+          project_id: string | null
+          prompt_notes: string | null
+          published_at: string | null
+          scheduled_at: string | null
+          status: string
+          title: string | null
+          updated_at: string
+          user_id: string
+          variant: string | null
+        }
+        Insert: {
           channel_id?: string | null
+          char_count?: number | null
           content?: string | null
           created_at?: string
+          dump_id?: string | null
           external_url?: string | null
           id?: string
-          project_id?: string
+          platform?: string | null
+          project_id?: string | null
+          prompt_notes?: string | null
           published_at?: string | null
           scheduled_at?: string | null
           status?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          variant?: string | null
+        }
+        Update: {
+          channel_id?: string | null
+          char_count?: number | null
+          content?: string | null
+          created_at?: string
+          dump_id?: string | null
+          external_url?: string | null
+          id?: string
+          platform?: string | null
+          project_id?: string | null
+          prompt_notes?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string | null
           updated_at?: string
           user_id?: string
+          variant?: string | null
         }
         Relationships: [
           {
@@ -90,6 +266,13 @@ export type Database = {
             columns: ["channel_id"]
             isOneToOne: false
             referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_dump_id_fkey"
+            columns: ["dump_id"]
+            isOneToOne: false
+            referencedRelation: "dumps"
             referencedColumns: ["id"]
           },
           {
