@@ -213,6 +213,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         
         {/* Spacer for fixed header */}
         <div className="h-16 flex-shrink-0" />
+        <DumpDialog open={isDumpOpen} onOpenChange={setIsDumpOpen} user={user} />
       </>
     );
   }
@@ -227,6 +228,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         </Link>
       </div>
       <SidebarContent />
+      <DumpDialog open={isDumpOpen} onOpenChange={setIsDumpOpen} user={user} />
     </aside>
   );
 }
