@@ -60,6 +60,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
   const isMobile = useIsMobile();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDumpOpen, setIsDumpOpen] = useState(false);
 
   // Get first letter of email
   const firstLetter = user?.email?.charAt(0).toUpperCase() || "U";
