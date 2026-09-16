@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
-import { Mic } from "lucide-react";
-import ProjectsTable from "@/components/ProjectsTable";
-
-interface Project {
-  id: string;
-  title: string;
-  status: "draft" | "processing" | "ready" | "published";
-  created_at: string;
-  updated_at: string;
-}
+import { Plus, Sparkles } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import DumpDialog from "@/components/DumpDialog";
+import { Dump, KIND_LABELS } from "@/lib/dumps";
 
 interface Post {
   id: string;
@@ -21,117 +14,136 @@ interface Post {
 
 export default function DashboardHome() {
   const { user } = useOutletContext<{ user: User | null }>();
-  const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [dumps, setDumps] = useState<Dump[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [completeness, setCompleteness] = useState<number | null>(null);
+  const [open, setOpen] = useState(false);
 
-  const fetchProjects = async () => {
+  const load = async () => {
     if (!user) return;
-    const [{ data, error }, { data: postsData }] = await Promise.all([
-      supabase.from("projects").select("*").eq("user_id", user.id).order("updated_at", { ascending: false }),
-      supabase.from("posts").select("id, status").eq("user_id", user.id),
+    const [{ data: dumpData }, { data: postData }, { data: brand }] = await Promise.all([
+      supabase.from("dumps").select("*").order("created_at", { ascending: false }),
+      supabase.from("posts").select("id, status"),
+      supabase.from("brand_profiles").select("what_you_do, audience, tone_traits, voice_samples").maybeSingle(),
     ]);
-
-    if (!error && data) {
-      setProjects(data as Project[]);
+    setDumps((dumpData ?? []) as Dump[]);
+    setPosts((postData ?? []) as Post[]);
+    if (brand) {
+      const done = [
+        brand.what_you_do,
+        brand.audience,
+        brand.tone_traits?.length ? "y" : "",
+        brand.voice_samples?.length ? "y" : "",
+      ].filter(Boolean).length;
+      setCompleteness(Math.round((done / 4) * 100));
+    } else {
+      setCompleteness(0);
     }
-    if (postsData) setPosts(postsData as Post[]);
   };
 
   useEffect(() => {
-    if (user) {
-      fetchProjects();
-    }
+    if (user) load();
   }, [user]);
 
-  const displayProjects = projects;
-
   const stats = [
-    { value: projects.length.toString(), label: "Recordings" },
-    { value: posts.length.toString(), label: "Posts Created" },
-    { value: posts.filter((p) => p.status === "published").length.toString(), label: "Published" },
-    { value: projects.filter((p) => p.status === "draft").length.toString(), label: "Drafts" },
+    { value: dumps.length.toString(), label: "Ideas caught" },
+    { value: dumps.filter((d) => d.status === "new").length.toString(), label: "Waiting to use" },
+    { value: posts.length.toString(), label: "Drafts written" },
+    { value: posts.filter((p) => p.status === "published").length.toString(), label: "Posted" },
   ];
-
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-[-0.5px] text-foreground mb-6 sm:mb-8">
-          Welcome to your Dashboard
-        </h1>
-
-        <div className="relative bg-background overflow-hidden">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 bg-black">
-            {stats.map((stat, index) => {
-              const isTopRow = index < 2;
-              const isBottomRow = index >= 2;
-              const isRightCol = index % 2 === 1;
-              const isLeftCol = index % 2 === 0;
-
-              const marginClasses: string[] = [];
-              if (isBottomRow) marginClasses.push("-mt-[1px]");
-              if (isRightCol) marginClasses.push("-ml-[1px]");
-              if (index > 0) marginClasses.push("lg:-ml-[1px]");
-              if (isBottomRow) marginClasses.push("lg:mt-0");
-
-              const roundedClasses: string[] = [];
-              if (isTopRow && isRightCol) roundedClasses.push("rounded-bl-[24px] sm:rounded-bl-[32px]");
-              if (isTopRow && isLeftCol) roundedClasses.push("rounded-br-[24px] sm:rounded-br-[32px]");
-              if (isBottomRow && isLeftCol) roundedClasses.push("rounded-tr-[24px] sm:rounded-tr-[32px]");
-              if (isBottomRow && isRightCol) roundedClasses.push("rounded-tl-[24px] sm:rounded-tl-[32px]");
-
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 1, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`bg-white border border-black ${marginClasses.join(" ")} ${roundedClasses.join(" ")} flex flex-col gap-2 sm:gap-3 items-start justify-start px-4 sm:px-6 py-4 sm:py-6 lg:py-8`}
-                >
-                  <p className="font-display font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight tracking-[-0.96px] text-black">
-                    {stat.value}
-                  </p>
-                  <p className="text-sm sm:text-base lg:text-lg leading-5 sm:leading-6 text-black">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              );
-            })}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div>
+            <h1 className="font-display font-black text-2xl sm:text-3xl tracking-[-0.5px]">
+              What's in your head today?
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Dump it here. We'll turn it into posts that sound like you.
+            </p>
           </div>
+          <button
+            onClick={() => setOpen(true)}
+            className="bg-highlight text-highlight-foreground border border-black h-12 px-6 rounded-full font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200 flex items-center justify-center gap-2"
+          >
+            <Plus className="w-5 h-5" /> Dump it
+          </button>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-8 sm:mt-12"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <h2 className="font-display font-black text-xl sm:text-2xl leading-tight tracking-[-0.5px] text-foreground">
-              Your Projects
-            </h2>
-            <button onClick={() => navigate("/dashboard/recordings")} className="bg-highlight text-highlight-foreground border border-black h-12 lg:h-14 px-6 sm:px-8 rounded-full text-base lg:text-lg font-medium shadow-[4px_6px_0px_0px_black] sm:shadow-[6px_8px_0px_0px_black] hover:shadow-[4px_6px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto">
-              Start Recording
-            </button>
-          </div>
-          {displayProjects.length === 0 ? (
-            <div className="border border-black bg-white p-8 sm:p-12 text-center">
-              <Mic className="w-12 h-12 mx-auto mb-4 text-black" />
-              <h3 className="font-display font-bold text-xl mb-2">No recordings yet</h3>
-              <p className="text-muted-foreground">
-                Start your first recording to see it appear here.
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 bg-black">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className={`bg-white border border-black ${index >= 2 ? "-mt-[1px] lg:mt-0" : ""} ${
+                index % 2 === 1 ? "-ml-[1px]" : ""
+              } ${index > 0 ? "lg:-ml-[1px]" : ""} flex flex-col gap-2 items-start px-4 sm:px-6 py-4 sm:py-6`}
+            >
+              <p className="font-display font-black text-2xl sm:text-3xl lg:text-4xl tracking-[-0.96px]">
+                {stat.value}
               </p>
+              <p className="text-sm sm:text-base">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {completeness !== null && completeness < 100 && (
+          <Link
+            to="/dashboard/brand"
+            className="block border border-black bg-secondary p-4 mt-6 hover:bg-primary transition-colors"
+          >
+            <p className="font-display font-bold flex items-center gap-2">
+              <Sparkles className="w-4 h-4" /> Your Brand DNA is {completeness}% filled in
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              The more we know about your voice, the less your drafts sound like a robot.
+            </p>
+          </Link>
+        )}
+
+        <div className="mt-8 sm:mt-12">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest ideas</h2>
+            <Link to="/dashboard/ideas" className="text-sm underline uppercase tracking-wide">
+              See all
+            </Link>
+          </div>
+
+          {dumps.length === 0 ? (
+            <div className="border border-black bg-white p-8 sm:p-12 text-center">
+              <h3 className="font-display font-bold text-xl mb-2">Nothing caught yet</h3>
+              <p className="text-muted-foreground mb-6">
+                A voice note, a screenshot, half a sentence — anything counts.
+              </p>
+              <button
+                onClick={() => setOpen(true)}
+                className="bg-primary border border-black h-12 px-6 rounded-full font-medium shadow-[4px_6px_0px_0px_black]"
+              >
+                Dump your first idea
+              </button>
             </div>
           ) : (
-            <ProjectsTable projects={displayProjects} onRefresh={fetchProjects} />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {dumps.slice(0, 6).map((d) => (
+                <Link
+                  key={d.id}
+                  to={`/dashboard/ideas/${d.id}`}
+                  className="border border-black bg-white p-4 hover:bg-secondary transition-colors"
+                >
+                  <span className="px-2 py-1 border border-black bg-secondary text-xs uppercase tracking-wide">
+                    {KIND_LABELS[d.kind] ?? d.kind}
+                  </span>
+                  <h3 className="font-display font-bold text-lg mt-2 leading-snug">{d.title}</h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{d.summary || d.raw_text}</p>
+                </Link>
+              ))}
+            </div>
           )}
-
-        </motion.div>
+        </div>
       </motion.div>
+
+      <DumpDialog open={open} onOpenChange={setOpen} user={user} onSaved={load} />
     </div>
   );
 }
