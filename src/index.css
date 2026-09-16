@@ -96,7 +96,7 @@
 
   .font-display {
     font-variation-settings: 'opsz' 112, 'wdth' 112, 'GRAD' 0, 'ROND' 0, 'slnt' 0;
-    letter-spacing: 0;
+    letter-spacing: -0.02em;
   }
 }
 

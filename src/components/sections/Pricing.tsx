@@ -20,7 +20,7 @@ export default function Pricing() {
 
   const plans = [
     {
-      name: "Capture the chaos",
+      name: "Free while in beta",
       price: "$0",
       features: [
         { text: "Voice, text, screenshot, file, and link dumps", icon: icons.tape2 },
@@ -33,8 +33,8 @@ export default function Pricing() {
       cardStyle: "bg-white",
     },
     {
-      name: "Shape the content",
-      price: "$0",
+      name: "Pro (planned)",
+      price: "TBD",
       features: [
         { text: "In-browser voice capture", icon: icons.infinity },
         { text: "Screenshot reading and transcription", icon: icons.voiceSparkle },
@@ -42,7 +42,7 @@ export default function Pricing() {
         { text: "Platform-native formatting", icon: icons.thread },
         { text: "Rewrite nudges and voice controls", icon: icons.imagine },
       ],
-      buttonText: "Start Free",
+      buttonText: "Not available yet",
       buttonStyle: "bg-black text-white",
       cardStyle: "bg-primary",
     },
