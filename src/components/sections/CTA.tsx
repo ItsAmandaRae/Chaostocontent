@@ -42,11 +42,11 @@ export default function CTA() {
                 className="flex flex-col gap-6 sm:gap-7 lg:gap-8 items-center relative shrink-0 w-full"
               >
                 <h2 className="font-display font-black text-2xl sm:text-3xl lg:text-5xl leading-tight sm:leading-9 lg:leading-[48px] tracking-[-0.36px] lg:tracking-[-0.96px] text-black text-center uppercase">
-                  Ready to find your voice?
+                   Ready to use what is already in your head?
                 </h2>
                 <div className="flex items-center relative shrink-0 w-full">
                   <p className="basis-0 font-normal grow leading-6 sm:leading-7 min-h-0 min-w-0 text-base sm:text-lg lg:text-xl text-black text-center">
-                    Bring your voice notes. Leave with posts on the calendar and ready to share.
+                     Bring the voice notes, screenshots, links, files, and unfinished thoughts. Leave with on-brand posts ready to share.
                   </p>
                 </div>
               </motion.div>

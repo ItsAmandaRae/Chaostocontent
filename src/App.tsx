@@ -1,7 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import DashboardLayout from "./pages/DashboardLayout";
@@ -28,6 +28,12 @@ import DemoSettings from "./demo/pages/Settings";
 
 const queryClient = new QueryClient();
 
+const LegacyBrainDumpRedirect = ({ demo = false }: { demo?: boolean }) => {
+  const { id } = useParams();
+  const base = demo ? "/demo/brain-dumps" : "/dashboard/brain-dumps";
+  return <Navigate to={id ? `${base}/${id}` : base} replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -38,12 +44,14 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
-            <Route path="ideas" element={<Ideas />} />
-            <Route path="ideas/:id" element={<IdeaDetail />} />
+            <Route path="brain-dumps" element={<Ideas />} />
+            <Route path="brain-dumps/:id" element={<IdeaDetail />} />
+            <Route path="ideas" element={<LegacyBrainDumpRedirect />} />
+            <Route path="ideas/:id" element={<LegacyBrainDumpRedirect />} />
             <Route path="posts" element={<Posts />} />
             <Route path="brand" element={<BrandDNA />} />
-            <Route path="recordings" element={<Recordings />} />
-            <Route path="recordings/:id" element={<RecordingDetail />} />
+            <Route path="recordings" element={<LegacyBrainDumpRedirect />} />
+            <Route path="recordings/:id" element={<LegacyBrainDumpRedirect />} />
             <Route path="channels" element={<Channels />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="analytics" element={<Analytics />} />
@@ -51,8 +59,10 @@ const App = () => (
           </Route>
           <Route path="/demo" element={<DemoLayout />}>
             <Route index element={<DemoHome />} />
-            <Route path="recordings" element={<DemoRecordings />} />
-            <Route path="recordings/:id" element={<DemoRecordingDetail />} />
+            <Route path="brain-dumps" element={<DemoRecordings />} />
+            <Route path="brain-dumps/:id" element={<DemoRecordingDetail />} />
+            <Route path="recordings" element={<LegacyBrainDumpRedirect demo />} />
+            <Route path="recordings/:id" element={<LegacyBrainDumpRedirect demo />} />
             <Route path="channels" element={<DemoChannels />} />
             <Route path="calendar" element={<DemoCalendar />} />
             <Route path="analytics" element={<DemoAnalytics />} />

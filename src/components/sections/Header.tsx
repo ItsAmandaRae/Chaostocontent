@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-const imgLoudioLogo = "/images/c93f85fbd41aa2dab6df10f57479facc20d26ecd.svg";
+import Logo from "@/components/Logo";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,9 +20,7 @@ export default function Header() {
       <div className="w-full px-6 lg:px-0">
         <div className="container mx-auto max-w-[1152px] flex items-center justify-between h-20 w-full">
           {/* Logo */}
-          <div className="h-5 w-28 relative flex-shrink-0">
-            <img alt="LOUDIO Logo" className="h-full w-auto object-contain" src={imgLoudioLogo} />
-          </div>
+          <Link to="/" className="text-black flex-shrink-0"><Logo /></Link>
 
           {/* Navigation Menu - Desktop */}
           <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">

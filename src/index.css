@@ -18,8 +18,8 @@
     --primary: 0.91 0.05 330;
     --primary-foreground: 0 0 0;
 
-    /* Sunshine Yellow #ffe730 */
-    --secondary: 0.93 0.19 95;
+    /* Very light pastel cyan #DDFBFF */
+    --secondary: 0.97 0.03 203;
     --secondary-foreground: 0 0 0;
 
     /* Mint Green #49ffcb */
@@ -59,8 +59,8 @@
     /* Hot Pink #F9D4F4 */
     --primary: 0.91 0.05 330;
     --primary-foreground: 0 0 0;
-    /* Sunshine Yellow #ffe730 */
-    --secondary: 0.93 0.19 95;
+    /* Very light pastel cyan #DDFBFF */
+    --secondary: 0.97 0.03 203;
     --secondary-foreground: 0 0 0;
     /* Mint Green #49ffcb */
     --accent: 0.92 0.16 165;

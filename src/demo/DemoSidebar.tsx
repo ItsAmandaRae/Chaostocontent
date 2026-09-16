@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Home,
-  Mic,
+  Lightbulb,
   Radio,
   Calendar,
   BarChart3,
@@ -24,7 +24,7 @@ import { useSeedData } from "./SeedDataProvider";
 
 const navItems = [
   { title: "Home", url: "/demo", icon: Home },
-  { title: "Recordings", url: "/demo/recordings", icon: Mic },
+  { title: "Brain Dumps", url: "/demo/brain-dumps", icon: Lightbulb },
   { title: "Channels", url: "/demo/channels", icon: Radio },
   { title: "Calendar", url: "/demo/calendar", icon: Calendar },
   { title: "Analytics", url: "/demo/analytics", icon: BarChart3 },

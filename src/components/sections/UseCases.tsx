@@ -126,9 +126,9 @@ export default function UseCases() {
                 viewport={{ once: true }}
                 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl leading-[0.9] tracking-[-0.96px] text-black uppercase mb-0"
               >
-                Capture ideas
-                <br />
-                in the wild
+                 Dump the chaos
+                 <br />
+                 before it disappears
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -137,7 +137,7 @@ export default function UseCases() {
                 transition={{ delay: 0.1 }}
                 className="text-base sm:text-lg lg:text-xl xl:text-2xl leading-6 sm:leading-7 lg:leading-8 text-black"
               >
-                Great ideas rarely happen at a desk. Record them wherever they hit, then turn them into posts when you're back.
+                 Voice note, screenshot, link, half-written rant—capture it however it arrives. We help shape it into something worth posting.
               </motion.p>
             </div>
             <div className="absolute bottom-0 left-0 w-64 h-64 hidden lg:block">
@@ -162,7 +162,7 @@ export default function UseCases() {
                     The Walking Thinker
                   </h3>
                   <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                    Ideas happen when you're moving, not sitting. Record the voice note, upload it, and write it up later.
+                     Ideas happen when you're moving, not sitting. Talk it out now and turn it into posts when you're ready.
                   </p>
                 </div>
               </motion.div>
@@ -173,7 +173,7 @@ export default function UseCases() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="bg-[#ffe730] outline outline-1 outline-black border-l border-r border-black p-6 sm:p-8 lg:p-16 flex flex-col gap-6 sm:gap-7 lg:gap-8 rounded-[32px] lg:rounded-[32px]"
+                className="bg-secondary outline outline-1 outline-black border-l border-r border-black p-6 sm:p-8 lg:p-16 flex flex-col gap-6 sm:gap-7 lg:gap-8 rounded-[32px] lg:rounded-[32px]"
                 style={{ outlineOffset: '-0.5px' }}
               >
                 <img alt="" className="w-10 h-10 sm:w-12 sm:h-12" src={imgCentralIcon5} />
@@ -182,7 +182,7 @@ export default function UseCases() {
                     The Commute Rant
                   </h3>
                   <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                    Stuck in traffic? Talk it out, then shape it into a post on the drive home.
+                     Stuck on an idea? Rant into your phone, then let Chaos To Content pull out the point and shape the post.
                   </p>
                 </div>
               </motion.div>
@@ -202,7 +202,7 @@ export default function UseCases() {
                     Post-Meeting Clarity
                   </h3>
                   <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                    Just finished a call and had a realization? Record it before the next meeting wipes your memory.
+                     Just finished a call and had a realization? Type it, speak it, or save a screenshot before the next meeting wipes your memory.
                   </p>
                 </div>
               </motion.div>
