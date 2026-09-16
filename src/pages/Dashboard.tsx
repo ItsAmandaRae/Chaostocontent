@@ -38,7 +38,7 @@ const defaultProjects: Project[] = [
   },
   {
     id: "default-4",
-    title: "Weekly Update Recording",
+    title: "Weekly Update Brain Dump",
     status: "processing",
     created_at: new Date(Date.now() - 259200000).toISOString(),
     updated_at: new Date(Date.now() - 259200000).toISOString(),
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
   // Calculate stats from display projects
   const stats = [
-    { value: displayProjects.length.toString(), label: "Recordings" },
+    { value: displayProjects.length.toString(), label: "Brain Dumps" },
     { value: displayProjects.filter(p => p.status !== "draft").length.toString(), label: "Posts Created" },
     { value: displayProjects.filter(p => p.status === "published").length.toString(), label: "Published" },
     { value: displayProjects.filter(p => p.status === "draft").length.toString(), label: "Drafts" },
@@ -182,7 +182,7 @@ export default function Dashboard() {
                 Your Projects
               </h2>
               <button className="bg-highlight text-highlight-foreground border border-black h-12 lg:h-14 px-6 sm:px-8 rounded-full text-base lg:text-lg font-medium shadow-[4px_6px_0px_0px_black] sm:shadow-[6px_8px_0px_0px_black] hover:shadow-[4px_6px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto">
-                Start Recording
+                Dump something
               </button>
             </div>
             <ProjectsTable projects={displayProjects} onRefresh={fetchProjects} />

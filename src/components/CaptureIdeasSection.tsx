@@ -5,7 +5,7 @@ const scenarios = [
   {
     icon: '🧠',
     title: 'The Walking Thinker',
-    description: 'Ideas happen on your morning walk. Capture them before they vanish with one tap recording.',
+    description: 'Ideas happen everywhere. Capture them as a voice note, text, screenshot, file, or link before they vanish.',
     color: 'bg-secondary',
   },
   {
@@ -45,7 +45,7 @@ const CaptureIdeasSection = () => {
             </h2>
             <p className="font-body text-base text-muted-foreground max-w-sm mb-8">
               Great ideas don't wait for you to sit down at your desk. 
-              LOUDIO goes where you go, turning every moment of inspiration into actionable text.
+              Chaos To Content goes where you go, turning scattered inspiration into posts you can actually use.
             </p>
 
             {/* Idea notification card */}

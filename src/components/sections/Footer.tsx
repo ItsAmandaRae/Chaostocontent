@@ -62,7 +62,7 @@ export default function Footer() {
                       d="M 66, 66 m -32, 0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0"
                     />
                   </defs>
-                  <text className="fill-[#F9D4F4] font-sans text-[8px] uppercase tracking-[0.275em]">
+                  <text className="fill-primary font-sans text-[8px] uppercase tracking-[0.275em]">
                     <textPath href="#footerCirclePath" startOffset="0%">
                       DUMP • SHAPE • PUBLISH • DUMP • SHAPE • PUBLISH •
                     </textPath>
@@ -82,7 +82,7 @@ export default function Footer() {
               <p className="text-sm sm:text-base leading-6 sm:leading-7 text-white opacity-75">
                 Turning scattered thoughts into authentic, on-brand content.
               </p>
-              <div className="flex gap-2 items-center text-[#F9D4F4]">
+              <div className="flex gap-2 items-center text-primary">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}

@@ -53,9 +53,9 @@ export const demoProfile: DemoProfile = {
 };
 
 export const demoChannels: DemoChannel[] = [
-  { id: "ch-x", platform: "twitter", handle: "maraonaudio", is_default: true, connected_at: iso(subDays(now, 64)) },
+  { id: "ch-x", platform: "twitter", handle: "maramakes", is_default: true, connected_at: iso(subDays(now, 64)) },
   { id: "ch-li", platform: "linkedin", handle: "mara-okonkwo", is_default: false, connected_at: iso(subDays(now, 61)) },
-  { id: "ch-th", platform: "threads", handle: "maraonaudio", is_default: false, connected_at: iso(subDays(now, 40)) },
+  { id: "ch-th", platform: "threads", handle: "maramakes", is_default: false, connected_at: iso(subDays(now, 40)) },
   { id: "ch-nl", platform: "newsletter", handle: "loudweekly", is_default: false, connected_at: iso(subDays(now, 21)) },
 ];
 
@@ -117,7 +117,7 @@ export const demoPosts: DemoPost[] = postSeed.map(([content, channel_id, project
     status,
     scheduled_at: status === "draft" ? null : at(day, hour, (i % 4) * 15),
     published_at: status === "published" ? at(day, hour, (i % 4) * 15) : null,
-    external_url: status === "published" ? "https://x.com/maraonaudio" : null,
+    external_url: status === "published" ? "https://x.com/maramakes" : null,
     created_at: iso(subDays(now, Math.abs(offset) + 3)),
   };
 });

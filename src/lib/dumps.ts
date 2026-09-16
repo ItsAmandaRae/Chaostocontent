@@ -77,8 +77,8 @@ export async function createLinkDump(userId: string, url: string, note?: string)
 }
 
 export async function createAudioDump(userId: string, file: File) {
-  if (file.size === 0) throw new Error("That recording is empty.");
-  if (file.size > 25 * 1024 * 1024) throw new Error("Keep recordings under 25 MB for now.");
+  if (file.size === 0) throw new Error("That voice note is empty.");
+  if (file.size > 25 * 1024 * 1024) throw new Error("Keep voice notes under 25 MB for now.");
   const path = `${userId}/dumps/${Date.now()}-${safeName(file.name || "voice-note.webm")}`;
   const { error } = await supabase.storage
     .from("recordings")
