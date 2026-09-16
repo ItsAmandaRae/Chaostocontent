@@ -27,8 +27,8 @@ export default function DemoRecordingDetail() {
 
   const project = projects.find((p) => p.id === id);
   const projectPosts = posts.filter((p) => p.project_id === id);
-  const isScreenshot = project?.title.toLowerCase().includes("screenshot");
-  const isText = project?.title.toLowerCase().includes("typed") || project?.title.toLowerCase().includes("link");
+  const isScreenshot = project?.title.toLowerCase().includes("screenshot") ?? false;
+  const isText = project?.title.toLowerCase().includes("typed") || project?.title.toLowerCase().includes("link") || false;
 
   if (!project) {
     return (
