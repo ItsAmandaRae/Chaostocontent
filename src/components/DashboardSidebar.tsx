@@ -87,6 +87,19 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
   const SidebarContent = () => (
     <>
+      {/* Dump it */}
+      <div className="p-4 pb-0">
+        <button
+          onClick={() => {
+            setIsSheetOpen(false);
+            setIsDumpOpen(true);
+          }}
+          className="w-full flex items-center justify-center gap-2 bg-highlight text-highlight-foreground border border-black h-12 rounded-full font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200"
+        >
+          <Plus className="w-5 h-5" /> Dump it
+        </button>
+      </div>
+
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-1">
