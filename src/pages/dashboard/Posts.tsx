@@ -87,13 +87,13 @@ export default function Posts() {
           <div className="border border-black bg-white p-8 sm:p-12 text-center">
             <h3 className="font-display font-bold text-xl mb-2">No posts here yet</h3>
             <p className="text-muted-foreground mb-6">
-              Open an idea and hit Make posts — drafts land here.
+               Open a Brain Dump and hit Make posts — drafts land here.
             </p>
             <Link
-              to="/dashboard/ideas"
+               to="/dashboard/brain-dumps"
               className="inline-block bg-primary border border-black h-12 px-6 leading-[3rem] rounded-full font-medium shadow-[4px_6px_0px_0px_black]"
             >
-              Go to ideas
+               Go to Brain Dumps
             </Link>
           </div>
         ) : (
@@ -103,10 +103,10 @@ export default function Posts() {
                 <DraftCard draft={d} onChanged={load} />
                 {d.dump_id && (
                   <Link
-                    to={`/dashboard/ideas/${d.dump_id}`}
+                     to={`/dashboard/brain-dumps/${d.dump_id}`}
                     className="text-xs underline text-muted-foreground inline-block"
                   >
-                    From this idea · {platformLabel(d.platform)}
+                     From this Brain Dump · {platformLabel(d.platform)}
                   </Link>
                 )}
               </div>

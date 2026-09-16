@@ -46,7 +46,7 @@ export default function DashboardHome() {
   }, [user]);
 
   const stats = [
-    { value: dumps.length.toString(), label: "Ideas caught" },
+    { value: dumps.length.toString(), label: "Brain Dumps" },
     { value: dumps.filter((d) => d.status === "new").length.toString(), label: "Waiting to use" },
     { value: posts.length.toString(), label: "Drafts written" },
     { value: posts.filter((p) => p.status === "published").length.toString(), label: "Posted" },
@@ -105,7 +105,7 @@ export default function DashboardHome() {
         <div className="mt-8 sm:mt-12">
           <div className="flex items-center justify-between gap-4 mb-4">
             <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest ideas</h2>
-            <Link to="/dashboard/ideas" className="text-sm underline uppercase tracking-wide">
+             <Link to="/dashboard/brain-dumps" className="text-sm underline uppercase tracking-wide">
               See all
             </Link>
           </div>
@@ -128,7 +128,7 @@ export default function DashboardHome() {
               {dumps.slice(0, 6).map((d) => (
                 <Link
                   key={d.id}
-                  to={`/dashboard/ideas/${d.id}`}
+                   to={`/dashboard/brain-dumps/${d.id}`}
                   className="border border-black bg-white p-4 hover:bg-secondary transition-colors"
                 >
                   <span className="px-2 py-1 border border-black bg-secondary text-xs uppercase tracking-wide">

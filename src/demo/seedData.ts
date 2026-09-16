@@ -47,7 +47,7 @@ const now = new Date();
 
 export const demoProfile: DemoProfile = {
   display_name: "Mara Okonkwo",
-  email: "mara@loudio.demo",
+  email: "mara@chaostocontent.demo",
   default_tone: "witty",
   auto_publish: false,
 };
@@ -61,17 +61,17 @@ export const demoChannels: DemoChannel[] = [
 
 const projectSeed: [string, DemoStatus, number, number | null, number | null][] = [
   ["Morning walk: why founders should ship ugly", "published", 1, 214, 3_412_000],
-  ["Voice note — pricing page teardown", "published", 2, 486, 7_910_000],
+  ["Screenshot dump — pricing page teardown", "published", 2, null, null],
   ["Client call debrief: onboarding friction", "ready", 3, 902, 14_220_000],
-  ["Hot take on AI slop in newsletters", "ready", 5, 178, 2_880_000],
+  ["Typed rant: AI slop in newsletters", "ready", 5, null, null],
   ["Airport rant about status pages", "published", 7, 331, 5_140_000],
   ["Thread draft: 6 things I stopped doing", "ready", 9, 254, 4_090_000],
   ["Studio session — brand voice notes", "processing", 11, 1_248, 19_600_000],
-  ["Random shower idea: audio-first CRM", "draft", 13, 96, 1_520_000],
+  ["Random shower idea: a no-admin CRM", "draft", 13, 96, 1_520_000],
   ["Podcast guest prep, take two", "draft", 16, 640, 10_050_000],
   ["Retro: what the launch week taught us", "published", 20, 723, 11_380_000],
   ["Coffee shop monologue on hiring", "ready", 24, 402, 6_320_000],
-  ["Weekend notes — community questions", "draft", 28, 155, 2_410_000],
+  ["Saved link — community questions", "draft", 28, null, null],
   ["Deep dive: churn interviews round 3", "processing", 33, 1_010, 15_880_000],
   ["Late night idea dump for Q3", "draft", 41, 288, 4_530_000],
 ];
@@ -103,7 +103,7 @@ const postSeed: [string, string | null, string, DemoPost["status"], number][] = 
   ["Community question of the week: how do you batch content without sounding batched?", "ch-nl", "rec-12", "scheduled", 8],
   ["Churn interviews round 3: people don't leave over price, they leave over silence.", "ch-li", "rec-13", "scheduled", 11],
   ["Q3 idea dump — picking three, killing nine.", "ch-th", "rec-14", "draft", 0],
-  ["Reminder: audio first, edit later. The record button is the whole strategy.", "ch-x", "rec-1", "scheduled", 4],
+  ["Capture it first, shape it later. Messy ideas are still valuable ideas.", "ch-x", "rec-1", "scheduled", 4],
 ];
 
 export const demoPosts: DemoPost[] = postSeed.map(([content, channel_id, project_id, status, offset], i) => {

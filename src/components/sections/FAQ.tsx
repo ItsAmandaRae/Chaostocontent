@@ -3,28 +3,28 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
-    question: "Does Loudio transcribe my audio or write posts for me?",
-    answer: "Not today. Loudio stores and plays back your recordings and gives you a composer to write the post yourself, next to the audio that inspired it. Automatic transcription and AI drafting are on the roadmap, not in the product.",
+    question: "What can I add to Chaos To Content?",
+    answer: "Voice notes, audio files, typed thoughts, rants, screenshots, photos, and links. Each one becomes a searchable Brain Dump you can turn into posts.",
   },
   {
-    question: "Can I record straight from the browser?",
-    answer: "Not yet \u2014 you upload an existing audio file (up to 50MB) from your phone or computer. Recording in the app is planned.",
+    question: "Does it read and organize my Brain Dumps?",
+    answer: "Yes. Audio is transcribed, screenshots are read, and every dump gets a useful title, summary, and tags so the good idea is easy to find later.",
   },
   {
-    question: "How does posting to X work?",
-    answer: "Manually, on purpose. Loudio opens X's compose window with your text already filled in. You review it and hit post, then confirm in Loudio so it's marked published with a timestamp and an optional link to the live post.",
+    question: "Will the posts sound like me?",
+    answer: "Your Brand DNA captures your audience, tone, real writing samples, offers, and words you never use. Drafts use that context instead of giving you generic AI copy.",
   },
   {
     question: "Does it publish automatically at the scheduled time?",
-    answer: "No. Scheduling is a plan, not a trigger. Your calendar shows what's due and when, but nothing leaves Loudio until you press share. We never store platform tokens or post in your name.",
+    answer: "No. Your calendar is a reminder system. Nothing leaves Chaos To Content until you choose to copy or open it and publish it yourself.",
   },
   {
-    question: "What about LinkedIn, Threads and other platforms?",
-    answer: "You can save handles for them and write posts against them with the right character limit. Sharing to those platforms is copy-to-clipboard plus a \"mark as published\" step rather than a one-click hand-off.",
+    question: "Which platforms can it write for?",
+    answer: "X, Instagram, TikTok, YouTube Shorts, LinkedIn, Threads, Facebook, and newsletters. Each draft is shaped for the platform instead of copied word for word.",
   },
   {
-    question: "Who can access my recordings?",
-    answer: "Only you. Audio lives in private storage scoped to your account, and playback happens through short-lived signed links.",
+    question: "Who can access my Brain Dumps?",
+    answer: "Only you. Your uploads and extracted ideas live in private storage scoped to your account.",
   },
 ];
 

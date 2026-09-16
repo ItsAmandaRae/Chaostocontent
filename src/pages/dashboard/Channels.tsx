@@ -136,7 +136,7 @@ export default function Channels() {
             Channels
           </h1>
           <p className="text-muted-foreground max-w-md">
-            Connect the platforms where you want to publish content from your recordings.
+            Choose where you want to publish the posts shaped from your Brain Dumps.
           </p>
         </div>
 
