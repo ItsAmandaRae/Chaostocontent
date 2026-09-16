@@ -8,7 +8,7 @@ export default function DemoHome() {
   const { projects, posts, profile } = useSeedData();
 
   const stats = [
-    { value: projects.length.toString(), label: "Recordings" },
+    { value: projects.length.toString(), label: "Brain Dumps" },
     { value: posts.length.toString(), label: "Posts Created" },
     { value: posts.filter((p) => p.status === "published").length.toString(), label: "Published" },
     { value: projects.filter((p) => p.status === "draft").length.toString(), label: "Drafts" },
@@ -65,13 +65,13 @@ export default function DemoHome() {
         <div className="mt-8 sm:mt-12">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <h2 className="font-display font-black text-xl sm:text-2xl leading-tight tracking-[-0.5px] text-foreground">
-              Recent Recordings
+              Recent Brain Dumps
             </h2>
             <button
-              onClick={() => navigate("/demo/recordings")}
+              onClick={() => navigate("/demo/brain-dumps")}
               className="bg-highlight text-highlight-foreground border border-black h-12 lg:h-14 px-6 sm:px-8 rounded-full text-base lg:text-lg font-medium shadow-[4px_6px_0px_0px_black] sm:shadow-[6px_8px_0px_0px_black] hover:shadow-[4px_6px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto"
             >
-              View all recordings
+              View all Brain Dumps
             </button>
           </div>
           <DemoProjectsTable projects={recent} />

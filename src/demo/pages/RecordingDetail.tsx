@@ -31,9 +31,9 @@ export default function DemoRecordingDetail() {
   if (!project) {
     return (
       <div className="p-8">
-        <p className="font-display font-bold text-xl mb-2">Recording not found</p>
-        <Link to="/demo/recordings" className="underline">
-          Back to recordings
+        <p className="font-display font-bold text-xl mb-2">Brain Dump not found</p>
+        <Link to="/demo/brain-dumps" className="underline">
+          Back to Brain Dumps
         </Link>
       </div>
     );
@@ -43,10 +43,10 @@ export default function DemoRecordingDetail() {
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <button
-          onClick={() => navigate("/demo/recordings")}
+          onClick={() => navigate("/demo/brain-dumps")}
           className="flex items-center gap-2 text-sm font-medium mb-4 hover:underline"
         >
-          <ArrowLeft className="w-4 h-4" /> Recordings
+          <ArrowLeft className="w-4 h-4" /> Brain Dumps
         </button>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
@@ -67,7 +67,7 @@ export default function DemoRecordingDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="border border-black bg-white p-5">
-            <h2 className="font-display font-bold text-lg mb-3">Audio</h2>
+            <h2 className="font-display font-bold text-lg mb-3">Brain Dump source</h2>
             <div className="border border-black bg-secondary p-4 flex items-center gap-3">
               <div className="w-12 h-12 border border-black bg-white flex items-center justify-center">
                 <FileAudio className="w-6 h-6" />
@@ -109,7 +109,7 @@ export default function DemoRecordingDetail() {
             </div>
 
             {projectPosts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No posts yet for this recording.</p>
+              <p className="text-sm text-muted-foreground">No posts yet for this Brain Dump.</p>
             ) : (
               <div className="space-y-3">
                 {projectPosts.map((post) => {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Mic, Search, SlidersHorizontal } from "lucide-react";
+import { Lightbulb, Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import DemoProjectsTable from "../DemoProjectsTable";
 import { useSeedData } from "../SeedDataProvider";
@@ -42,14 +42,14 @@ export default function DemoRecordings() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <h1 className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-[-0.5px] text-foreground">
-            Recordings
+            Brain Dumps
           </h1>
           <button
-            onClick={() => toast.info("Uploading is disabled in the demo — sign up to record for real")}
+            onClick={() => toast.info("Adding Brain Dumps is disabled in the demo — sign up to try every input")}
             className="bg-highlight text-highlight-foreground border border-black h-12 px-6 rounded-full text-base font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto flex items-center justify-center gap-2"
           >
-            <Mic className="w-5 h-5" />
-            Record New
+            <Lightbulb className="w-5 h-5" />
+            Dump something
           </button>
         </div>
 
@@ -59,7 +59,7 @@ export default function DemoRecordings() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search recordings..."
+              placeholder="Search Brain Dumps..."
               className="pl-10 border border-black rounded-none focus-visible:ring-0 focus-visible:border-black h-12"
             />
           </div>
@@ -92,8 +92,8 @@ export default function DemoRecordings() {
 
         {filteredProjects.length === 0 ? (
           <div className="border border-black bg-white p-8 sm:p-12 text-center">
-            <Mic className="w-12 h-12 mx-auto mb-4 text-black" />
-            <h3 className="font-display font-bold text-xl mb-2">No recordings found</h3>
+            <Lightbulb className="w-12 h-12 mx-auto mb-4 text-black" />
+            <h3 className="font-display font-bold text-xl mb-2">No Brain Dumps found</h3>
             <p className="text-muted-foreground">Try adjusting your filters or search.</p>
           </div>
         ) : (
