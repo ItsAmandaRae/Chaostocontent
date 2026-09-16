@@ -68,7 +68,7 @@ export default function Recordings() {
 
     if (error || !data) {
       setCreating(false);
-      toast.error("Failed to create recording");
+       toast.error("Failed to create Brain Dump");
       return;
     }
 
@@ -81,13 +81,13 @@ export default function Recordings() {
     }
 
     setCreating(false);
-    toast.success("Recording created");
+     toast.success("Brain Dump created");
     setCreateOpen(false);
     setNewTitle("");
     setNewStatus("draft");
     setAudioFile(null);
     fetchProjects();
-    navigate(`/dashboard/recordings/${data.id}`);
+     navigate(`/dashboard/brain-dumps/${data.id}`);
   };
 
   const fetchProjects = async () => {
