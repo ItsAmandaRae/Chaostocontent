@@ -9,15 +9,15 @@ const faqs = [
   },
   {
     question: 'Can I export to multiple platforms at once?',
-    answer: "Absolutely! LOUDIO supports export to all major platforms including Twitter/X, LinkedIn, Notion, Google Docs, and more. You can set up custom export templates and push to multiple destinations with a single click.",
+    answer: "Yes. Chaos To Content creates drafts for major social platforms and newsletters, then lets you copy or open them for final review and posting.",
   },
   {
     question: 'What languages are supported?',
     answer: "We currently support over 30 languages including English, Spanish, French, German, Portuguese, Japanese, Korean, Chinese, and many more. Our accuracy rates are consistently above 95% across all supported languages.",
   },
   {
-    question: 'Is there a limit on recording length?',
-    answer: "Free users can record up to 2 minutes per session. Pro users enjoy unlimited recording length - we've had users successfully transcribe 4+ hour podcasts and meetings without any issues.",
+    question: 'What can I add as a Brain Dump?',
+    answer: "Add a voice note, audio file, typed thought, rant, screenshot, photo, or link. Messy and unfinished is welcome.",
   },
   {
     question: 'How accurate is the transcription?',

@@ -62,9 +62,9 @@ export default function Footer() {
                       d="M 66, 66 m -32, 0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0"
                     />
                   </defs>
-                  <text className="fill-[#F9D4F4] font-sans text-[8px] uppercase tracking-[0.275em]">
+                  <text className="fill-primary font-sans text-[8px] uppercase tracking-[0.275em]">
                     <textPath href="#footerCirclePath" startOffset="0%">
-                      AUDIO • TRANSFORM • PUBLISH • AUDIO • TRANSFORM • PUBLISH •
+                      DUMP • SHAPE • PUBLISH • DUMP • SHAPE • PUBLISH •
                     </textPath>
                   </text>
                 </motion.svg>
@@ -80,9 +80,9 @@ export default function Footer() {
               </div>
 
               <p className="text-sm sm:text-base leading-6 sm:leading-7 text-white opacity-75">
-                Turning the chaos of spoken word into the clarity of written thought.
+                Turning scattered thoughts into authentic, on-brand content.
               </p>
-              <div className="flex gap-2 items-center text-[#F9D4F4]">
+              <div className="flex gap-2 items-center text-primary">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
@@ -129,7 +129,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4 sm:gap-5 lg:gap-16">
             <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
               <p className="text-sm sm:text-base text-white opacity-75 text-center md:text-left">
-                © 2026 Loudio Inc. All rights reserved.
+                © 2026 Chaos To Content. All rights reserved.
               </p>
               <div className="flex gap-2 items-center">
                 <div className="w-2 h-2">
@@ -141,16 +141,11 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Large Logo */}
-            <div className="w-full overflow-hidden aspect-[1312/224]">
-              <svg width="1312" height="224" viewBox="0 0 1312 224" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full object-contain">
-                <path fillRule="evenodd" clipRule="evenodd" d="M313.653 0C351.71 0 382.811 10.6545 406.956 31.964C431.201 53.1734 443.323 79.6855 443.323 111.499C443.323 143.214 431.102 169.726 406.658 191.036C382.215 212.345 351.213 223 313.653 223C275.498 223 244.298 212.395 220.054 191.186C195.908 169.976 183.836 143.414 183.836 111.499C183.836 79.5854 195.908 53.0238 220.054 31.8144C244.298 10.605 275.498 8.94857e-05 313.653 0ZM313.653 69.4808C299.147 69.4809 287.224 73.3834 277.884 81.1867C268.543 88.9901 263.873 99.0942 263.873 111.499C263.873 123.905 268.543 134.01 277.884 141.813C287.224 149.517 299.147 153.369 313.653 153.369C328.061 153.369 339.936 149.467 349.276 141.664C358.616 133.86 363.286 123.805 363.286 111.499C363.286 98.9942 358.616 88.8901 349.276 81.1867C339.936 73.3832 328.061 69.4808 313.653 69.4808Z" fill="white"/>
-                <path fillRule="evenodd" clipRule="evenodd" d="M1182.33 0C1220.39 9.30385e-05 1251.49 10.6546 1275.63 31.964C1299.88 53.1734 1312 79.6855 1312 111.499C1312 143.214 1299.78 169.726 1275.33 191.036C1250.89 212.345 1219.89 223 1182.33 223C1144.18 223 1112.98 212.395 1088.73 191.186C1064.59 169.976 1052.51 143.414 1052.51 111.499C1052.51 79.5854 1064.59 53.0238 1088.73 31.8144C1112.98 10.6049 1144.18 0 1182.33 0ZM1182.33 69.4808C1167.82 69.4808 1155.9 73.3833 1146.56 81.1867C1137.22 88.9901 1132.55 99.0942 1132.55 111.499C1132.55 123.905 1137.22 134.01 1146.56 141.813C1155.9 149.517 1167.82 153.369 1182.33 153.369C1196.74 153.369 1208.61 149.467 1217.95 141.664C1227.29 133.86 1231.96 123.805 1231.96 111.499C1231.96 98.9942 1227.29 88.8901 1217.95 81.1867C1208.61 73.3833 1196.74 69.4809 1182.33 69.4808Z" fill="white"/>
-                <path d="M536.544 124.105C536.544 133.909 539.078 141.463 544.145 146.765C549.312 152.067 556.913 154.719 566.949 154.719C576.984 154.719 584.536 152.118 589.604 146.915C594.771 141.613 597.354 134.009 597.354 124.105V4.05121H677.094L677.242 127.406C677.242 157.42 667.554 180.881 648.179 197.788C628.803 214.596 601.677 222.999 566.8 222.999C532.222 222.999 505.145 214.596 485.57 197.788C466.095 180.881 456.358 157.42 456.358 127.406V4.05121H536.544V124.105Z" fill="white"/>
-                <path d="M80.1862 150.667H183.176V218.948H0V4.05121H80.1862V150.667Z" fill="white"/>
-                <path fillRule="evenodd" clipRule="evenodd" d="M811.101 4.05121C848.76 4.05121 879.115 13.9055 902.168 33.6142C925.319 53.2229 936.896 79.1347 936.896 111.349C936.896 143.863 925.319 169.926 902.168 189.534C879.016 209.143 848.66 218.948 811.101 218.948H702.597V4.05121H811.101ZM782.783 155.319H805.736C821.038 155.419 832.912 151.718 841.358 144.214C849.903 136.611 854.175 126.055 854.175 112.549C854.175 99.1437 850.102 88.4889 841.954 80.5855C833.806 72.682 821.684 68.73 805.587 68.73H782.783V155.319Z" fill="white"/>
-                <path d="M1034.89 218.948H954.553V4.05121H1034.89V218.948Z" fill="white"/>
-              </svg>
+            {/* Large wordmark */}
+            <div className="w-full overflow-hidden border-t border-white/20 pt-8">
+              <p className="font-display font-black uppercase text-white text-[clamp(3rem,10vw,8rem)] leading-[0.8] text-center">
+                Chaos To Content
+              </p>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ const plans = [
     period: '/mo',
     icon: '✓',
     features: [
-      '5 recordings per month',
+      '5 Brain Dumps per month',
       'Basic transcription',
       '2 minute max duration',
       'AI-free Transcription',
@@ -23,9 +23,9 @@ const plans = [
     period: '/mo',
     icon: '⚡',
     features: [
-      'Up to 1 hour recording',
+      'Up to 1 hour of audio per Brain Dump',
       'Studio-quality AI cleanup',
-      'Unlimited recordings',
+      'Unlimited Brain Dumps',
       'Style matching',
       '24 hour turn-around',
     ],

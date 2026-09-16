@@ -1,70 +1,13 @@
 import { motion } from "framer-motion";
-import CastosLogo from "@/components/logos/CastosLogo";
+import { FileAudio, FileText, Image, Link, MessageSquareText, Upload } from "lucide-react";
 
-// Bump this to force-refresh cached logo assets.
-const LOGO_ASSET_VERSION = "2";
-
-const logoRiverside = "/images/logos/riverside.svg";
-const logoDescript = "/images/logos/descript.svg";
-const logoAlitu = "/images/logos/alito.svg";
-const logoCastos = `/images/logos/castos.svg?v=${LOGO_ASSET_VERSION}`;
-const logoSpotify = "/images/logos/spotify.svg";
-const logoZencastr = "/images/logos/zencastr.svg";
-
-interface LogoConfig {
-  name: string;
-  src?: string;
-  top: string;
-  height: string;
-  width?: string;
-  inline?: boolean;
-}
-
-const logos: LogoConfig[] = [
-  {
-    name: "Riverside",
-    src: logoRiverside,
-    top: "19px",
-    height: "25px",
-    width: "143.269px",
-  },
-  {
-    name: "Descript",
-    src: logoDescript,
-    top: "15.5px",
-    height: "31px",
-    width: "130.262px",
-  },
-  {
-    name: "Alitu",
-    src: logoAlitu,
-    top: "18.5016px",
-    height: "27px",
-    width: "59.42px",
-  },
-  {
-    name: "Castos",
-    // Inline to avoid any browser/CDN caching issues with static SVG files.
-    inline: true,
-    src: logoCastos,
-    top: "12.5px",
-    height: "38px",
-    width: "113.05px",
-  },
-  {
-    name: "Spotify",
-    src: logoSpotify,
-    top: "15.5px",
-    height: "27px",
-    width: "112px",
-  },
-  {
-    name: "Zencastr",
-    src: logoZencastr,
-    top: "21.5px",
-    height: "17px",
-    width: "114.364px",
-  },
+const inputs = [
+  { label: "Voice note", icon: FileAudio },
+  { label: "File", icon: Upload },
+  { label: "Rant", icon: MessageSquareText },
+  { label: "Text", icon: FileText },
+  { label: "Screenshot", icon: Image },
+  { label: "Link", icon: Link },
 ];
 
 export default function Logotypes() {
@@ -73,7 +16,7 @@ export default function Logotypes() {
       <div className="container mx-auto max-w-[1152px]">
         <div className="relative">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-0 overflow-hidden bg-black">
-            {logos.map((logo, index) => {
+            {inputs.map((input, index) => {
               const rowMobile = Math.floor(index / 2);
               const colMobile = index % 2;
               const rowSm = Math.floor(index / 3);
@@ -112,31 +55,15 @@ export default function Logotypes() {
 
               return (
               <motion.div
-                key={logo.name}
+                key={input.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className={`border border-black bg-white h-16 overflow-hidden relative ${marginClasses.join(' ')}`}
+                className={`border border-black bg-white h-16 flex items-center justify-center gap-2 px-3 ${marginClasses.join(' ')}`}
               >
-                <div
-                  className="absolute left-1/2 -translate-x-1/2"
-                  style={{
-                    top: logo.top,
-                    height: logo.height,
-                    width: logo.width || 'auto'
-                  }}
-                >
-                  {logo.inline ? (
-                    <CastosLogo className="block h-full w-auto" />
-                  ) : (
-                    <img
-                      alt={logo.name}
-                      className="block h-full w-auto object-contain"
-                      src={logo.src}
-                    />
-                  )}
-                </div>
+                <input.icon className="w-5 h-5 shrink-0" />
+                <span className="font-display font-bold text-sm uppercase">{input.label}</span>
               </motion.div>
               );
             })}

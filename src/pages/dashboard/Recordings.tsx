@@ -68,7 +68,7 @@ export default function Recordings() {
 
     if (error || !data) {
       setCreating(false);
-      toast.error("Failed to create recording");
+       toast.error("Failed to create Brain Dump");
       return;
     }
 
@@ -81,13 +81,13 @@ export default function Recordings() {
     }
 
     setCreating(false);
-    toast.success("Recording created");
+     toast.success("Brain Dump created");
     setCreateOpen(false);
     setNewTitle("");
     setNewStatus("draft");
     setAudioFile(null);
     fetchProjects();
-    navigate(`/dashboard/recordings/${data.id}`);
+     navigate(`/dashboard/brain-dumps/${data.id}`);
   };
 
   const fetchProjects = async () => {
@@ -133,11 +133,11 @@ export default function Recordings() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <h1 className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-[-0.5px] text-foreground">
-            Recordings
+             Brain Dumps
           </h1>
           <button onClick={() => setCreateOpen(true)} className="bg-highlight text-highlight-foreground border border-black h-12 px-6 rounded-full text-base font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto flex items-center justify-center gap-2">
             <Mic className="w-5 h-5" />
-            Record New
+             Add Brain Dump
           </button>
         </div>
 
@@ -150,7 +150,7 @@ export default function Recordings() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search recordings..."
+               placeholder="Search Brain Dumps..."
               className="pl-10 border border-black rounded-none focus-visible:ring-0 focus-visible:border-black h-12"
             />
           </div>
@@ -186,14 +186,14 @@ export default function Recordings() {
         {filteredProjects.length === 0 ? (
           <div className="border border-black bg-white p-8 sm:p-12 text-center">
             <Mic className="w-12 h-12 mx-auto mb-4 text-black" />
-            <h3 className="font-display font-bold text-xl mb-2">No recordings found</h3>
+             <h3 className="font-display font-bold text-xl mb-2">No Brain Dumps found</h3>
             <p className="text-muted-foreground mb-6">
               {projects.length === 0
-                ? "Record your first thought to get started."
+                 ? "Dump your first thought to get started."
                 : "Try adjusting your filters or search."}
             </p>
             <button onClick={() => setCreateOpen(true)} className="bg-primary text-black border border-black h-12 px-6 rounded-full font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out">
-              Start Recording
+               Add Brain Dump
             </button>
           </div>
         ) : (
@@ -203,7 +203,7 @@ export default function Recordings() {
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogContent className="border border-black rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white">
             <DialogHeader>
-              <DialogTitle className="font-display font-black text-xl">New Recording</DialogTitle>
+               <DialogTitle className="font-display font-black text-xl">New Brain Dump</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -211,7 +211,7 @@ export default function Recordings() {
                 <Input
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="What's this recording about?"
+                   placeholder="What's this Brain Dump about?"
                   className="border border-black rounded-none focus-visible:ring-0 focus-visible:border-black h-12"
                 />
               </div>

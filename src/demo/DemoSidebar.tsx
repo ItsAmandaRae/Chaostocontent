@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { Link, useLocation } from "react-router-dom";
 import {
   Home,
-  Mic,
+  Lightbulb,
   Radio,
   Calendar,
   BarChart3,
@@ -24,7 +25,7 @@ import { useSeedData } from "./SeedDataProvider";
 
 const navItems = [
   { title: "Home", url: "/demo", icon: Home },
-  { title: "Recordings", url: "/demo/recordings", icon: Mic },
+  { title: "Brain Dumps", url: "/demo/brain-dumps", icon: Lightbulb },
   { title: "Channels", url: "/demo/channels", icon: Radio },
   { title: "Calendar", url: "/demo/calendar", icon: Calendar },
   { title: "Analytics", url: "/demo/analytics", icon: BarChart3 },
@@ -42,6 +43,14 @@ export default function DemoSidebar() {
 
   const SidebarContent = () => (
     <>
+      <div className="p-4 pb-0">
+        <button
+          onClick={() => toast.info("Sign up to add voice notes, files, rants, text, screenshots, and links") }
+          className="w-full h-12 border border-black bg-highlight rounded-full font-medium shadow-[4px_6px_0px_0px_black]"
+        >
+          Dump it
+        </button>
+      </div>
       <nav className="flex-1 p-4">
         <ul className="space-y-1">
           {navItems.map((item) => (

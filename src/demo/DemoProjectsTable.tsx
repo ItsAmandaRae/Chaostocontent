@@ -87,7 +87,7 @@ export default function DemoProjectsTable({ projects }: { projects: DemoProject[
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <Link
-                  to={`/demo/recordings/${project.id}`}
+                  to={`/demo/brain-dumps/${project.id}`}
                   className="font-display font-bold text-black truncate block hover:underline"
                 >
                   {project.title}
@@ -134,7 +134,7 @@ export default function DemoProjectsTable({ projects }: { projects: DemoProject[
                 }`}
               >
                 <TableCell className="font-display font-bold text-black max-w-[280px] truncate">
-                  <Link to={`/demo/recordings/${project.id}`} className="hover:underline">
+                  <Link to={`/demo/brain-dumps/${project.id}`} className="hover:underline">
                     {project.title}
                   </Link>
                 </TableCell>

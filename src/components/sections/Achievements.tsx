@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 
 export default function Achievements() {
   const stats = [
-    { value: "50MB", label: "Per audio upload" },
-    { value: "280", label: "Live character counter for X" },
-    { value: "1-click", label: "Share to X, pre-filled" },
+    { value: "5", label: "Ways to dump an idea" },
+    { value: "8", label: "Platform-ready formats" },
+    { value: "1", label: "Brand voice across every draft" },
     { value: "0", label: "Posts sent without your approval" },
   ];
 

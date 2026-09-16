@@ -34,10 +34,10 @@ export default function BentoGrid() {
               </div>
               <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
                 <h3 className="font-display font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-[-0.36px] text-black">
-                  A Private Audio Library
+                   One Brain Dump Inbox
                 </h3>
                 <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                  Upload voice memos from your phone or desktop and they land in encrypted storage only you can open. Play any recording back in the browser, with its size and length right there.
+                   Toss in voice notes, files, screenshots, links, or messy text. Everything stays private, searchable, and ready when your brain is not.
                 </p>
               </div>
             </motion.div>
@@ -55,10 +55,10 @@ export default function BentoGrid() {
               </div>
               <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
                 <h3 className="font-display font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-[-0.36px] text-black">
-                  Post Composer
+                   On-Brand Drafts
                 </h3>
                 <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                  Write the post next to the recording that sparked it, with a live character count per platform.
+                   Brand DNA helps turn each raw thought into editable drafts that sound like you on every platform.
                 </p>
               </div>
             </motion.div>
@@ -97,10 +97,10 @@ export default function BentoGrid() {
               </div>
               <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
                 <h3 className="font-display font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-[-0.36px] text-black">
-                  Share to X, Manually
+                   Share Everywhere, Your Way
                 </h3>
                 <p className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black">
-                  One click opens X with your text already typed. You hit post, then mark it published — no tokens, no background jobs, no surprise tweets in your name.
+                   Copy or open drafts for X, Instagram, TikTok, LinkedIn, Threads, Facebook, YouTube Shorts, and newsletters. You always approve the final post.
                 </p>
               </div>
             </motion.div>

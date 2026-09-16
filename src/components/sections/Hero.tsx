@@ -25,8 +25,8 @@ export default function Hero() {
               </div>
               <div className="bg-white border border-black px-2 sm:px-3 py-1 h-7 sm:h-8 flex items-center">
                 <p className="text-xs sm:text-sm lg:text-base font-normal text-black uppercase leading-tight font-mono">
-                  <span className="hidden sm:inline">AUDIO-FIRST POSTING WORKSPACE</span>
-                  <span className="sm:hidden">POSTING WORKSPACE</span>
+                   <span className="hidden sm:inline">BRAIN DUMP TO CONTENT WORKSPACE</span>
+                   <span className="sm:hidden">CHAOS TO CONTENT</span>
                 </p>
               </div>
             </motion.div>
@@ -38,14 +38,14 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Record it.
+                 Chaos in.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Post it.
+                 Content out.
               </motion.p>
             </div>
 
@@ -56,7 +56,7 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black max-w-full sm:max-w-[480px]"
             >
-              Upload your voice notes, keep them in one private library, write the posts they inspire, schedule them on a calendar, and share to X in one click. You stay in control — nothing is ever posted without you.
+               Drop in a voice note, file, rant, text, screenshot, or link. Chaos To Content finds the golden nuggets and shapes them into platform-ready posts that still sound like you.
             </motion.p>
           </div>
 
@@ -91,7 +91,7 @@ export default function Hero() {
             </div>
           </div>
           <p className="text-base sm:text-lg text-black tracking-[-0.25px]">
-            Built for people with more voice notes than posts
+             Built for busy brains with more ideas than finished posts
           </p>
         </motion.div>
 
@@ -191,7 +191,7 @@ export default function Hero() {
             </defs>
             <text className="fill-black font-sans text-[10px] uppercase tracking-[0.275em]">
               <textPath href="#circlePath" startOffset="0%">
-                AUDIO • TRANSFORM • PUBLISH • AUDIO • TRANSFORM • PUBLISH •
+                 DUMP • SHAPE • PUBLISH • DUMP • SHAPE • PUBLISH •
               </textPath>
             </text>
           </motion.svg>

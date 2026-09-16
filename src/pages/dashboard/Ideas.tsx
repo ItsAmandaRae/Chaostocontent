@@ -84,7 +84,7 @@ export default function Ideas() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="font-display font-black text-2xl sm:text-3xl tracking-[-0.5px]">Your ideas</h1>
+            <h1 className="font-display font-black text-2xl sm:text-3xl tracking-[-0.5px]">Your Brain Dumps</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Everything you've thrown in — voice notes, notes, screenshots, links.
             </p>
@@ -106,7 +106,7 @@ export default function Ideas() {
               {resurface.map((d) => (
                 <Link
                   key={d.id}
-                  to={`/dashboard/ideas/${d.id}`}
+                   to={`/dashboard/brain-dumps/${d.id}`}
                   className="px-3 py-1 border border-black bg-white text-sm hover:bg-primary transition-colors"
                 >
                   {d.title}
@@ -171,7 +171,7 @@ export default function Ideas() {
                   </span>
                 </div>
 
-                <Link to={`/dashboard/ideas/${d.id}`} className="block">
+                 <Link to={`/dashboard/brain-dumps/${d.id}`} className="block">
                   <h3 className="font-display font-bold text-lg leading-snug hover:underline">{d.title}</h3>
                 </Link>
 
@@ -205,7 +205,7 @@ export default function Ideas() {
 
                 <div className="mt-auto flex items-center gap-2 pt-2">
                   <Link
-                    to={`/dashboard/ideas/${d.id}`}
+                     to={`/dashboard/brain-dumps/${d.id}`}
                     className="flex-1 text-center px-3 py-2 border border-black bg-primary text-sm font-medium"
                   >
                     Make posts

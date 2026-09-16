@@ -85,8 +85,8 @@ export default function RecordingDetail() {
   if (!project) {
     return (
       <div className="p-8">
-        <p className="font-display font-bold text-xl mb-2">Recording not found</p>
-        <Link to="/dashboard/recordings" className="underline">Back to recordings</Link>
+         <p className="font-display font-bold text-xl mb-2">Brain Dump not found</p>
+         <Link to="/dashboard/brain-dumps" className="underline">Back to Brain Dumps</Link>
       </div>
     );
   }
@@ -95,10 +95,10 @@ export default function RecordingDetail() {
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <button
-          onClick={() => navigate("/dashboard/recordings")}
+           onClick={() => navigate("/dashboard/brain-dumps")}
           className="flex items-center gap-2 text-sm font-medium mb-4 hover:underline"
         >
-          <ArrowLeft className="w-4 h-4" /> Recordings
+           <ArrowLeft className="w-4 h-4" /> Brain Dumps
         </button>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">

@@ -127,7 +127,7 @@ export default function ProjectsTable({ projects, onRefresh }: ProjectsTableProp
       toast.success(`Moved to ${statusLabels[status]}`, {
         description:
           status === "published"
-            ? "Publish individual posts from the recording to send them out."
+             ? "Publish individual posts from the Brain Dump when they are ready."
             : undefined,
       });
       onRefresh();
@@ -194,7 +194,7 @@ export default function ProjectsTable({ projects, onRefresh }: ProjectsTableProp
     <div className="border border-black bg-white p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <Link to={`/dashboard/recordings/${project.id}`} className="font-display font-bold text-black truncate block hover:underline">
+           <Link to={`/dashboard/brain-dumps/${project.id}`} className="font-display font-bold text-black truncate block hover:underline">
             {project.title}
           </Link>
           <p className="text-sm text-muted-foreground mt-1">
@@ -270,7 +270,7 @@ export default function ProjectsTable({ projects, onRefresh }: ProjectsTableProp
                 className={`border-b border-black hover:bg-white ${index === displayProjects.length - 1 ? 'border-b-0' : ''}`}
               >
                 <TableCell className="font-display font-bold text-black max-w-[200px] truncate">
-                  <Link to={`/dashboard/recordings/${project.id}`} className="hover:underline">
+                   <Link to={`/dashboard/brain-dumps/${project.id}`} className="hover:underline">
                     {project.title}
                   </Link>
                 </TableCell>

@@ -141,7 +141,7 @@ export default function PostComposer({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium uppercase tracking-wide mb-2">Recording</label>
+            <label className="block text-sm font-medium uppercase tracking-wide mb-2">Brain Dump source</label>
             <select
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}

@@ -29,14 +29,14 @@ export default function Testimonials() {
 
   const testimonials = [
     {
-      quote: "I used to spend 2 hours writing threads. Now I just talk for 3 minutes on my morning walk. Game changer.",
+      quote: "My ideas used to disappear across notes, screenshots, and voice memos. Now they actually become posts that sound like me.",
       author: "Sarah J.",
       role: "Founder @ TechFlow",
-      bgColor: "bg-[#49ffcb]",
+      bgColor: "bg-accent",
       avatar: "/images/15d2a3cb41b76069bfd438c785ffec04bc13df19.png",
     },
     {
-      quote: "The noise cancellation is witchcraft. Recorded in a busy airport and it sounded studio crisp.",
+      quote: "I dropped in a messy client-call rant and got three clear angles I would genuinely post. No blank-page spiral.",
       author: "Mike R.",
       role: "VC Analyst",
       bgColor: "bg-white",
@@ -45,7 +45,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <section ref={sectionRef} className="bg-[#f5f5f5] py-16 lg:py-32 px-6 lg:px-0 relative">
+    <section ref={sectionRef} className="bg-muted py-16 lg:py-32 px-6 lg:px-0 relative">
       <div className="container mx-auto max-w-[1152px] relative">
         {/* Grid Background */}
         <div

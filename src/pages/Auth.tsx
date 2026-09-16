@@ -171,7 +171,7 @@ export default function Auth() {
   const getDescription = () => {
     switch (view) {
       case "login": return "Sign in to continue creating content";
-      case "signup": return "Start your journey with Loudio";
+      case "signup": return "Turn your chaos into content";
       case "forgot": return "Enter your email to receive a reset link";
     }
   };

@@ -90,9 +90,9 @@ export default function IdeaDetail() {
   if (!dump) {
     return (
       <div className="p-8">
-        <p className="font-display font-bold text-xl mb-4">That idea isn't here anymore.</p>
-        <button onClick={() => navigate("/dashboard/ideas")} className="px-4 py-2 border border-black bg-primary">
-          Back to ideas
+         <p className="font-display font-bold text-xl mb-4">That Brain Dump isn't here anymore.</p>
+         <button onClick={() => navigate("/dashboard/brain-dumps")} className="px-4 py-2 border border-black bg-primary">
+           Back to Brain Dumps
         </button>
       </div>
     );
@@ -104,10 +104,10 @@ export default function IdeaDetail() {
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <button
-          onClick={() => navigate("/dashboard/ideas")}
+           onClick={() => navigate("/dashboard/brain-dumps")}
           className="flex items-center gap-2 text-sm uppercase tracking-wide mb-4 hover:underline"
         >
-          <ArrowLeft className="w-4 h-4" /> All ideas
+           <ArrowLeft className="w-4 h-4" /> All Brain Dumps
         </button>
 
         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -210,7 +210,7 @@ export default function IdeaDetail() {
                   </>
                 ) : (
                   <>
-                    <Archive className="w-4 h-4" /> Archive this idea
+                     <Archive className="w-4 h-4" /> Archive this Brain Dump
                   </>
                 )}
               </button>

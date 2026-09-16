@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Pencil, Trash2, Send, ExternalLink, FileAudio } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Send, ExternalLink, FileAudio, FileText, Image } from "lucide-react";
 import { platformLabel } from "@/lib/platforms";
 import { useSeedData } from "../SeedDataProvider";
 
@@ -27,13 +27,15 @@ export default function DemoRecordingDetail() {
 
   const project = projects.find((p) => p.id === id);
   const projectPosts = posts.filter((p) => p.project_id === id);
+  const isScreenshot = project?.title.toLowerCase().includes("screenshot") ?? false;
+  const isText = project?.title.toLowerCase().includes("typed") || project?.title.toLowerCase().includes("link") || false;
 
   if (!project) {
     return (
       <div className="p-8">
-        <p className="font-display font-bold text-xl mb-2">Recording not found</p>
-        <Link to="/demo/recordings" className="underline">
-          Back to recordings
+        <p className="font-display font-bold text-xl mb-2">Brain Dump not found</p>
+        <Link to="/demo/brain-dumps" className="underline">
+          Back to Brain Dumps
         </Link>
       </div>
     );
@@ -43,10 +45,10 @@ export default function DemoRecordingDetail() {
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <button
-          onClick={() => navigate("/demo/recordings")}
+          onClick={() => navigate("/demo/brain-dumps")}
           className="flex items-center gap-2 text-sm font-medium mb-4 hover:underline"
         >
-          <ArrowLeft className="w-4 h-4" /> Recordings
+          <ArrowLeft className="w-4 h-4" /> Brain Dumps
         </button>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
@@ -67,20 +69,17 @@ export default function DemoRecordingDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="border border-black bg-white p-5">
-            <h2 className="font-display font-bold text-lg mb-3">Audio</h2>
+            <h2 className="font-display font-bold text-lg mb-3">Brain Dump source</h2>
             <div className="border border-black bg-secondary p-4 flex items-center gap-3">
-              <div className="w-12 h-12 border border-black bg-white flex items-center justify-center">
-                <FileAudio className="w-6 h-6" />
+               <div className="w-12 h-12 border border-black bg-white flex items-center justify-center">
+                 {isScreenshot ? <Image className="w-6 h-6" /> : isText ? <FileText className="w-6 h-6" /> : <FileAudio className="w-6 h-6" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{project.audio_path ?? "No audio attached"}</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDuration(project.duration_seconds)} ·{" "}
-                  {project.audio_size ? `${(project.audio_size / 1_000_000).toFixed(1)} MB` : "—"}
-                </p>
+                 <p className="font-medium truncate">{isScreenshot ? "Screenshot" : isText ? "Text or saved link" : "Voice note"}</p>
+                 {project.audio_path && <p className="text-sm text-muted-foreground">{formatDuration(project.duration_seconds)} · {project.audio_size ? `${(project.audio_size / 1_000_000).toFixed(1)} MB` : "—"}</p>}
               </div>
             </div>
-            <div className="mt-4 h-12 border border-black bg-white flex items-end gap-[3px] px-2 pb-2">
+             {project.audio_path && <div className="mt-4 h-12 border border-black bg-white flex items-end gap-[3px] px-2 pb-2">
               {Array.from({ length: 48 }).map((_, i) => (
                 <span
                   key={i}
@@ -88,13 +87,13 @@ export default function DemoRecordingDetail() {
                   style={{ height: `${20 + ((i * 37) % 70)}%` }}
                 />
               ))}
-            </div>
-            <button
+             </div>}
+             {project.audio_path && <button
               onClick={() => toast.info("Playback is disabled in the demo")}
               className="mt-4 px-4 py-2 border border-black bg-black text-white font-medium hover:bg-white hover:text-black transition-colors"
             >
               Play
-            </button>
+             </button>}
           </div>
 
           <div className="border border-black bg-white p-5">
@@ -109,7 +108,7 @@ export default function DemoRecordingDetail() {
             </div>
 
             {projectPosts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No posts yet for this recording.</p>
+              <p className="text-sm text-muted-foreground">No posts yet for this Brain Dump.</p>
             ) : (
               <div className="space-y-3">
                 {projectPosts.map((post) => {

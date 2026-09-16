@@ -34,7 +34,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { title: "Home", url: "/dashboard", icon: Home },
-  { title: "Ideas", url: "/dashboard/ideas", icon: Lightbulb },
+  { title: "Brain Dumps", url: "/dashboard/brain-dumps", icon: Lightbulb },
   { title: "Posts", url: "/dashboard/posts", icon: FileText },
   { title: "Brand DNA", url: "/dashboard/brand", icon: Fingerprint },
   { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
@@ -45,7 +45,7 @@ const navItems = [
 // Colors from our palette
 const avatarColors = [
   "bg-primary", // Hot Pink
-  "bg-secondary", // Sunshine Yellow
+  "bg-secondary", // Pastel cyan
   "bg-accent", // Mint Green
   "bg-highlight", // Orange
 ];

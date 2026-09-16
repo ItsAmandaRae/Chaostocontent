@@ -102,10 +102,10 @@ export default function Analytics() {
   }, [projects, posts]);
 
   const stats = [
-    { value: projects.length.toString(), label: "Total Recordings" },
+    { value: projects.length.toString(), label: "Total Brain Dumps" },
     { value: posts.length.toString(), label: "Total Posts" },
     { value: publishedThisMonth.toString(), label: "Published This Month" },
-    { value: filteredProjects.length.toString(), label: "Recordings in Range" },
+    { value: filteredProjects.length.toString(), label: "Brain Dumps in Range" },
   ];
 
   return (
@@ -175,7 +175,7 @@ export default function Analytics() {
           <div className="lg:col-span-2 border border-black bg-white p-5">
             <h2 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              Recordings Over Time
+               Brain Dumps Over Time
             </h2>
             <div className="flex items-end gap-2 h-48 sm:h-64">
               {chartData.map((d) => (
@@ -204,7 +204,7 @@ export default function Analytics() {
                 activity.map((event) => (
                   <div key={`${event.type}-${event.id}`} className="p-3 border border-black">
                     <p className="font-medium text-sm">
-                      {event.type === "recording" ? "Recording created" : `Post ${event.title}`}
+                       {event.type === "recording" ? "Brain Dump added" : `Post ${event.title}`}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {event.type === "recording" ? event.title : ""}

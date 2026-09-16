@@ -104,7 +104,7 @@ export default function DemoSettings() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <p className="font-display font-bold">Free Plan</p>
-                <p className="text-sm text-muted-foreground">5 recordings / 10 posts per month</p>
+                <p className="text-sm text-muted-foreground">5 Brain Dumps / 10 posts per month</p>
               </div>
               <button
                 onClick={() => toast.info("Billing upgrade coming soon")}
