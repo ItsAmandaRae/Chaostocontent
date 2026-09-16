@@ -7,6 +7,10 @@ import Auth from "./pages/Auth";
 import DashboardLayout from "./pages/DashboardLayout";
 import DashboardHome from "./pages/dashboard/Home";
 import Recordings from "./pages/dashboard/Recordings";
+import Ideas from "./pages/dashboard/Ideas";
+import IdeaDetail from "./pages/dashboard/IdeaDetail";
+import Posts from "./pages/dashboard/Posts";
+import BrandDNA from "./pages/dashboard/BrandDNA";
 import RecordingDetail from "./pages/dashboard/RecordingDetail";
 import Channels from "./pages/dashboard/Channels";
 import Calendar from "./pages/dashboard/Calendar";
@@ -34,6 +38,10 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
+            <Route path="ideas" element={<Ideas />} />
+            <Route path="ideas/:id" element={<IdeaDetail />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="brand" element={<BrandDNA />} />
             <Route path="recordings" element={<Recordings />} />
             <Route path="recordings/:id" element={<RecordingDetail />} />
             <Route path="channels" element={<Channels />} />
