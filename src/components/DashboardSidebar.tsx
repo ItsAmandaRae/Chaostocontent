@@ -1,16 +1,18 @@
 import { useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Home, 
-  Mic, 
-  Radio, 
-  Calendar, 
-  BarChart3, 
+import {
+  Home,
+  Lightbulb,
+  FileText,
+  Fingerprint,
+  Radio,
+  Calendar,
+  BarChart3,
   ChevronUp,
   Settings,
   LogOut,
   Menu,
-  X
+  Plus,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -27,13 +29,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Logo from "./Logo";
+import DumpDialog from "./DumpDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { title: "Home", url: "/dashboard", icon: Home },
-  { title: "Recordings", url: "/dashboard/recordings", icon: Mic },
-  { title: "Channels", url: "/dashboard/channels", icon: Radio },
+  { title: "Ideas", url: "/dashboard/ideas", icon: Lightbulb },
+  { title: "Posts", url: "/dashboard/posts", icon: FileText },
+  { title: "Brand DNA", url: "/dashboard/brand", icon: Fingerprint },
   { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
+  { title: "Channels", url: "/dashboard/channels", icon: Radio },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
 ];
 
