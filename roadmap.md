@@ -7,4 +7,5 @@
 - [x] Replace orange accents with pastel electric yellow
 - [x] Remove placeholder testimonials
 - [x] Refresh public typography and opening message
-- [ ] Verify public, demo, and authenticated routes at desktop and mobile sizes
+- [x] Verify public landing page at desktop and mobile sizes
+- [ ] Verify authenticated routes when a test account is available
