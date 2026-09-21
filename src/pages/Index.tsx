@@ -4,7 +4,6 @@ import Logotypes from '@/components/sections/Logotypes';
 import BentoGrid from '@/components/sections/BentoGrid';
 import UseCases from '@/components/sections/UseCases';
 import Achievements from '@/components/sections/Achievements';
-import Testimonials from '@/components/sections/Testimonials';
 import Pricing from '@/components/sections/Pricing';
 import FAQ from '@/components/sections/FAQ';
 import CTA from '@/components/sections/CTA';
@@ -19,7 +18,6 @@ const Index = () => {
       <BentoGrid />
       <UseCases />
       <Achievements />
-      <Testimonials />
       <Pricing />
       <FAQ />
       <CTA />
