@@ -29,15 +29,15 @@ export default function Hero() {
   const floating = (x: number, y: number, rotate: number) => reduceMotion ? {} : { x: [0, x, 0], y: [0, y, 0], rotate: [0, rotate, 0] };
 
   return (
-    <section className="relative min-h-[calc(100vh-5rem)] overflow-hidden border-b border-foreground bg-background">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-[1152px] grid-cols-1 items-center gap-6 px-6 pb-12 pt-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:px-0 lg:pb-16 lg:pt-14">
+    <section className="relative overflow-hidden border-b border-foreground bg-background">
+      <div className="mx-auto grid max-w-[1152px] grid-cols-1 items-start gap-6 px-6 pb-12 pt-10 lg:min-h-[760px] lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:px-0 lg:pb-16 lg:pt-20">
         <div className="relative z-20 flex flex-col items-start">
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="mb-7 inline-flex items-center gap-2 border border-foreground bg-highlight px-3 py-2 font-mono text-xs font-semibold uppercase sm:text-sm">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
             Capture the chaos before it disappears
           </motion.div>
 
-          <h1 className="font-display text-[clamp(3.5rem,8vw,7.5rem)] font-extrabold uppercase leading-[0.84] text-foreground">
+          <h1 className="font-display text-[44px] font-extrabold uppercase leading-[0.9] text-foreground sm:text-7xl sm:leading-[0.86] lg:text-[92px]">
             <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>Chaos in.</motion.span>
             <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>Content out.</motion.span>
           </h1>
@@ -58,7 +58,7 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.55, delay: 0.15 }} className="relative mx-auto h-[430px] w-full max-w-[620px] sm:h-[540px] lg:h-[650px]" aria-label="Scattered ideas becoming organized content">
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.55, delay: 0.15 }} className="relative mx-auto h-[430px] w-full min-w-0 max-w-[620px] sm:h-[540px] lg:h-[650px]" aria-label="Scattered ideas becoming organized content">
           <div className="absolute left-[14%] top-[15%] h-[68%] w-[68%] rounded-full border border-dashed border-foreground/30" />
           <div className="absolute left-[24%] top-[25%] h-[48%] w-[48%] rounded-full border border-foreground/20" />
 
