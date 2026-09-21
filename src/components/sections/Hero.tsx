@@ -37,7 +37,7 @@ export default function Hero() {
             Capture the chaos before it disappears
           </motion.div>
 
-          <h1 className="font-display text-[44px] font-extrabold uppercase leading-[0.9] text-foreground sm:text-7xl sm:leading-[0.86] lg:text-[92px]">
+          <h1 className="font-display text-4xl font-extrabold uppercase leading-[0.9] text-foreground sm:text-7xl sm:leading-[0.86] lg:text-[92px]">
             <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>Chaos in.</motion.span>
             <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>Content out.</motion.span>
           </h1>
