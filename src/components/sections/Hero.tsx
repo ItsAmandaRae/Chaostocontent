@@ -1,237 +1,101 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { Camera, FileText, Link2, Mic2, Send, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import avatar1 from "@/assets/avatar-1.jpg";
-import avatar2 from "@/assets/avatar-2.jpg";
-import avatar3 from "@/assets/avatar-3.jpg";
 
-const imgIcon = "/images/dd6c36abbd704b03e1997b404542ec260273d97c.svg";
-export default function Hero() {
+const floatTransition = (delay: number) => ({
+  duration: 4.5,
+  delay,
+  repeat: Infinity,
+  repeatType: "mirror" as const,
+  ease: "easeInOut" as const,
+});
+
+function BrainMark() {
   return (
-    <section className="relative min-h-[600px] lg:h-[832px] overflow-hidden">
-      {/* Content */}
-      <div className="container mx-auto px-6 lg:px-0 pt-12 sm:pt-16 lg:pt-24 max-w-[1152px] relative z-10">
-        <div className="flex flex-col gap-8 sm:gap-10 lg:gap-12">
-          {/* Badge + Title + Description */}
-          <div className="flex flex-col gap-6 sm:gap-8">
-            {/* Badge */}
-            <motion.div
-              className="flex items-start gap-0 h-7 sm:h-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <div className="relative w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0">
-                <img alt="" className="w-full h-full" src={imgIcon} />
-              </div>
-              <div className="bg-white border border-black px-2 sm:px-3 py-1 h-7 sm:h-8 flex items-center">
-                <p className="text-xs sm:text-sm lg:text-base font-normal text-black uppercase leading-tight font-mono">
-                   <span className="hidden sm:inline">BRAIN DUMP TO CONTENT WORKSPACE</span>
-                   <span className="sm:hidden">CHAOS TO CONTENT</span>
-                </p>
-              </div>
-            </motion.div>
+    <svg viewBox="0 0 260 220" className="h-full w-full" aria-hidden="true">
+      <path
+        d="M127 30c-23-20-60-4-57 27-29-3-46 33-25 53-21 18-9 55 19 57 2 27 38 35 58 18 21 20 59 8 58-20 29-8 36-45 14-62 17-23-3-57-31-55-3-30-40-41-59-20Z"
+        className="fill-primary stroke-foreground"
+        strokeWidth="4"
+      />
+      <path d="M127 31v154M91 52c22 8 26 24 18 41M73 82c17-3 30 5 36 20M65 123c17-7 34 1 42 13M88 170c-2-18 8-29 24-35M161 50c-20 9-24 25-16 42M181 81c-17-3-30 6-36 21M190 123c-18-7-34 1-43 14M168 170c2-18-8-29-23-35" className="fill-none stroke-foreground" strokeWidth="3" strokeLinecap="round" />
+      <path d="M110 101c9 7 25 7 34 0M108 136c10-7 27-7 38 0" className="fill-none stroke-foreground" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-            {/* Title */}
-            <div className="flex flex-col font-display font-black text-4xl sm:text-5xl md:text-7xl lg:text-[120px] leading-[1.1] sm:leading-tight sm:leading-[80px] lg:leading-[112px] tracking-[-1.6px] sm:tracking-[-2px] lg:tracking-[-2.4px] text-black uppercase">
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                 Chaos in.
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                 Content out.
-              </motion.p>
-            </div>
+export default function Hero() {
+  const reduceMotion = useReducedMotion();
+  const floating = (x: number, y: number, rotate: number) => reduceMotion ? {} : { x: [0, x, 0], y: [0, y, 0], rotate: [0, rotate, 0] };
 
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-base sm:text-lg lg:text-xl leading-6 sm:leading-7 text-black max-w-full sm:max-w-[480px]"
-            >
-               Drop in a voice note, file, rant, text, screenshot, or link. Chaos To Content finds the golden nuggets and shapes them into platform-ready posts that still sound like you.
-            </motion.p>
-          </div>
-
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <Link to="/auth?mode=signup" className="bg-highlight text-highlight-foreground border border-black h-11 sm:h-12 lg:h-16 px-12 py-2.5 sm:py-2 lg:py-3 rounded-full text-base lg:text-lg font-medium shadow-[4px_6px_0px_0px_black] sm:shadow-[6px_8px_0px_0px_black] hover:shadow-[4px_6px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-200 ease-out w-full sm:w-auto inline-flex items-center justify-center">
-              Start Creating Now
-            </Link>
+  return (
+    <section className="relative min-h-[calc(100vh-5rem)] overflow-hidden border-b border-foreground bg-background">
+      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-[1152px] grid-cols-1 items-center gap-6 px-6 pb-12 pt-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:px-0 lg:pb-16 lg:pt-14">
+        <div className="relative z-20 flex flex-col items-start">
+          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="mb-7 inline-flex items-center gap-2 border border-foreground bg-highlight px-3 py-2 font-mono text-xs font-semibold uppercase sm:text-sm">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            Capture the chaos before it disappears
           </motion.div>
+
+          <h1 className="font-display text-[clamp(3.5rem,8vw,7.5rem)] font-extrabold uppercase leading-[0.84] text-foreground">
+            <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>Chaos in.</motion.span>
+            <motion.span className="block" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>Content out.</motion.span>
+          </h1>
+
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="mt-7 max-w-[560px] text-base font-medium leading-7 text-foreground sm:text-lg">
+            For creators, social media managers, and business owners whose best ideas live everywhere. Drop the notes, screenshots, links, files, rants, and voice memos here—then turn them into on-brand posts without the blank-page freeze.
+          </motion.p>
+
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="mt-8 flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
+            <Link to="/auth?mode=signup" className="inline-flex h-14 items-center justify-center gap-2 rounded-full border-2 border-foreground bg-highlight px-8 text-base font-bold text-highlight-foreground shadow-[6px_7px_0_0_oklch(var(--foreground))] transition-transform hover:translate-x-0.5 hover:translate-y-0.5">
+              Start capturing <Send className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <a href="#features" className="inline-flex h-14 items-center justify-center rounded-full border-2 border-foreground bg-background px-8 text-base font-bold text-foreground transition-colors hover:bg-secondary">See how it works</a>
+          </motion.div>
+
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.42 }} className="mt-9 max-w-[450px] border-l-4 border-highlight pl-4 text-sm font-bold leading-6 text-foreground sm:text-base">
+            Built for busy brains with more ideas than finished posts
+          </motion.p>
         </div>
 
-        {/* Trusted By */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex flex-row items-center gap-3 mt-12 sm:mt-14 lg:mt-16 mb-0"
-        >
-          <div className="flex items-center -space-x-3">
-            <div className="border-2 border-black rounded-full w-7 h-7 sm:w-8 sm:h-8 relative z-30">
-              <img alt="Creator avatar" className="w-full h-full rounded-full object-cover" src={avatar1} />
-            </div>
-            <div className="border-2 border-black rounded-full w-7 h-7 sm:w-8 sm:h-8 relative z-20">
-              <img alt="Creator avatar" className="w-full h-full rounded-full object-cover" src={avatar2} />
-            </div>
-            <div className="border-2 border-black rounded-full w-7 h-7 sm:w-8 sm:h-8 relative z-10">
-              <img alt="Creator avatar" className="w-full h-full rounded-full object-cover" src={avatar3} />
-            </div>
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.55, delay: 0.15 }} className="relative mx-auto h-[430px] w-full max-w-[620px] sm:h-[540px] lg:h-[650px]" aria-label="Scattered ideas becoming organized content">
+          <div className="absolute left-[14%] top-[15%] h-[68%] w-[68%] rounded-full border border-dashed border-foreground/30" />
+          <div className="absolute left-[24%] top-[25%] h-[48%] w-[48%] rounded-full border border-foreground/20" />
+
+          <motion.div animate={floating(-7, -12, -3)} transition={floatTransition(0)} className="absolute left-[4%] top-[8%] w-36 -rotate-6 border-2 border-foreground bg-secondary p-3 shadow-neo-sm sm:w-44">
+            <div className="flex items-center gap-2 border-b border-foreground pb-2 text-xs font-bold uppercase"><Camera className="h-4 w-4" /> Screenshot</div>
+            <div className="mt-3 aspect-video border border-foreground bg-background p-2"><div className="h-2 w-3/4 bg-primary" /><div className="mt-2 h-2 w-full bg-muted" /><div className="mt-2 h-2 w-2/3 bg-highlight" /></div>
+          </motion.div>
+
+          <motion.div animate={floating(8, -10, 4)} transition={floatTransition(0.4)} className="absolute right-[1%] top-[5%] w-40 rotate-6 border-2 border-foreground bg-primary p-4 shadow-neo-sm sm:w-48">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase"><FileText className="h-4 w-4" /> 1:13 AM note</div>
+            <p className="mt-3 text-xs font-semibold leading-5">What if consistency isn’t a discipline problem—it’s a retrieval problem?</p>
+          </motion.div>
+
+          <motion.div animate={floating(-6, 10, 3)} transition={floatTransition(0.8)} className="absolute bottom-[12%] left-[1%] w-44 rotate-3 rounded-full border-2 border-foreground bg-background px-4 py-3 shadow-neo-sm sm:w-52">
+            <div className="flex items-center gap-2 text-xs font-bold"><Mic2 className="h-4 w-4" /><span>VOICE THOUGHT · 0:47</span></div>
+            <div className="mt-2 flex h-4 items-center gap-1">{[7, 13, 9, 16, 5, 12, 8, 15, 6, 11].map((h, i) => <span key={i} className="w-0.5 bg-foreground" style={{ height: h }} />)}</div>
+          </motion.div>
+
+          <motion.div animate={floating(7, 9, -4)} transition={floatTransition(1.2)} className="absolute bottom-[7%] right-[1%] w-48 -rotate-3 border-2 border-foreground bg-highlight p-3 shadow-neo-sm sm:w-56">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase"><Link2 className="h-4 w-4" /> Saved for later</div>
+            <p className="mt-2 truncate font-mono text-[10px]">the-idea-i-will-need-next-week.com</p>
+          </motion.div>
+
+          <div className="absolute left-1/2 top-1/2 z-10 h-52 w-60 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-72">
+            <BrainMark />
+            <motion.div animate={reduceMotion ? {} : { rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }} className="absolute -inset-5 rounded-full border-2 border-dashed border-foreground" />
           </div>
-          <p className="text-base sm:text-lg text-black tracking-[-0.25px]">
-             Built for busy brains with more ideas than finished posts
-          </p>
-        </motion.div>
 
-        {/* Hero Illustration - Below content on mobile, absolute on desktop */}
-        <div
-          className="relative lg:absolute lg:left-[calc((100%-1152px)/2+512px)] lg:mt-0 lg:top-32 w-[320px] h-[294px] sm:w-[480px] sm:h-[441px] lg:w-[768px] lg:h-[704px] ml-0 sm:ml-6 lg:mx-0 max-w-[calc(100%-24px)] hero-illustration-mobile hero-illustration-spacing z-0 lg:z-10 pointer-events-none lg:pointer-events-auto origin-top-left scale-50 sm:scale-75 lg:scale-100"
-        >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="relative w-full h-full"
-        >
-        {/* 64x64 Grid Modules */}
-        <div className="absolute left-[640px] top-0 w-16 h-16 outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
-        <div className="absolute left-[640px] top-[32px] w-8 h-8 bg-primary outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
-        <div className="absolute left-[576px] top-[128px] w-16 h-16 bg-white outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
-        <div className="absolute left-[512px] top-[192px] w-16 h-16 outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
+          <motion.div animate={floating(3, -8, 4)} transition={floatTransition(0.2)} className="absolute left-[8%] top-[48%] grid h-11 w-11 place-items-center border-2 border-foreground bg-highlight shadow-neo-sm"><Sparkles className="h-5 w-5" /></motion.div>
+          <motion.div animate={floating(-4, 8, -3)} transition={floatTransition(1)} className="absolute right-[10%] top-[45%] border-2 border-foreground bg-background px-3 py-2 font-mono text-[10px] font-bold uppercase shadow-neo-sm">Hook found</motion.div>
 
-        {[192, 256, 320, 384, 448, 512, 576, 640].map((x, i) => (
-          <div key={`row4-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black" style={{ left: `${x}px`, top: '256px', outlineOffset: '-0.5px' }} />
-        ))}
-
-        {[64, 128, 192, 256, 320, 384, 448, 512, 576, 640, 704].map((x, i) => (
-          <div key={`row5-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black" style={{ left: `${x}px`, top: '320px', outlineOffset: '-0.5px' }} />
-        ))}
-
-        {[64, 128, 192, 256, 320, 384, 448, 512, 576, 640, 704].map((x, i) => (
-          <div key={`row6-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black" style={{ left: `${x}px`, top: '384px', outlineOffset: '-0.5px' }} />
-        ))}
-
-        {[128, 192, 256, 320, 384, 448, 512, 576, 640].map((x, i) => (
-          <div key={`row7-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black" style={{ left: `${x}px`, top: '448px', outlineOffset: '-0.5px' }} />
-        ))}
-
-        {[192, 256].map((x, i) => (
-          <div key={`row8a-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black" style={{ left: `${x}px`, top: '512px', outlineOffset: '-0.5px' }} />
-        ))}
-        <div className="absolute left-[640px] top-[512px] w-16 h-16 bg-white outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
-        <div className="absolute left-0 top-[576px] w-16 h-16 bg-white outline outline-1 outline-black" style={{ outlineOffset: '-0.5px' }} />
-
-        {[128, 192].map((x, i) => (
-          <div key={`row10-${i}`} className="absolute w-16 h-16 outline outline-1 outline-black border-b border-black" style={{ left: `${x}px`, top: '640px', outlineOffset: '-0.5px' }} />
-        ))}
-
-        {/* Pink pill with waveform */}
-        <div className="absolute w-[576px] h-48 left-[128px] top-[320px] bg-primary rounded-full shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] border-2 border-black" />
-
-        {/* Animated vertical bars */}
-        <div className="absolute left-[320px] top-[352px] h-[128px] flex items-center gap-[30px]">
-          {[66, 98, 34, 128, 34, 98, 66, 82, 34, 128, 34].map((baseHeight, i) => (
-            <motion.div
-              key={i}
-              className="w-0.5 bg-black rounded-full"
-              animate={{
-                height: [baseHeight * 0.5, Math.min(baseHeight, 128), baseHeight * 0.5]
-              }}
-              transition={{
-                duration: 1.2,
-                delay: i * 0.08,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut'
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Orange record button */}
-        <div className="absolute w-32 h-32 left-[160px] top-[352px] bg-highlight rounded-full border-2 border-black flex items-center justify-center">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16.0017 25.3333V28M16.0017 25.3333C11.0974 25.3333 8.19749 22.3268 6.6875 20M16.0017 25.3333C20.906 25.3333 23.806 22.3268 25.316 20M21.3351 9.33333V14.6667C21.3351 17.6121 18.9472 20 16.0017 20C13.0562 20 10.6684 17.6121 10.6684 14.6667V9.33333C10.6684 6.38781 13.0562 4 16.0017 4C18.9472 4 21.3351 6.38781 21.3351 9.33333Z" stroke="black" strokeWidth="2" strokeLinecap="square"/>
+          <svg className="pointer-events-none absolute inset-0 h-full w-full text-foreground" viewBox="0 0 620 650" fill="none" aria-hidden="true">
+            <path d="M150 135 C220 140 225 210 270 250M472 126 C405 150 402 215 355 250M155 500 C220 480 230 420 270 392M476 510 C410 482 399 428 354 390" stroke="currentColor" strokeWidth="2" strokeDasharray="7 8" />
+            <path d="M499 304 C544 304 552 304 580 304" stroke="currentColor" strokeWidth="2" />
+            <path d="m570 294 11 10-11 10" stroke="currentColor" strokeWidth="2" />
           </svg>
-        </div>
-        <div className="absolute w-24 h-24 left-[176px] top-[368px] rounded-full border-2 border-primary" />
-        <svg className="absolute left-[192px] top-[384px]" width="64" height="64" viewBox="0 0 64 64" fill="none">
-          <circle cx="32" cy="32" r="31" stroke="black" strokeWidth="2"/>
-        </svg>
-
-        {/* Decorative stars */}
-        <div className="absolute left-[544px] top-[160px] w-[64px] h-[64px]">
-          <motion.svg
-            className="absolute -left-[34px] -top-[34px] w-[132px] h-[132px]"
-            viewBox="0 0 132 132"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, rotate: 360 }}
-            transition={{
-              opacity: { duration: 0.5, delay: 0.5 },
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" }
-            }}
-          >
-            <defs>
-              <path
-                id="circlePath"
-                d="M 66, 66 m -48, 0 a 48,48 0 1,1 96,0 a 48,48 0 1,1 -96,0"
-              />
-            </defs>
-            <text className="fill-black font-sans text-[10px] uppercase tracking-[0.275em]">
-              <textPath href="#circlePath" startOffset="0%">
-                 DUMP • SHAPE • PUBLISH • DUMP • SHAPE • PUBLISH •
-              </textPath>
-            </text>
-          </motion.svg>
-
-          <motion.svg
-            className="absolute inset-0 text-black"
-            width="64" height="64"
-            viewBox="0 0 64 64"
-            fill="none"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-          >
-            <path d="M0 32C17.6731 32 32 46.3269 32 64C32 46.3269 46.3269 32 64 32C46.3269 32 32 17.6731 32 0C32 17.6731 17.6731 32 0 32Z" fill="currentColor"/>
-          </motion.svg>
-        </div>
-        <motion.svg
-          className="absolute left-[672px] top-[544px] text-black"
-          width="64" height="64"
-          viewBox="0 0 64 64"
-          fill="none"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
-        >
-          <path d="M0 32C17.6731 32 32 46.3269 32 64C32 46.3269 46.3269 32 64 32C46.3269 32 32 17.6731 32 0C32 17.6731 17.6731 32 0 32Z" fill="currentColor"/>
-        </motion.svg>
-        <motion.svg
-          className="absolute left-[160px] top-[608px] text-black"
-          width="64" height="64"
-          viewBox="0 0 64 64"
-          fill="none"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 1.3 }}
-        >
-          <path d="M0 32C17.6731 32 32 46.3269 32 64C32 46.3269 46.3269 32 64 32C46.3269 32 32 17.6731 32 0C32 17.6731 17.6731 32 0 32Z" fill="currentColor"/>
-        </motion.svg>
         </motion.div>
-        </div>
       </div>
     </section>
   );

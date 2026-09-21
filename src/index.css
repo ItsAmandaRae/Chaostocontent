@@ -14,21 +14,21 @@
     --popover: 1 0 0;
     --popover-foreground: 0 0 0;
 
-    /* Hot Pink #F9D4F4 */
-    --primary: 0.91 0.05 330;
+    /* Soft pink #FBE3F7 */
+    --primary: 0.94 0.04 327;
     --primary-foreground: 0 0 0;
 
-    /* Very light pastel cyan #DDFBFF */
-    --secondary: 0.97 0.03 203;
+    /* Pale cyan #E5FBFF */
+    --secondary: 0.98 0.025 205;
     --secondary-foreground: 0 0 0;
 
     /* Mint Green #49ffcb */
     --accent: 0.92 0.16 165;
     --accent-foreground: 0 0 0;
 
-    /* Orange - warmer, brighter */
-    --highlight: 0.70 0.22 50;
-    --highlight-foreground: 1 0 0;
+    /* Pastel electric yellow #E9FF38 */
+    --highlight: 0.96 0.19 113;
+    --highlight-foreground: 0.15 0 0;
 
     --muted: 0.97 0 0;
     --muted-foreground: 0.55 0 0;
@@ -56,18 +56,18 @@
     --card-foreground: 1 0 0;
     --popover: 0.20 0 0;
     --popover-foreground: 1 0 0;
-    /* Hot Pink #F9D4F4 */
-    --primary: 0.91 0.05 330;
+    /* Soft pink #FBE3F7 */
+    --primary: 0.94 0.04 327;
     --primary-foreground: 0 0 0;
-    /* Very light pastel cyan #DDFBFF */
-    --secondary: 0.97 0.03 203;
+    /* Pale cyan #E5FBFF */
+    --secondary: 0.98 0.025 205;
     --secondary-foreground: 0 0 0;
     /* Mint Green #49ffcb */
     --accent: 0.92 0.16 165;
     --accent-foreground: 0 0 0;
-    /* Orange - warmer, brighter */
-    --highlight: 0.70 0.22 50;
-    --highlight-foreground: 1 0 0;
+    /* Pastel electric yellow #E9FF38 */
+    --highlight: 0.96 0.19 113;
+    --highlight-foreground: 0.15 0 0;
     --muted: 0.25 0 0;
     --muted-foreground: 0.65 0 0;
     --border: 1 0 0;
@@ -95,8 +95,7 @@
   }
 
   .font-display {
-    font-variation-settings: 'opsz' 112, 'wdth' 112, 'GRAD' 0, 'ROND' 0, 'slnt' 0;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 }
 
