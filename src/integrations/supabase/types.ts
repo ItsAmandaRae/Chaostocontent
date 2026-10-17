@@ -631,6 +631,10 @@ export type Database = {
     }
     Functions: {
       access_for: { Args: { p_at?: string; p_user: string }; Returns: Json }
+      admin_find_account: {
+        Args: { p_actor: string; p_query: string }
+        Returns: Json
+      }
       finish_ai: {
         Args: {
           p_request: string
