@@ -72,6 +72,7 @@ export async function createLinkDump(userId: string, url: string, note?: string)
     title: trimmed.replace(/^https?:\/\//, "").slice(0, 120),
     link_url: trimmed,
     raw_text: note?.trim() ? `Saved link: ${trimmed}\n\n${note.trim()}` : null,
+    original_notes: note?.trim() || null,
     processing_state: "processing",
   });
 }
@@ -111,6 +112,7 @@ export async function createImageDump(userId: string, file: File, note?: string)
     file_mime: file.type,
     file_size: file.size,
     raw_text: note?.trim() || null,
+    original_notes: note?.trim() || null,
     processing_state: "processing",
   });
 }
@@ -137,7 +139,7 @@ export async function generatePosts(dumpIds: string[], platforms: string[], note
 
 export async function regeneratePost(postId: string, notes: string) {
   const { data, error } = await supabase.functions.invoke("generate-posts", {
-    body: { mode: "regenerate", postId, notes },
+    body: { mode: "regenerate", postId, notes, suggestOnly: true },
   });
   if (error) {
     throw new Error(

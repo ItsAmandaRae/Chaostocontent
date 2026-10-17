@@ -17,5 +17,6 @@
 - [x] Idea Bank page, shared Make Content dialog, Content page with autosave + undoable delete, Planner without legacy project/channel
 - [x] Demo Idea Bank with clearly-labeled fictional sample data, local-only
 - [x] Authenticated end-to-end checks: dump -> ideas -> save all; dump -> content opens immediately; autosave persists; delete/undo; bucket delete retains records; cross-owner refs rejected; planner without legacy project
+- [ ] Correctness pass: reference mode on all sources + persisted provenance; idea-focused generation with source snapshots; serialized autosave with crash recovery; long-form caption-limit fix; idempotent OCR + aligned audio limits; simplified create dialog; screenshot/audio fixture tests
 - [ ] Voice/audio end-to-end test with a real recording (only text-note path tested)
 - [ ] Optional: demo Content/Planner sample pages (demo currently covers Brain Dumps + Idea Bank)
