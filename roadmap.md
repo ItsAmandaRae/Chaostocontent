@@ -1,5 +1,22 @@
 # Roadmap
 
+## Unified planner and no-AI platform reuse
+- [x] Every bucket together in shared Week/Month/List planner, date chooser and unplanned list; non-filtering labelled legend and separate bucket manager (demo changes local-only).
+- [x] Three 32px single-line bars plus reachable overflow, bounded month 180px/week 190px days; twelve named preset colors, unused-first locked default, original four keys/styles/assignments untouched. Month height includes date and overflow actions.
+- [x] Owner-scoped `reuse_content` transaction changes only platform or makes a retry-idempotent editable copy, verifies latest saved text, preserves title/type/bucket/source snapshot/voice/reference/source associations; copies start unscheduled/unposted. No AI reservation/usage path.
+- [x] Tweak wording disclosure contains optional nudges/rewrite/usage note; suggestions remain outside it, reviewable until applied/discarded. Copy/Open/planner and autosave feedback visible. Reset display explicitly UTC; dynamic allowances and Paid-coming-soon unchanged.
+- [x] Passed `bun tests/contentReuse.test.ts`, `bun --env-file=.env tests/contentReuse.database.test.ts`, `bun run test:drafts`, `bun tests/ux.test.ts`, signup/recovery unit and browser regressions. Isolated persistence tested all twelve colors/defaults, bad palette, expected-text mismatch, destination-only metadata, latest wording/provenance copy, original retained, unscheduled/unposted copy, concurrent idempotency, cross-owner denial, bucket retention, exact unchanged app usage/zero AI rows. Fictional accounts/rows cleaned up; no emails/provider calls.
+- [x] Entirely mocked signed-in browser: mixed pink/cyan/mint same day, exactly three 32px bars, 180px month/190px week bounds, six records through overflow at 1280/390/360, day chooser all content, event opens editor not chooser, unsaved-wording flush/change/copy, repeated clicks once, save failure blocks copy, mocked Instagram open + exact current clipboard, Edmonton reset November 1. `tests/plannerReuse.browser.py` retained; screenshots/logs in `/tmp/browser/planner-reuse`. Public/auth/demo desktop/mobile inspected; zero page errors, no planner/auth/demo horizontal overflow.
+- [x] Latest managed production build/typecheck signal `build OK` (2026-10-17 21:13:38 UTC); no standalone build/typecheck, no manual commit. Managed checkpoint observed `8fed372` before final test/documentation updates.
+- Limit: existing landing horizontal overflow at 360px measures 140px; unchanged in this planner/editor pass. Live owner writes, real provider output and live email/password flows not exercised. Existing source hard-delete cascade and 5000-character database constraint observed read-only, not altered in this scope. No billing/provider migration/payment/publishing/auth changes or dependencies.
+
+### Files for this iteration
+- `AGENTS.md`, `roadmap.md`, `src/lib/planner.ts`, `src/lib/draftQueue.ts`, `src/lib/contentReuse.ts`, `src/index.css`
+- `src/components/BucketLegend.tsx`, `BucketChips.tsx`, `PlannerBoard.tsx`, `DraftCard.tsx`, `PlanAccessSection.tsx`
+- `src/pages/dashboard/Calendar.tsx`, `Posts.tsx`, `src/demo/pages/Calendar.tsx`
+- `drizzle/migrations/0007_unified_palette_and_content_reuse.sql`, tool-maintained migration journal and regenerated types
+- `tests/contentReuse.test.ts`, `tests/contentReuse.database.test.ts`, `tests/plannerReuse.browser.py`
+
 ## Signup guidance follow-up (auth only)
 - [x] No-session signup retains persistent email-verification guidance, address, spam/confirmation/sign-in next steps, Edit email and Back to sign in; no delivery/account-existence claims. Confirmation remains enabled.
 - [x] Resend is an explicit signup-confirmation request with a 60-second cooldown, inflight guard and persistent errors/rate-limit guidance. Signup callbacks are separate from recovery and require server-validated confirmation before Continue.

@@ -678,6 +678,45 @@ export type Database = {
         }
         Returns: Json
       }
+      reuse_content: {
+        Args: {
+          p_copy_id?: string
+          p_expected_text: string
+          p_platform: string
+          p_post: string
+        }
+        Returns: {
+          bucket_id: string | null
+          channel_id: string | null
+          char_count: number | null
+          content: string | null
+          created_at: string
+          deleted_at: string | null
+          dump_id: string | null
+          external_url: string | null
+          id: string
+          idea_id: string | null
+          platform: string | null
+          project_id: string | null
+          prompt_notes: string | null
+          published_at: string | null
+          reference_note: string | null
+          scheduled_at: string | null
+          source_snapshot: string | null
+          status: string
+          title: string | null
+          updated_at: string
+          user_id: string
+          variant: string | null
+          voice_mode: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "posts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       app_role: "admin"

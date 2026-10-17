@@ -16,6 +16,7 @@ import { shareTo } from "@/lib/share";
 import { Draft } from "@/components/DraftCard";
 import AddToPlannerDialog from "@/components/AddToPlannerDialog";
 import BucketChips from "@/components/BucketChips";
+import BucketLegend from "@/components/BucketLegend";
 import { Bucket, loadBuckets } from "@/lib/buckets";
 
 export default function Calendar() {
@@ -26,7 +27,7 @@ export default function Calendar() {
   const { user } = useOutletContext<{ user: User | null }>();
   const [posts, setPosts] = useState<Draft[]>([]);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
-  const [bucket, setBucket] = useState("all");
+  const [managingBuckets, setManagingBuckets] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const [planning, setPlanning] = useState<Draft | null>(null);
@@ -46,18 +47,8 @@ export default function Calendar() {
     if (user) fetchData();
   }, [user]);
 
-  const bucketed = useMemo(
-    () =>
-      posts.filter((p) => {
-        if (bucket === "unsorted") return !p.bucket_id;
-        if (bucket !== "all") return p.bucket_id === bucket;
-        return true;
-      }),
-    [posts, bucket],
-  );
-
-  const planned = bucketed.filter((p) => p.scheduled_at);
-  const unplanned = bucketed.filter((p) => !p.scheduled_at && p.status !== "published");
+  const planned = posts.filter((p) => p.scheduled_at);
+  const unplanned = posts.filter((p) => !p.scheduled_at);
 
   // All date handling uses the device's local timezone.
   const postsForDay = (day: Date) =>
@@ -188,7 +179,9 @@ export default function Calendar() {
         {!access?.paid && <p className="mb-5 text-sm text-muted-foreground">Your existing dates and content stay available. Adding or moving dates requires Paid access, which isn't available to purchase yet. <Link className="underline" to="/demo/calendar">Explore fictional planner preview</Link></p>}
         {user && (
           <div className="mb-6">
-            <BucketChips userId={user.id} buckets={buckets} active={bucket} onSelect={setBucket} onChanged={fetchData} />
+            <BucketLegend buckets={buckets} />
+            <Button variant="ghost" size="sm" className="mt-2" onClick={() => setManagingBuckets(true)}>Manage buckets</Button>
+            <Dialog open={managingBuckets} onOpenChange={setManagingBuckets}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>Manage buckets</DialogTitle><DialogDescription>All buckets remain visible together in your planner.</DialogDescription></DialogHeader><BucketChips managementOnly userId={user.id} buckets={buckets} active="all" onSelect={() => {}} onChanged={fetchData} /></DialogContent></Dialog>
           </div>
         )}
 
@@ -249,8 +242,8 @@ export default function Calendar() {
           <DialogContent className="max-h-[85vh] overflow-y-auto">
             <DialogHeader><DialogTitle>{selectedDate ? `Plan for ${format(selectedDate, "MMMM d, yyyy")}` : "Choose content"}</DialogTitle><DialogDescription>Choose existing content. Its text stays unchanged.</DialogDescription></DialogHeader>
             {!access?.paid && <p className="text-sm text-muted-foreground">Adding or moving dates requires Paid access. You can still view, edit and remove your existing dates.</p>}
-            {bucketed.map(p => <Button key={p.id} variant="outline" disabled={!access?.paid} className="h-auto whitespace-normal justify-start text-left" onClick={() => { if (selectedDate) void planUnplanned(p, selectedDate); }}>{title(p)}</Button>)}
-            {!bucketed.length && <p className="text-sm text-muted-foreground">No saved content in this bucket.</p>}
+            {posts.map(p => <Button key={p.id} variant="outline" disabled={!access?.paid} className="h-auto whitespace-normal justify-start text-left" onClick={() => { if (selectedDate) void planUnplanned(p, selectedDate); }}>{title(p)}</Button>)}
+            {!posts.length && <p className="text-sm text-muted-foreground">No saved content yet.</p>}
           </DialogContent>
         </Dialog>
 

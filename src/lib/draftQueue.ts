@@ -30,7 +30,8 @@ export function createDraftQueue(write: (id: string, text: string) => Promise<vo
       return e.running;
     };
     const edit = (text: string) => { e.text = text; e.state = "idle"; backup(); notify(e); if (e.timer) clearTimeout(e.timer); e.timer = setTimeout(() => void flush(), 900); };
-    return { get: () => ({ text: e.text, state: e.state }), edit, flush, subscribe: (fn: () => void) => { e.listeners.add(fn); return () => { e.listeners.delete(fn); }; }, recovered: e.text !== saved };
+    const flushOrThrow = async () => { await flush(); if (e.state === "error" || e.text !== e.saved) throw new Error("Couldn't save your latest wording. Retry saving before reusing it."); return e.text; };
+    return { get: () => ({ text: e.text, state: e.state }), edit, flush, flushOrThrow, subscribe: (fn: () => void) => { e.listeners.add(fn); return () => { e.listeners.delete(fn); }; }, recovered: e.text !== saved };
   }
   return { open };
 }

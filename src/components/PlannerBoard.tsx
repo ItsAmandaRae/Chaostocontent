@@ -16,12 +16,11 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
   const selectView = (next: PlannerView) => { setView(next); try { localStorage.setItem(`ctc-planner-view:${userKey}`, next); } catch { /* View memory is optional. */ } };
   const days = plannerDays(anchor, view);
   const forDay = (day: Date) => items.filter(item => item.scheduled_at && dayKey(localPlanDate(item.scheduled_at)) === dayKey(day));
-  const bar = (item: PlannerItem) => {
+  const bar = (item: PlannerItem, compact = true) => {
     const bucket = buckets.find(b => b.id === item.bucket_id);
-    return <Button key={item.id} variant="ghost" onClick={(e) => { e.stopPropagation(); onOpen(item); }} className={`w-full h-auto min-h-16 block text-left whitespace-normal rounded-sm p-2 ${bucketColorClass(bucket?.color)}`}>
-      <span className="block font-semibold text-sm break-words">{plannerTitle(item)}</span>
-      <span className="block text-xs mt-1 break-words">{formatLabel(item.variant)} · {bucket?.name ?? "Unsorted"}</span>
-      {item.platform && <span className="block text-xs mt-1">{platformLabel(item.platform)}</span>}
+    return <Button key={item.id} variant="ghost" aria-label={`${plannerTitle(item)} · ${bucket?.name ?? "Unsorted"}`} title={plannerTitle(item)} onClick={(e) => { e.stopPropagation(); onOpen(item); }} className={`w-full min-w-0 block text-left rounded-sm px-2 ${compact ? "h-8 min-h-8 max-h-8 py-1 overflow-hidden" : "h-auto whitespace-normal p-3"} ${bucketColorClass(bucket?.color)}`}>
+      <span className={`block font-semibold text-sm ${compact ? "truncate" : "break-words"}`}>{plannerTitle(item)}</span>
+      {!compact && <span className="block text-xs mt-1 break-words">{formatLabel(item.variant)} · {bucket?.name ?? "Unsorted"} · {platformLabel(item.platform)}</span>}
     </Button>;
   };
   return <section className="space-y-4 min-w-0">
@@ -37,15 +36,15 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
     <div className={view === "list" ? "space-y-5" : "grid grid-cols-1 lg:grid-cols-7 gap-px border border-border bg-border"}>
       {days.filter(day => view !== "list" || (isSameMonth(day, anchor) && forDay(day).length > 0)).map(day => {
         const dayItems = forDay(day);
-        return <section key={dayKey(day)} className={`min-w-0 p-2 space-y-2 ${isSameMonth(day, anchor) || view === "week" ? "bg-background" : "bg-muted"} ${view === "week" ? "lg:min-h-64" : "min-h-24"}`}>
-          <Button variant="ghost" onClick={() => onDay(day)} className="w-full justify-start whitespace-normal h-auto text-left px-1 py-2" aria-label={`Plan for ${format(day, "MMMM d, yyyy")}`}><time dateTime={dayKey(day)}>{format(day, view === "month" ? "EEE d" : "EEEE, MMM d")}</time></Button>
-          {dayItems.slice(0, view === "month" ? 3 : undefined).map(bar)}
-          {view === "month" && dayItems.length > 3 && <Button variant="outline" className="w-full whitespace-normal" onClick={() => setOverflowDay(day)}>+{dayItems.length - 3} more</Button>}
+        return <section key={dayKey(day)} data-planner-day={dayKey(day)} className={`min-w-0 p-2 space-y-1 ${isSameMonth(day, anchor) || view === "week" ? "bg-background" : "bg-muted"} ${view === "list" ? "" : view === "week" ? "h-[190px] overflow-hidden" : "h-[180px] overflow-hidden"}`}>
+          <Button variant="ghost" onClick={() => onDay(day)} className="w-full min-w-0 justify-start h-8 text-left px-1 py-1" aria-label={`Plan for ${format(day, "MMMM d, yyyy")}`}><time className="truncate" dateTime={dayKey(day)}>{format(day, view === "week" ? "EEE, MMM d" : "EEE d")}</time></Button>
+          {dayItems.slice(0, view === "list" ? undefined : 3).map(item => bar(item, view !== "list"))}
+          {view !== "list" && dayItems.length > 3 && <Button variant="ghost" className="w-full h-7 text-xs" onClick={() => setOverflowDay(day)}>+{dayItems.length - 3} more</Button>}
           {!dayItems.length && view === "week" && <p className="text-sm text-muted-foreground px-1">No plans</p>}
         </section>;
       })}
     </div>
     {view === "list" && !days.some(day => isSameMonth(day, anchor) && forDay(day).length) && <p className="text-sm text-muted-foreground">Nothing planned this month.</p>}
-    <Dialog open={!!overflowDay} onOpenChange={open => !open && setOverflowDay(null)}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>{overflowDay ? format(overflowDay, "MMMM d, yyyy") : "Day plans"}</DialogTitle><DialogDescription>Planned content</DialogDescription></DialogHeader>{overflowDay && forDay(overflowDay).map(bar)}{overflowDay && <Button variant="outline" onClick={() => { onDay(overflowDay); setOverflowDay(null); }}>Add content to this day</Button>}</DialogContent></Dialog>
+    <Dialog open={!!overflowDay} onOpenChange={open => !open && setOverflowDay(null)}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>{overflowDay ? format(overflowDay, "MMMM d, yyyy") : "Day plans"}</DialogTitle><DialogDescription>Planned content · all buckets</DialogDescription></DialogHeader>{overflowDay && forDay(overflowDay).map(item => bar(item, false))}{overflowDay && <Button variant="outline" onClick={() => { onDay(overflowDay); setOverflowDay(null); }}>Add content to this day</Button>}</DialogContent></Dialog>
   </section>;
 }
