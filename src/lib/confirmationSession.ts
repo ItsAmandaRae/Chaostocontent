@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { confirmationIntent } from './signup';
+import { confirmationIntent, setPendingSignup } from './signup';
 
 const url = new URL(window.location.href);
 const intended = confirmationIntent(url);
@@ -16,7 +16,8 @@ void supabase.auth.initialize().then(async ({ error }) => {
   window.history.replaceState(window.history.state, '', clean.pathname + clean.search);
   if (error || new URLSearchParams(url.hash.slice(1)).has('error_description') || url.searchParams.has('error_description')) { publish('invalid'); return; }
   const { data, error: failure } = await supabase.auth.getUser();
-  publish(!failure && data.user?.email_confirmed_at ? 'confirmed' : 'invalid');
+  if (!failure && data.user?.email_confirmed_at) { setPendingSignup(null); publish('confirmed'); }
+  else publish('invalid');
 });
 export const confirmationSession = {
   subscribe(fn: () => void) { listeners.add(fn); return () => { listeners.delete(fn); }; },

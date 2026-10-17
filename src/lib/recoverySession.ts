@@ -1,10 +1,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 import { recoveryIntent, sessionIdentity, validRecovery, type RecoveryMarker } from './recovery';
+import { confirmationIntent } from './signup';
 
 const KEY = 'ctc-password-recovery';
 const initialUrl = new URL(window.location.href);
 const requested = recoveryIntent(initialUrl);
+if (confirmationIntent(initialUrl)) clearMarker();
 const providerError = new URLSearchParams(initialUrl.hash.slice(1)).has('error_description') || initialUrl.searchParams.has('error_description');
 type State = { status: 'none' | 'checking' | 'ready' | 'invalid' | 'complete'; userId?: string };
 let state: State = { status: requested || readMarker() ? 'checking' : 'none' };
