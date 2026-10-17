@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
     // ---- create content from dumps and/or an idea ----------------------------
     if (!body.dumpIds?.length && !body.ideaId) throw new HttpError(400, "Pick something to create from.");
 
-    const { source: ideaSource, kind, linkUrl } = body.ideaId
+    let { source: ideaSource, kind, linkUrl } = body.ideaId
       ? await loadSource(null, body.ideaId)
       : { source: "", kind: null as string | null, linkUrl: null as string | null };
 
