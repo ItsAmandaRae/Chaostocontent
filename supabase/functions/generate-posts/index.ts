@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
     // ---- create content from dumps and/or an idea ----------------------------
     if (!body.dumpIds?.length && !body.ideaId) throw new HttpError(400, "Pick something to create from.");
 
-    const { source: ideaSource, kind, linkUrl } = body.ideaId
+    let { source: ideaSource, kind, linkUrl } = body.ideaId
       ? await loadSource(null, body.ideaId)
       : { source: "", kind: null as string | null, linkUrl: null as string | null };
 
@@ -203,10 +203,13 @@ Deno.serve(async (req) => {
     if (body.dumpIds?.length) {
       const { data: dumps } = await supabase
         .from("dumps")
-        .select("id, title, raw_text, summary")
+        .select("id, title, raw_text, summary, kind, link_url")
         .in("id", body.dumpIds)
         .eq("user_id", userId);
-      if (!dumps?.length) throw new HttpError(404, "We couldn't find those Brain Dumps.");
+      if (!dumps?.length || dumps.length !== body.dumpIds.length)
+        throw new HttpError(404, "We couldn't find those Brain Dumps.");
+      kind = kind ?? (dumps.length === 1 ? (dumps[0].kind as string | null) : null);
+      linkUrl = linkUrl ?? (dumps.length === 1 ? (dumps[0].link_url as string | null) : null);
       dumpSource = dumps
         .map((d) => `--- Brain Dump: ${d.title} ---\n${d.summary ? `${d.summary}\n\n` : ""}${d.raw_text ?? ""}`)
         .join("\n\n");

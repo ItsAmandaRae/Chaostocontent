@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useSearchParams } from "react-router-dom";
 import { Filter, Loader2, Search } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +20,18 @@ export default function Posts() {
   const [format, setFormat] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openId = searchParams.get("open");
+
+  useEffect(() => {
+    if (!openId || loading) return;
+    const el = document.getElementById(`post-${openId}`);
+    if (el) {
+      el.scrollIntoView({ block: "center" });
+      el.querySelector("textarea")?.focus();
+      setSearchParams({}, { replace: true });
+    }
+  }, [openId, loading, drafts]);
 
   const load = async () => {
     const [{ data }, b] = await Promise.all([
@@ -153,7 +165,7 @@ export default function Posts() {
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
             {visible.map((d) => (
-              <div key={d.id} className="space-y-1">
+              <div key={d.id} id={`post-${d.id}`} className="space-y-1">
                 <DraftCard draft={d} buckets={buckets} onChanged={load} />
                 <div className="flex gap-3 text-xs text-muted-foreground">
                   {d.dump_id && (

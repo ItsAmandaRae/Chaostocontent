@@ -17,7 +17,7 @@ const INITIAL_IDEAS: DemoIdea[] = [
   {
     id: "demo-1",
     title: "The 3-tab rule that saved my mornings",
-    angle: "How closing everything but 3 tabs cut my startup time in half",
+    angle: "How closing everything but 3 tabs made my mornings feel less behind",
     excerpt: "every morning I'd open 40 tabs and feel behind before I started",
     bucket: "Evergreen",
   },
@@ -68,7 +68,7 @@ export default function DemoIdeaBank() {
           The golden nuggets you pulled out — ready whenever you are.
         </p>
         <p className="text-xs uppercase tracking-wide text-muted-foreground mb-6">
-          Sample data — changes here stay in this demo and are never saved or sent to AI.
+          Fictional sample data — changes here stay in this demo, are never saved, and no AI is involved.
         </p>
 
         <div className="flex flex-wrap gap-2 mb-6">

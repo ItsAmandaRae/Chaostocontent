@@ -60,7 +60,7 @@ export async function createTextDump(userId: string, text: string) {
     kind: "text",
     title: trimmed.split(/\s+/).slice(0, 8).join(" ").slice(0, 120) || "Untitled idea",
     raw_text: trimmed.slice(0, 40000),
-    processing_state: "pending",
+    processing_state: "processing",
   });
 }
 
@@ -72,7 +72,7 @@ export async function createLinkDump(userId: string, url: string, note?: string)
     title: trimmed.replace(/^https?:\/\//, "").slice(0, 120),
     link_url: trimmed,
     raw_text: note?.trim() ? `Saved link: ${trimmed}\n\n${note.trim()}` : null,
-    processing_state: "pending",
+    processing_state: "processing",
   });
 }
 
@@ -92,7 +92,7 @@ export async function createAudioDump(userId: string, file: File) {
     file_mime: file.type || "audio/webm",
     file_size: file.size,
     duration_seconds: duration,
-    processing_state: "pending",
+    processing_state: "processing",
   });
 }
 
@@ -111,7 +111,7 @@ export async function createImageDump(userId: string, file: File, note?: string)
     file_mime: file.type,
     file_size: file.size,
     raw_text: note?.trim() || null,
-    processing_state: "pending",
+    processing_state: "processing",
   });
 }
 

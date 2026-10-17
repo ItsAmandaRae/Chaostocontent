@@ -8,6 +8,13 @@
       "when": 1792217825430,
       "tag": "0000_create_buckets_ideas_soft_delete",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792221545716,
+      "tag": "0001_enforce_cross_row_ownership",
+      "breakpoints": true
     }
   ]
 }

@@ -66,7 +66,11 @@ Deno.serve(async (req) => {
       .map((i) => ({
         title: i.title!.trim().slice(0, 160),
         angle: typeof i.angle === "string" ? i.angle.trim().slice(0, 400) : "",
-        excerpt: typeof i.excerpt === "string" ? i.excerpt.trim().slice(0, 1000) : "",
+        // Only keep the excerpt if it is a verbatim slice of the source.
+        excerpt:
+          typeof i.excerpt === "string" && i.excerpt.trim() && source.includes(i.excerpt.trim())
+            ? i.excerpt.trim().slice(0, 1000)
+            : "",
       }));
     if (!ideas.length) throw new HttpError(502, "No clear ideas came back — try again in a moment.");
 
