@@ -27,6 +27,8 @@ export default function Posts() {
     if (!openId || loading) return;
     const el = document.getElementById(`post-${openId}`);
     if (el) {
+      // Explicitly opened copies stay visible even when previous list filters differed.
+      setBucket("all"); setPlatform("all"); setFormat("all"); setSearch("");
       el.scrollIntoView({ block: "center" });
       el.querySelector("textarea")?.focus();
       setSearchParams({}, { replace: true });
