@@ -6,3 +6,4 @@
 - Store verified billing, protected admin roles and complimentary grants separately; client state never grants access or changes billing.
 - Enforce bucket counts and personal planner-date access with database triggers, preserving existing data and date removal after downgrade.
 - Source preparation and content creation have separate allowances; snapshots preserve provenance and every rewrite is reviewable.
+- Share editor write queues across mounts keyed by authenticated user and post, so navigation cannot create parallel stale saves; recover pending work from a matching user-scoped local backup.

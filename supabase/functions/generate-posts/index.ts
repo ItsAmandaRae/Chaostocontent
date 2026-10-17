@@ -296,7 +296,7 @@ Deno.serve(async (req) => {
       project_id: null as string | null,
       platform: primary.id,
       variant: format.id,
-      title: titleDump?.title ?? (ideaSource.split("\n")[0] || "Untitled").slice(0, 120),
+      title: ideaLoad?.ideaTitle ?? titleDump?.title ?? "Untitled",
       content,
       char_count: content.length,
       status: "draft",

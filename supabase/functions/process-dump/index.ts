@@ -3,7 +3,7 @@ const corsHeaders = { ...sdkCorsHeaders, "Access-Control-Allow-Headers": `${sdkC
 import { z } from "npm:zod@3";
 import { chatText, HttpError, transcribe } from "../_shared/ai.ts";
 import { userClient } from "../_shared/auth.ts";
-import { Allowance, privilegedClient } from "../_shared/access.ts";
+import { Allowance } from "../_shared/access.ts";
 
 const BodySchema = z.object({ dumpId: z.string().uuid() });
 
@@ -97,6 +97,9 @@ Deno.serve(async (req) => {
     }
 
     if (!text) throw new HttpError(422, "There was nothing to read in that dump.");
+    if (!media && dump.processing_state === "done") {
+      return new Response(JSON.stringify({ ok: true, title: dump.title, raw_text: text }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
     const meta = makeMeta(text);
 

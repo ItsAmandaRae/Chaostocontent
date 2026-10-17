@@ -44,6 +44,13 @@ try {
   check("Client cannot reserve usage directly", !!(await free.client.rpc("reserve_ai", { p_user: free.id, p_request: crypto.randomUUID(), p_action: "extract", p_kind: "creation", p_source: "fixture", p_hash: "fixture" })).error);
   check("Free creation limit is exactly 5", (await access(free.id)).creations === 5);
   check("Free media limit is exactly 5", (await access(free.id)).media_reads === 5);
+  check("Public plan config immutable with no client setter", !!(await free.client.rpc("plan_config", { p_paid: true })).data && !(await free.client.from("user_roles").select()).data?.length);
+  const media = await Promise.all(Array.from({ length: 8 }, (_, i) => reserve(free.id, crypto.randomUUID(), "media", `source-${i}`)));
+  check("Concurrent media-read allowance exactly 5", media.filter(r => !r.error).length === 5);
+  const mediaRows = await admin.from("ai_usage").select("request_id").eq("user_id", free.id).eq("kind", "media");
+  for (const r of mediaRows.data ?? []) await admin.rpc("finish_ai", { p_user: free.id, p_request: r.request_id, p_success: false });
+  check("Failed media reads refund all 5", (await access(free.id)).media_remaining === 5);
+  check("Media preparation fields cannot be forged", !!(await free.client.from("dumps").insert({ user_id: free.id, kind: "image", media_prepared_at: new Date().toISOString(), extracted_text: "forged" })).error);
   const req = crypto.randomUUID(); assert.ifError((await reserve(free.id, req)).error);
   check("Duplicate active request rejected", !!(await reserve(free.id, req)).error);
   assert.ifError((await admin.rpc("finish_ai", { p_user: free.id, p_request: req, p_success: false })).error);
@@ -82,6 +89,14 @@ try {
   check("Owner endpoint grants Complimentary", grant.data?.access?.plan === "Complimentary");
   check("Complimentary limits are finite provisional 100", (await access(free.id)).creations === 100 && (await access(free.id)).media_reads === 100);
   check("Paid plans without legacy project or channel", !(await free.client.from("posts").update({ scheduled_at: new Date().toISOString() }).eq("id", post.id)).error);
+  const grantRows = await admin.from("complimentary_grants").select("expires_at").eq("user_id", free.id).is("revoked_at", null);
+  const futureExpiry = grantRows.data?.[0]?.expires_at;
+  assert.ok(futureExpiry);
+  check("Gift expiry boundary resolves to Free", (await access(free.id, futureExpiry)).plan === "Free");
+  const createId = crypto.randomUUID();
+  assert.ifError((await admin.rpc("reserve_ai", { p_user: free.id, p_request: createId, p_action: "create", p_kind: "creation", p_source: "manual-fixture", p_hash: "fixture-create" })).error);
+  const finalized = await Promise.all([1, 2].map(() => admin.rpc("finish_ai", { p_user: free.id, p_request: createId, p_success: true, p_result: { platform: "blog", variant: "blog", content: "Atomic fixture content", title: "Atomic fixture" } })));
+  check("Duplicate finalization creates exactly one content item", finalized[0].data?.posts?.[0]?.id === finalized[1].data?.posts?.[0]?.id && (await free.client.from("posts").select("id").eq("title", "Atomic fixture")).data?.length === 1);
   assert.ifError((await free.client.from("buckets").insert({ user_id: free.id, name: "Fourth preserved bucket" })).error);
   const revoke = await owner.client.functions.invoke("admin-access", { body: { action: "revoke", userId: free.id } });
   check("Revoked gift returns Free", revoke.data?.access?.plan === "Free");
