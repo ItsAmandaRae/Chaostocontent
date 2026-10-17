@@ -52,7 +52,8 @@ async def main():
   await page.get_by_role('link',name='Back to sign in').click()
   await page.locator('#email').wait_for()
   await page.locator('#email').fill('fictional@example.invalid');await page.locator('#password').fill('LongFixturePassword-1!');await page.get_by_role('button',name='Sign in',exact=True).click();await page.wait_for_url('**/dashboard')
-  await page.goto('http://localhost:8080/auth?mode=forgot')
+  await page.goto('http://localhost:8080/reset-password');await page.get_by_role('link',name='Request a fresh link').wait_for();assert await page.locator('#new-password').count()==0 and len(updates)==1
+  await page.get_by_role('link',name='Request a fresh link').click()
   await page.locator('#email').fill('fictional@example.invalid');assert not recovery_requests
   await page.get_by_role('button',name='Send reset link').click()
   await page.get_by_role('status').filter(has_text='If an account matches').wait_for()
