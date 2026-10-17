@@ -9,7 +9,7 @@ export default function RecoveryRedirect() {
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    if (confirmation !== 'none' && location.pathname !== '/auth') {
+    if (['confirmed', 'invalid'].includes(confirmation) && location.pathname !== '/auth') {
       navigate('/auth?mode=confirm', { replace: true });
       return;
     }
