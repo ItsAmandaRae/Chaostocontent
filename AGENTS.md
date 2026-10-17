@@ -9,4 +9,5 @@
 - Share editor write queues across mounts keyed by authenticated user and post, so navigation cannot create parallel stale saves; recover pending work from a matching user-scoped local backup.
 - Keep brand voice prompt construction shared between create and rewrite; Brand DNA is the single persistent voice source.
 - Let the auth SDK alone consume recovery callbacks; register recovery handling before redirects and require a validated, session-scoped recovery marker for password changes, so normal sessions and URL intent cannot authorize the recovery form.
+- Classify signup confirmation separately from recovery before auth redirects; validate confirmation through the auth server and keep no-session signup guidance with user-initiated, guarded resend, so email intent never implies a session or delivery.
 - Share planner rendering and local-date helpers between real and fictional demo views; bucket palette keys persist under existing ownership policies, and view preferences are user-scoped.

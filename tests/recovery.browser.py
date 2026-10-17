@@ -59,7 +59,7 @@ async def main():
   await page.get_by_role('status').filter(has_text='If an account matches').wait_for()
   assert len(recovery_requests)==1 and recovery_requests[0].get('email')=='fictional@example.invalid'
   await page.screenshot(path=str(OUT/'email-state.png'))
-  await page.evaluate('localStorage.clear()');await page.goto('http://localhost:8080/auth?mode=signup');await page.locator('#email').fill('fictional@example.invalid');await page.locator('#password').fill('LongFixturePassword-1!');await page.get_by_role('button',name='Create account').click();await page.get_by_role('status').filter(has_text='confirm your account').wait_for();assert len(signups)==1
+  await page.evaluate('localStorage.clear()');await page.goto('http://localhost:8080/auth?mode=signup');await page.locator('#email').fill('fictional@example.invalid');await page.locator('#password').fill('LongFixturePassword-1!');await page.get_by_role('button',name='Create account').click();await page.get_by_role('status').filter(has_text='verify your account').wait_for();assert len(signups)==1
   await page.set_viewport_size({'width':360,'height':800})
   await page.goto('http://localhost:8080/reset-password');await page.get_by_role('link',name='Request a fresh link').wait_for();await page.screenshot(path=str(OUT/'missing-mobile.png'))
   assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')

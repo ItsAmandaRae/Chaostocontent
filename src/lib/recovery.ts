@@ -11,6 +11,7 @@ export function validRecovery(marker: RecoveryMarker | null, userId: string, ses
 }
 export function recoveryIntent(url: URL) {
   const hash = new URLSearchParams(url.hash.slice(1));
+  if (hash.get('type') === 'signup' || url.searchParams.get('type') === 'signup' || url.searchParams.get('mode') === 'confirm') return false;
   return url.pathname === '/reset-password' || url.searchParams.get('mode') === 'reset' || hash.get('type') === 'recovery' || hash.has('error_description') || url.searchParams.has('error_description') || url.searchParams.has('code');
 }
 export function passwordErrors(password: string, confirm: string) {

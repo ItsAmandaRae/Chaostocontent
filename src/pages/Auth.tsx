@@ -10,6 +10,9 @@ import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import RecoveryForm from "@/components/RecoveryForm";
 import { recoverySession } from "@/lib/recoverySession";
+import { confirmationSession } from "@/lib/confirmationSession";
+import SignupVerification from "@/components/SignupVerification";
+import { pendingSignup, setPendingSignup } from "@/lib/signup";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -45,6 +48,8 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const recovery = useSyncExternalStore(recoverySession.subscribe, recoverySession.getSnapshot);
+  const confirmation = useSyncExternalStore(confirmationSession.subscribe, confirmationSession.getSnapshot);
+  const confirmationActive = confirmation !== "none" || searchParams.get("mode") === "confirm";
   const resetRoute = location.pathname === "/reset-password" || searchParams.get("mode") === "reset";
   const recoveryActive = resetRoute || ["checking", "ready", "invalid", "complete"].includes(recovery.status);
   const requestedMode = searchParams.get("mode");
@@ -52,8 +57,8 @@ export default function Auth() {
   
   const [normalView, setView] = useState<AuthView>(initialView);
   const view: AuthView = recoveryActive ? "reset" : normalView;
-  const [emailSent, setEmailSent] = useState(false);
-  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(() => initialView === "signup" && Boolean(pendingSignup()));
+  const [email, setEmail] = useState(() => pendingSignup() ?? "");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -70,6 +75,7 @@ export default function Auth() {
 
   useEffect(() => {
     const canRedirect = () => !resetRoute && searchParams.get("mode") !== "forgot" &&
+      searchParams.get("mode") !== "confirm" && confirmationSession.getSnapshot() === "none" &&
       !["forgot", "reset"].includes(normalView) && recoverySession.getSnapshot().status === "none";
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event !== "PASSWORD_RECOVERY" && session?.user && canRedirect()) navigate("/dashboard");
@@ -85,6 +91,8 @@ export default function Auth() {
 
   const handleViewChange = (newView: AuthView) => {
     clearErrors();
+    setPassword("");
+    setPendingSignup(null);
     setEmailSent(false);
     setView(newView);
     navigate(`/auth?mode=${newView}`, { replace: true });
@@ -144,7 +152,7 @@ export default function Auth() {
         toast.success("Welcome back!");
       } else {
         const redirectUrl = window.location.origin;
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -152,11 +160,15 @@ export default function Auth() {
           },
         });
         if (error) throw error;
-        setEmailSent(true);
+        setPassword("");
+        if (data.session) navigate("/dashboard");
+        else { setPendingSignup(email); setEmailSent(true); }
       }
     } catch (error: any) {
       if (error.message === "User already registered") {
-        toast.error("This email is already registered. Please sign in instead.");
+        setPassword("");
+        setPendingSignup(email);
+        setEmailSent(true);
       } else if (error.message === "Invalid login credentials") {
         toast.error("Invalid email or password. Please try again.");
       } else {
@@ -168,6 +180,7 @@ export default function Auth() {
   };
 
   const getTitle = () => {
+    if (confirmationActive) return "Verify email";
     switch (view) {
       case "login": return "Welcome Back";
       case "signup": return "Create Account";
@@ -177,6 +190,7 @@ export default function Auth() {
   };
 
   const getDescription = () => {
+    if (confirmationActive) return confirmation === "confirmed" ? "Your email is verified" : "Confirm your email to continue";
     switch (view) {
       case "login": return "Sign in to continue creating content";
       case "signup": return "Turn your chaos into content";
@@ -333,7 +347,12 @@ export default function Auth() {
             </p>
 
             {/* Form */}
-            {view === "reset" ? <RecoveryForm /> : emailSent ? (
+            {confirmationActive ? (
+              <div className="flex flex-col gap-4 text-center">
+                {confirmation === "checking" ? <p role="status">Checking your confirmation link…</p> : confirmation === "confirmed" ? <><p role="status">Your email is verified. You can continue to your workspace.</p><Button onClick={async () => { const { data, error } = await supabase.auth.getUser(); if (!error && data.user) { confirmationSession.clear(); navigate("/dashboard"); } }}>Continue</Button></> : <><p role="alert">This confirmation link is missing, expired or already used. Sign in if you already verified, or request another confirmation from sign up.</p><Button onClick={() => { confirmationSession.clear(); handleViewChange("signup"); }}>Back to sign up</Button></>}
+                {confirmation !== "checking" && <Button variant="outline" onClick={() => { confirmationSession.clear(); handleViewChange("login"); }}>Back to sign in</Button>}
+              </div>
+            ) : view === "reset" ? <RecoveryForm /> : emailSent && view === "signup" ? <SignupVerification email={email} onEdit={() => { setPendingSignup(null); setEmailSent(false); setPassword(""); }} onSignIn={() => handleViewChange("login")} /> : emailSent ? (
               <div className="space-y-4 text-center" role="status">
                 <p>{view === "signup" ? "Check your email to confirm your account before signing in." : "If an account matches that email, you’ll receive a password reset link. Check your inbox and spam folder."}</p>
                 <Button variant="outline" onClick={() => { setEmailSent(false); }}>Use another email</Button>
@@ -409,7 +428,7 @@ export default function Auth() {
             </form>}
 
             {/* Footer text */}
-            <p className="mt-6 text-center text-black font-body">
+            {!confirmationActive && !emailSent && <p className="mt-6 text-center text-black font-body">
               {view === "login" && (
                 <>
                   Don't have an account?{" "}
@@ -446,7 +465,7 @@ export default function Auth() {
                   </Button>
                 </>
               )}
-            </p>
+            </p>}
           </div>
         </motion.div>
       </div>

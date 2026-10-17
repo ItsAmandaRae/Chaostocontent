@@ -1,5 +1,11 @@
 # Roadmap
 
+## Signup guidance follow-up (auth only)
+- [x] No-session signup retains persistent email-verification guidance, address, spam/confirmation/sign-in next steps, Edit email and Back to sign in; no delivery/account-existence claims. Confirmation remains enabled.
+- [x] Resend is an explicit signup-confirmation request with a 60-second cooldown, inflight guard and persistent errors/rate-limit guidance. Signup callbacks are separate from recovery and require server-validated confirmation before Continue.
+- [x] `bun tests/signup.test.ts`, `bun tests/recovery.test.ts`, mocked signup browser flow and `python3 tests/recovery.browser.py` passed. Mocks covered no-session state/reload, no automatic resend, cooldown/inflight, resend success and 429, edit/back, validated signup callback -> Continue -> dashboard, expired confirmation without reset form, recovery regressions, 1280/360 no overflow. Latest managed build: OK. No live email, account or password changes.
+- [ ] Real confirmation delivery and real recovery -> changed-password login remain blocked on supported isolated email/link access; never email owner/real people or change their passwords. No billing, publishing or planner work in this pass.
+
 ## Priority password recovery blocker
 - [x] Implement SDK-owned recovery callback handling before normal redirects; public `/reset-password` and legacy `/auth` recovery, validated user/session-scoped expiring recovery marker, refresh recovery, new/confirm password + visibility and server error/retry, password-only update and local signout after success. Settings opens `/auth?mode=forgot` without sending email; requests retain a non-enumerating check-email state. Normal signup retains confirmation required.
 - [x] `bun tests/recovery.test.ts` and `bun --env-file=.env tests/authSettings.test.ts` passed. `python3 tests/recovery.browser.py` passed with explicitly fictional network responses: SDK implicit recovery event/token cleanup, refresh, mismatch/show-hide, rejected update preserves form/retry, success/local signout, legacy callback, missing/expired callback, ordinary session + direct reset cannot update, signed-in forgot form/no automatic request, normal sign-in redirect, signup confirmation state, 1280/360 screenshots/no horizontal overflow/zero page errors. No real emails, fixture accounts, owner changes or settings writes.
