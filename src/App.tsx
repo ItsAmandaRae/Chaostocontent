@@ -1,3 +1,5 @@
+import AccessAdmin from "./pages/dashboard/AccessAdmin";
+import DemoContent from "./demo/pages/Content";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -55,6 +57,7 @@ const App = () => (
             <Route path="calendar" element={<Calendar />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="access" element={<AccessAdmin />} />
           </Route>
           <Route path="/demo" element={<DemoLayout />}>
             <Route index element={<DemoHome />} />
@@ -63,6 +66,7 @@ const App = () => (
             <Route path="recordings" element={<LegacyBrainDumpRedirect demo />} />
             <Route path="recordings/:id" element={<LegacyBrainDumpRedirect demo />} />
             <Route path="ideas" element={<DemoIdeaBank />} />
+            <Route path="posts" element={<DemoContent />} />
             <Route path="channels" element={<DemoChannels />} />
             <Route path="calendar" element={<DemoCalendar />} />
             <Route path="analytics" element={<DemoAnalytics />} />

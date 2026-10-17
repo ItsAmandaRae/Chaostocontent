@@ -1,3 +1,4 @@
+import PlanAccessSection from "@/components/PlanAccessSection";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -180,24 +181,7 @@ export default function Settings() {
               </div>
             </section>
 
-            <section className="border border-black bg-white p-5">
-              <h2 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
-                <CreditCard className="w-5 h-5" />
-                Billing
-              </h2>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <p className="font-display font-bold">Free Plan</p>
-                  <p className="text-sm text-muted-foreground">5 Brain Dumps / 10 posts per month</p>
-                </div>
-                <button
-                  onClick={() => toast.info("Billing upgrade coming soon")}
-                  className="px-6 py-2 border border-black bg-highlight text-highlight-foreground font-medium hover:bg-white hover:text-black transition-colors"
-                >
-                  Upgrade
-                </button>
-              </div>
-            </section>
+            <PlanAccessSection />
 
             <div className="flex justify-end">
               <button

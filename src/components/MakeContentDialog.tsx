@@ -1,3 +1,4 @@
+import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Sparkles } from "lucide-react";
@@ -99,6 +100,7 @@ export default function MakeContentDialog({ open, onOpenChange, dumpIds, ideaId,
         </DialogHeader>
 
         <div className="space-y-5">
+          <AllowanceNote />
           <div>
             <label htmlFor="mc-platform" className="block text-xs uppercase tracking-wide text-muted-foreground mb-2">
               Where it's going

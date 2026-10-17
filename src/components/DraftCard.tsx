@@ -1,3 +1,4 @@
+import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Copy, ExternalLink, RefreshCw, Trash2, CheckCircle2, CalendarPlus, Undo2 } from "lucide-react";
@@ -276,7 +277,7 @@ export default function DraftCard({ draft, buckets, onChanged }: Props) {
 
       {suggestion !== null && (
         <div className="border border-black bg-accent/40 p-3 space-y-2">
-          <p className="text-xs uppercase tracking-wide font-medium">Brought back from your original words — review before applying</p>
+          <p className="text-xs uppercase tracking-wide font-medium">Rewrite suggestion — review before applying</p>
           <p className="text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">{suggestion}</p>
           <div className="flex gap-2">
             <button onClick={applySuggestion} className="px-3 py-1.5 border border-black bg-primary text-sm font-medium">
@@ -337,6 +338,7 @@ export default function DraftCard({ draft, buckets, onChanged }: Props) {
         </button>
       </div>
 
+      <AllowanceNote />
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs uppercase tracking-wide text-muted-foreground">Nudge it:</span>
         {nudges.map((n) => (

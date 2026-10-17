@@ -1,3 +1,4 @@
+import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -55,7 +56,6 @@ export default function IdeaDetail() {
     !!dump &&
     dump.processing_state !== "processing" &&
     dump.processing_state !== "pending" &&
-    dump.processing_state !== "error" &&
     !!(dump.raw_text?.trim() || dump.summary?.trim());
 
   const pullIdeas = async () => {
@@ -198,6 +198,7 @@ export default function IdeaDetail() {
 
             <div className="border border-black bg-white p-4 space-y-3">
               <h2 className="font-display font-bold text-lg">What next?</h2>
+              <AllowanceNote />
               <div className="grid sm:grid-cols-2 gap-2">
                 <button
                   onClick={pullIdeas}

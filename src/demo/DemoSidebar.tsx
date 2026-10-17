@@ -27,6 +27,7 @@ const navItems = [
   { title: "Home", url: "/demo", icon: Home },
   { title: "Brain Dumps", url: "/demo/brain-dumps", icon: Lightbulb },
   { title: "Idea Bank", url: "/demo/ideas", icon: Sparkles },
+  { title: "Content", url: "/demo/posts", icon: FileText },
   { title: "Planner", url: "/demo/calendar", icon: Calendar },
 ];
 
