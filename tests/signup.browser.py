@@ -40,12 +40,13 @@ async def main():
   assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')
   await page.get_by_role('button',name='Edit email',exact=True).click();await page.locator('#email').wait_for();assert await page.locator('#email').input_value()=='fictional@example.invalid'
   await page.locator('#password').fill('LongFixturePassword-1!');await page.get_by_role('button',name='Create account').click();await page.get_by_role('button',name='Back to sign in',exact=True).click();await page.locator('#password').wait_for()
+  await page.close();page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));await page.route('**/auth/v1/**',route);await page.route('**/rest/v1/**',lambda r:r.fulfill(json=[]));await page.route('**/functions/v1/**',lambda r:r.fulfill(json={}))
   def enc(x):return base64.urlsafe_b64encode(json.dumps(x).encode()).decode().rstrip('=')
   token=enc({'alg':'HS256'})+'.'+enc({'sub':user['id'],'session_id':'signup-fixture','exp':int(time.time())+3600})+'.fictional'
   await page.goto('http://localhost:8080/#access_token='+token+'&refresh_token=fictional&expires_in=3600&token_type=bearer&type=signup')
   await page.wait_for_timeout(1500);print('confirmation page:',page.url,await page.locator('body').inner_text());await page.get_by_role('button',name='Continue',exact=True).wait_for();assert await page.locator('#new-password').count()==0
   assert '#' not in page.url
-  await page.clock.run_for(2000);await page.screenshot(path='/tmp/browser/signup/confirmed-mobile.png')
+  await page.wait_for_timeout(1500);await page.screenshot(path='/tmp/browser/signup/confirmed-mobile.png')
   await page.get_by_role('button',name='Continue',exact=True).click();await page.wait_for_url('**/dashboard')
   await page.goto('http://localhost:8080/auth#type=signup&error=access_denied&error_description=Expired')
   await page.get_by_role('alert').filter(has_text='confirmation link').wait_for();assert await page.locator('#new-password').count()==0
