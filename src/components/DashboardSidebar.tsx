@@ -35,12 +35,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const navItems = [
   { title: "Home", url: "/dashboard", icon: Home },
   { title: "Brain Dumps", url: "/dashboard/brain-dumps", icon: Lightbulb },
-  { title: "Posts", url: "/dashboard/posts", icon: FileText },
+  { title: "Idea Bank", url: "/dashboard/ideas", icon: Sparkles },
+  { title: "Content", url: "/dashboard/posts", icon: FileText },
+  { title: "Planner", url: "/dashboard/calendar", icon: Calendar },
   { title: "Brand DNA", url: "/dashboard/brand", icon: Fingerprint },
-  { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
-  { title: "Channels", url: "/dashboard/channels", icon: Radio },
-  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
 ];
+
+// Legacy sections kept reachable but out of the primary nav: /dashboard/channels, /dashboard/analytics.
 
 // Colors from our palette
 const avatarColors = [
