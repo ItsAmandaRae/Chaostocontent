@@ -99,11 +99,14 @@ Deno.serve(async (req) => {
 
     const meta = makeMeta(text);
 
-    const { error: updateError } = await (media ? privilegedClient() : supabase)
+    if (media && allowance) {
+      const result = await allowance.finish({ ok: true, ...meta, raw_text: text, extracted_text: extracted, dump_id: dump.id });
+      return new Response(JSON.stringify(result), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const { error: updateError } = await supabase
       .from("dumps")
       .update({
         raw_text: text,
-        ...(media ? { extracted_text: extracted, media_prepared_at: new Date().toISOString() } : {}),
         title: meta.title,
         summary: meta.summary,
         tags: meta.tags,
