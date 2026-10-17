@@ -2,6 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { chatText, HttpError, parseJson } from "../_shared/ai.ts";
 import { userClient } from "../_shared/auth.ts";
+import { Allowance } from "../_shared/access.ts";
 import { PLATFORMS, platformById, formatById, defaultFormatFor } from "../_shared/platforms.ts";
 
 const platformIds = PLATFORMS.map((p) => p.id);
@@ -90,6 +91,7 @@ function clamp(text: string, limit: number | null) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  let allowance: Allowance | null = null;
   try {
     const { supabase, userId } = await userClient(req);
     const parsed = BodySchema.safeParse(await req.json());
@@ -100,6 +102,7 @@ Deno.serve(async (req) => {
       });
     }
     const body = parsed.data;
+    allowance = new Allowance(userId);
 
     const { data: brand } = await supabase
       .from("brand_profiles")
@@ -134,7 +137,7 @@ Deno.serve(async (req) => {
             `THE IDEA TO WRITE ABOUT (the user's current, possibly edited, version — this is the focus)\n` +
             `Title: ${idea.title}\n` +
             (idea.angle ? `Angle: ${idea.angle}\n` : "") +
-            (idea.source_excerpt ? `Their original words supporting it: "${idea.source_excerpt}"\n` : "");
+            (idea.source_excerpt ? `Supporting source excerpt (may be reference material): "${idea.source_excerpt}"\n` : "");
           if (idea.dump_id && !dumpId) dumpId = idea.dump_id;
           if (!dumpId) {
             return { source: ideaBlock, kind: null, linkUrl: null, ideaTitle, missing: false };
@@ -173,7 +176,8 @@ Deno.serve(async (req) => {
       if (!post) throw new HttpError(404, "That draft no longer exists.");
 
       const spec = platformById(post.platform ?? "") ?? PLATFORMS[0];
-      const format = formatById(post.variant ?? "") ?? formatById(defaultFormatFor(spec.id))!;
+      const format = formatById(post.variant ?? "") ?? formatById(defaultFormatFor(spec.id));
+      if (!format) throw new HttpError(400, "Unknown content format.");
       const loaded = await loadSource(post.dump_id, post.idea_id);
       // Fall back to the snapshot taken at creation time if the source was deleted.
       const source = loaded.missing ? (post.source_snapshot ?? "") : loaded.source;
@@ -189,6 +193,8 @@ Deno.serve(async (req) => {
           : "This draft came back TOO POLISHED and lost the user's voice. Rewrite it from the ORIGINAL SOURCE below (not from the current draft). Restore their distinctive phrasing, humour and raw specifics. Keep the lightest possible touch."
         : `Change requested: ${body.notes?.trim() || "make it stronger and more specific"}`;
 
+      const cached = await allowance.reserve(req, "rewrite", "creation", post.id, body);
+      if (cached) return new Response(JSON.stringify(cached), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const text = await chatText([
         { role: "system", content: `${SYSTEM}${isReference ? `\n\n${REFERENCE_RULES}` : ""}\n\nBRAND PROFILE\n${brandBlock(brand as BrandProfile | null)}` },
         {
@@ -206,23 +212,8 @@ Deno.serve(async (req) => {
       const content = format.longForm ? text.trim() : clamp(text, spec.limit);
       if (!content) throw new HttpError(502, "The AI came back empty — try again.");
 
-      if (body.rawMode || body.suggestOnly) {
-        // Suggestion only — never overwrite the user's edited version.
-        return new Response(JSON.stringify({ ok: true, content, suggested: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      const { error } = await supabase
-        .from("posts")
-        .update({ content, char_count: content.length, prompt_notes: body.notes ?? null })
-        .eq("id", post.id)
-        .eq("user_id", userId);
-      if (error) throw new HttpError(500, "Could not save the new draft.");
-
-      return new Response(JSON.stringify({ ok: true, content }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      const result = await allowance.finish({ ok: true, content, suggested: true });
+      return new Response(JSON.stringify(result), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // ---- create content from dumps and/or an idea ----------------------------
@@ -246,17 +237,19 @@ Deno.serve(async (req) => {
       kind = kind ?? (dumps.length === 1 ? (dumps[0].kind as string | null) : null);
       linkUrl = linkUrl ?? (dumps.length === 1 ? (dumps[0].link_url as string | null) : null);
       dumpSource = dumps
-        .map((d) => `--- Brain Dump: ${d.title} ---\n${d.summary ? `${d.summary}\n\n` : ""}${d.raw_text ?? ""}`)
+        .map((d) => `--- Brain Dump: ${d.title} ---\n${d.raw_text ?? ""}`)
         .join("\n\n");
     }
 
     const source = [ideaSource, dumpSource].filter(Boolean).join("\n\n").slice(0, 24000);
     if (!source.trim()) throw new HttpError(422, "There's nothing readable to create from yet.");
 
-    const specs = body.platforms.map((id) => platformById(id)!).filter(Boolean);
+    const specs = body.platforms.map((id) => platformById(id)).filter((p): p is NonNullable<typeof p> => !!p);
     // One primary output: the first platform, in the chosen (or default) format.
     const primary = specs[0];
-    const format = formatById(body.format ?? "") ?? formatById(defaultFormatFor(primary.id))!;
+    if (!primary) throw new HttpError(400, "Choose a destination.");
+    const format = formatById(body.format ?? "") ?? formatById(defaultFormatFor(primary.id));
+    if (!format) throw new HttpError(400, "Choose a format.");
     const limit = format.longForm ? null : primary.limit;
 
     const voiceMode = body.voiceMode ?? "my_words";
@@ -266,6 +259,8 @@ Deno.serve(async (req) => {
         ? "Note: only the link and the user's note about it were saved — the page content itself was NOT read. Do not pretend to know what the page says.\n\n"
         : "";
 
+    const cached = await allowance.reserve(req, "create", "creation", body.ideaId ?? (body.dumpIds ?? []).join(","), body);
+    if (cached) return new Response(JSON.stringify(cached), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     const raw = await chatText(
       [
         { role: "system", content: `${SYSTEM}${systemExtra}\n\nBRAND PROFILE\n${brandBlock(brand as BrandProfile | null)}` },
@@ -310,17 +305,10 @@ Deno.serve(async (req) => {
       source_snapshot: source.slice(0, 30000),
     };
 
-    const { data: inserted, error } = await supabase.from("posts").insert(row).select("id, platform, content").single();
-    if (error) throw new HttpError(500, "Could not save the draft.");
-
-    if (body.dumpIds?.length) {
-      await supabase.from("dumps").update({ status: "used" }).in("id", body.dumpIds).eq("user_id", userId);
-    }
-
-    return new Response(JSON.stringify({ ok: true, posts: [inserted] }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const result = await allowance.finish(row);
+    return new Response(JSON.stringify(result), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (err) {
+    await allowance?.release();
     const status = err instanceof HttpError ? err.status : 500;
     const message = err instanceof Error ? err.message : "Something went wrong.";
     return new Response(JSON.stringify({ error: message }), {

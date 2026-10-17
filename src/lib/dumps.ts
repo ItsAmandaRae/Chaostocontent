@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { refreshAccess } from "@/lib/access";
 import { readDuration } from "@/lib/audio";
 
 export type DumpKind = "audio" | "text" | "image" | "link";
@@ -31,8 +32,10 @@ function safeName(name: string) {
 /** Kicks off transcription / screenshot reading / summarising for a dump. */
 export async function processDump(dumpId: string) {
   const { data, error } = await supabase.functions.invoke("process-dump", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: { dumpId },
   });
+  refreshAccess();
   if (error) {
     const message =
       (data as { error?: string } | null)?.error ??
@@ -125,8 +128,10 @@ export async function dumpFileUrl(kind: string, path: string) {
 
 export async function generatePosts(dumpIds: string[], platforms: string[], notes?: string) {
   const { data, error } = await supabase.functions.invoke("generate-posts", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: { mode: "create", dumpIds, platforms, notes: notes?.trim() || undefined },
   });
+  refreshAccess();
   if (error) {
     throw new Error(
       (data as { error?: string } | null)?.error ??
@@ -139,8 +144,10 @@ export async function generatePosts(dumpIds: string[], platforms: string[], note
 
 export async function regeneratePost(postId: string, notes: string) {
   const { data, error } = await supabase.functions.invoke("generate-posts", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: { mode: "regenerate", postId, notes, suggestOnly: true },
   });
+  refreshAccess();
   if (error) {
     throw new Error(
       (data as { error?: string } | null)?.error ??
@@ -159,8 +166,10 @@ export interface ExtractedIdea {
 
 export async function extractIdeas(dumpId: string): Promise<ExtractedIdea[]> {
   const { data, error } = await supabase.functions.invoke("extract-ideas", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: { dumpId },
   });
+  refreshAccess();
   if (error) {
     throw new Error(
       (data as { error?: string } | null)?.error ??
@@ -183,6 +192,7 @@ export interface CreateContentOptions {
 
 export async function generateContent(opts: CreateContentOptions) {
   const { data, error } = await supabase.functions.invoke("generate-posts", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: {
       mode: "create",
       dumpIds: opts.dumpIds,
@@ -194,6 +204,7 @@ export async function generateContent(opts: CreateContentOptions) {
       notes: opts.notes?.trim() || undefined,
     },
   });
+  refreshAccess();
   if (error) {
     throw new Error(
       (data as { error?: string } | null)?.error ??
@@ -207,8 +218,10 @@ export async function generateContent(opts: CreateContentOptions) {
 /** "Too polished. Bring back my words." — returns a suggestion; nothing is saved. */
 export async function regenerateFromSource(postId: string): Promise<string> {
   const { data, error } = await supabase.functions.invoke("generate-posts", {
+    headers: { "x-request-id": crypto.randomUUID() },
     body: { mode: "regenerate", postId, rawMode: true },
   });
+  refreshAccess();
   if (error) {
     throw new Error(
       (data as { error?: string } | null)?.error ??
