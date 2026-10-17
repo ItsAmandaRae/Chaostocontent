@@ -36,3 +36,9 @@
 - [x] Previous pending checks completed: rewrite suggestion review/apply UI, live idempotent OCR reprocess, edited idea angle retained in generated-content provenance (wording remains AI-dependent)
 - [ ] Voice note recorded in-browser (microphone) untested; only file upload path tested
 - [x] Demo Content/Planner sample pages with fictional local-only data and navigation
+
+## Voice, access copy and visual planner refinement
+- [ ] Single Brand DNA voice with custom traits; truthful real/demo Settings, preserve legacy fields
+- [ ] Dynamic complimentary feature access and separate monthly usage copy
+- [ ] Persisted bucket colors and shared Week/Month/List planner with local dates, day selection and mobile layout
+- [ ] Targeted isolated tests and desktop/mobile demo review; preserve platform Copy/Open
