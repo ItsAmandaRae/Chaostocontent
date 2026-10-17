@@ -1,5 +1,9 @@
 # Roadmap
 
+- [ ] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, owner-only gifts and audit
+- [ ] Plan/access UI, honest pricing, demo Content/Planner, setup documentation
+- [ ] Targeted security/concurrency/reset regressions and remaining rewrite/OCR/idea verification; isolated fixtures only
+
 - [x] Rename LOUDIO to Chaos To Content
 - [x] Reframe visible recording language as Brain Dumps
 - [x] Replace yellow with pastel cyan through the shared palette
