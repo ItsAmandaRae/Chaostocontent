@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
-import { ChevronLeft, ChevronRight, CalendarDays, List, Copy, Trash2, CheckCircle2, CalendarPlus, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, List, Copy, Trash2, CheckCircle2, CalendarPlus, ExternalLink, Pencil } from "lucide-react";
 import { platformLabel, formatLabel } from "@/lib/platforms";
 import { shareTo } from "@/lib/share";
 import { Draft } from "@/components/DraftCard";
@@ -136,6 +136,13 @@ export default function Calendar() {
         >
           <CalendarPlus className="w-4 h-4" />
         </button>
+        <Link
+          to={`/dashboard/posts?open=${p.id}`}
+          aria-label="Open and edit"
+          className="p-1.5 border border-black bg-white hover:bg-secondary transition-colors"
+        >
+          <Pencil className="w-4 h-4" />
+        </Link>
         <button onClick={() => copy(p)} aria-label="Copy" className="p-1.5 border border-black hover:bg-secondary transition-colors">
           <Copy className="w-4 h-4" />
         </button>
