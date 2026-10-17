@@ -1,5 +1,12 @@
 # Roadmap
 
+## Unified planner and no-AI platform reuse
+- [ ] Show every bucket together in shared Week/Month/List planner, date chooser and unplanned list; non-filtering labelled legend and small bucket manager.
+- [ ] Compact bounded calendar days, three single-line bars plus accessible overflow; twelve named preset colors preserving legacy keys and assignments.
+- [ ] Owner-scoped destination change and editable copy of latest flushed content, preserving provenance; idempotent clicks, fail closed on unsaved text, no AI usage.
+- [ ] Collapse optional AI wording controls, retain reviewable suggestions and visible primary actions; explicitly UTC reset display.
+- [ ] Isolated fixture/regression and desktop/mobile checks, managed build evidence and checkpoint. No real emails, provider calls, outbound posts, billing, publishing or auth changes.
+
 ## Signup guidance follow-up (auth only)
 - [x] No-session signup retains persistent email-verification guidance, address, spam/confirmation/sign-in next steps, Edit email and Back to sign in; no delivery/account-existence claims. Confirmation remains enabled.
 - [x] Resend is an explicit signup-confirmation request with a 60-second cooldown, inflight guard and persistent errors/rate-limit guidance. Signup callbacks are separate from recovery and require server-validated confirmation before Continue.
