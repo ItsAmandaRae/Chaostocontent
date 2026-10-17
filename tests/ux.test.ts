@@ -29,3 +29,27 @@ Object.defineProperty(globalThis,'navigator',{value:{clipboard:{writeText:async(
 Object.defineProperty(globalThis,'window',{value:{open:(url:string)=>opened.push(url)},configurable:true});
 for(const [platform,url] of [['instagram','https://www.instagram.com/'],['tiktok','https://www.tiktok.com/upload'],['twitter','https://x.com/intent/post?text=fixture%20text']]) {const result=await shareTo(platform,'fixture text');assert.ok(result.copied&&result.opened);assert.equal(opened.at(-1),url);assert.equal(copied.at(-1),'fixture text');}
 console.log('Voice prompt, local date/range, user-scoped view and Copy/Open regression checks passed');
+
+// Persist/reload checks use one isolated account, never an existing owner.
+if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_PUBLISHABLE_KEY) {
+ const { createClient } = await import('@supabase/supabase-js');
+ const admin=createClient(process.env.VITE_SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false}});
+ const password=crypto.randomUUID()+'aA1!';
+ const email=`ux-fixture-${crypto.randomUUID()}@example.invalid`;
+ const created=await admin.auth.admin.createUser({email,password,email_confirm:true});assert.ifError(created.error);assert.ok(created.data.user);
+ const id=created.data.user.id;
+ try {
+  const client=createClient(process.env.VITE_SUPABASE_URL,process.env.VITE_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false}});
+  assert.ifError((await client.auth.signInWithPassword({email,password})).error);
+  assert.ifError((await client.from('brand_profiles').insert({user_id:id,tone_traits:traits,voice_samples:brand.voice_samples})).error);
+  const stored=await client.from('brand_profiles').select('tone_traits,voice_samples').single();assert.ifError(stored.error);assert.deepEqual(stored.data?.tone_traits,traits);assert.deepEqual(stored.data?.voice_samples,brand.voice_samples);
+  const bucket=await client.from('buckets').insert({user_id:id,name:'Fictional',color:'cyan'}).select().single();assert.ifError(bucket.error);assert.ok(bucket.data);
+  assert.ifError((await client.from('buckets').update({color:'mint',name:'Edited fictional'}).eq('id',bucket.data.id)).error);
+  const loaded=await client.from('buckets').select().eq('id',bucket.data.id).single();assert.equal(loaded.data?.color,'mint');assert.equal(loaded.data?.name,'Edited fictional');
+  assert.ok((await client.from('buckets').update({color:'unapproved'}).eq('id',bucket.data.id)).error);
+  console.log('Isolated custom trait/voice sample and bucket color roundtrips passed; invalid color blocked');
+ } finally {
+  for (const table of ['brand_profiles','buckets','profiles']) assert.ifError((await admin.from(table).delete().eq('user_id',id)).error);
+  assert.ifError((await admin.auth.admin.deleteUser(id)).error);
+ }
+}

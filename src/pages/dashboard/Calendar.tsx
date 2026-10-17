@@ -1,11 +1,12 @@
 import PlannerBoard from "@/components/PlannerBoard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { planDateISO } from "@/lib/planner";
 import { usePlanAccess } from "@/lib/access";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
@@ -18,6 +19,8 @@ import BucketChips from "@/components/BucketChips";
 import { Bucket, loadBuckets } from "@/lib/buckets";
 
 export default function Calendar() {
+  const navigate = useNavigate();
+  const [choosingDay, setChoosingDay] = useState(false);
   const { access } = usePlanAccess();
   const reducedMotion = useReducedMotion();
   const { user } = useOutletContext<{ user: User | null }>();
@@ -98,6 +101,7 @@ export default function Calendar() {
       .eq("id", p.id);
     if (error) return toast.error(error.message);
     toast.success(`Planned for ${format(day, "MMMM d, yyyy")}`);
+    setChoosingDay(false);
     fetchData();
   };
 
@@ -189,8 +193,8 @@ export default function Calendar() {
         )}
 
         <PlannerBoard userKey={user?.id ?? "signed-out"} items={planned} buckets={buckets}
-          onOpen={(p) => { const draft = posts.find(item => item.id === p.id); if (draft) { setSelectedDate(draft.scheduled_at ? new Date(draft.scheduled_at) : null); } }}
-          onDay={(day) => { setSelectedDate(day); setUnplannedOpen(true); }} />
+          onOpen={(p) => navigate(`/dashboard/posts?open=${p.id}`)}
+          onDay={(day) => { setSelectedDate(day); setChoosingDay(true); }} />
         {selectedDate && <section className="mt-5 border-t border-border py-4 space-y-3">
           <h3>{format(selectedDate, "MMMM d, yyyy")}</h3>
           {selectedDayPosts.map(p => row(p, false))}
@@ -240,6 +244,15 @@ export default function Calendar() {
             </div>
           )}
         </div>
+
+        <Dialog open={choosingDay} onOpenChange={setChoosingDay}>
+          <DialogContent className="max-h-[85vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{selectedDate ? `Plan for ${format(selectedDate, "MMMM d, yyyy")}` : "Choose content"}</DialogTitle><DialogDescription>Choose existing content. Its text stays unchanged.</DialogDescription></DialogHeader>
+            {!access?.paid && <p className="text-sm text-muted-foreground">Adding or moving dates requires Paid access. You can still view, edit and remove your existing dates.</p>}
+            {bucketed.map(p => <Button key={p.id} variant="outline" disabled={!access?.paid} className="h-auto whitespace-normal justify-start text-left" onClick={() => { if (selectedDate) void planUnplanned(p, selectedDate); }}>{title(p)}</Button>)}
+            {!bucketed.length && <p className="text-sm text-muted-foreground">No saved content in this bucket.</p>}
+          </DialogContent>
+        </Dialog>
 
         {planning && (
           <AddToPlannerDialog
