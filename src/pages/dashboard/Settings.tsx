@@ -131,7 +131,7 @@ export default function Settings() {
                 Account
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button variant="outline" disabled>Password reset unavailable</Button>
+                <Button variant="outline" asChild><Link to="/auth?mode=forgot">Reset password</Link></Button>
                 <button
                   onClick={() => toast.info("Account deletion is not available yet")}
                   className="px-4 py-2 border border-black text-destructive hover:bg-destructive hover:text-white transition-colors font-medium"
