@@ -36,6 +36,7 @@ export default function IdeaBank() {
   const [editTitle, setEditTitle] = useState("");
   const [editAngle, setEditAngle] = useState("");
   const [makeFrom, setMakeFrom] = useState<Idea | null>(null);
+  const [dumpKinds, setDumpKinds] = useState<Record<string, string>>({});
 
   const load = async () => {
     const [{ data }, b] = await Promise.all([
@@ -45,6 +46,11 @@ export default function IdeaBank() {
     setIdeas((data ?? []) as Idea[]);
     setBuckets(b);
     setLoading(false);
+    const dumpIds = [...new Set((data ?? []).map((i) => i.dump_id).filter(Boolean))] as string[];
+    if (dumpIds.length) {
+      const { data: dumpsData } = await supabase.from("dumps").select("id, kind").in("id", dumpIds);
+      setDumpKinds(Object.fromEntries((dumpsData ?? []).map((d) => [d.id, d.kind])));
+    }
   };
 
   useEffect(() => {
@@ -273,6 +279,10 @@ export default function IdeaBank() {
           open={!!makeFrom}
           onOpenChange={(open) => !open && setMakeFrom(null)}
           ideaId={makeFrom?.id}
+          suggestReference={
+            !!makeFrom?.dump_id &&
+            (dumpKinds[makeFrom.dump_id] === "image" || dumpKinds[makeFrom.dump_id] === "link")
+          }
           onCreated={(postId) => navigate(`/dashboard/posts?open=${postId}`)}
         />
       </motion.div>
