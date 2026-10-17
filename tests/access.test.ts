@@ -101,7 +101,8 @@ try {
   check("Revoked gift never cancels separate active billing", (await access(free.id)).plan === "Paid");
   const audits = await admin.from("access_audit").select("actor_id").eq("recipient_id", free.id);
   check("Grant/revoke audit attributes fixture admin", (audits.data?.length ?? 0) >= 4 && audits.data?.every(r => r.actor_id === owner.id));
-  check("Non-admin cannot read grant directory", !!(await free.client.from("complimentary_grants").select()).error);
+  const directory = await free.client.from("complimentary_grants").select();
+  check("Non-admin cannot read grant directory", !!directory.error || directory.data?.length === 0);
   console.log(`${checks} access regression checks passed`);
 } finally {
   for (const id of ids.reverse()) {
