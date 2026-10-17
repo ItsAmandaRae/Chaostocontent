@@ -1,10 +1,11 @@
 import { usePlanAccess } from "@/lib/access";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { planDateISO, localPlanDate } from "@/lib/planner";
 import { Calendar } from "@/components/ui/calendar";
 
 interface Props {
@@ -12,20 +13,22 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   postId: string;
   currentDate?: string | null;
+  initialDate?: Date;
   onPlanned: () => void;
 }
 
 /** Plans existing content for a date — same record, never a duplicate. */
-export default function AddToPlannerDialog({ open, onOpenChange, postId, currentDate, onPlanned }: Props) {
+export default function AddToPlannerDialog({ open, onOpenChange, postId, currentDate, initialDate, onPlanned }: Props) {
   const { access } = usePlanAccess();
   const [date, setDate] = useState<Date | undefined>(currentDate ? new Date(currentDate) : undefined);
   const [busy, setBusy] = useState(false);
+  useEffect(() => { if (open) setDate(currentDate ? localPlanDate(currentDate) : initialDate); }, [open, postId, currentDate, initialDate]);
 
   const save = async (d: Date | undefined) => {
     setBusy(true);
     const { error } = await supabase
       .from("posts")
-      .update({ scheduled_at: d ? d.toISOString() : null, status: d ? "scheduled" : "draft" })
+      .update({ scheduled_at: d ? planDateISO(d) : null, status: d ? "scheduled" : "draft" })
       .eq("id", postId);
     setBusy(false);
     if (error) return toast.error(error.message);
