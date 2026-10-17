@@ -323,7 +323,7 @@ export default function Auth() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="font-display font-black text-3xl sm:text-4xl leading-tight tracking-[-1.2px] text-black text-center mb-4 sm:mb-6 uppercase"
+              className={`font-display font-black ${view === "reset" ? "text-2xl sm:text-4xl" : "text-3xl sm:text-4xl"} leading-tight tracking-normal text-foreground text-center mb-4 sm:mb-6 uppercase`}
             >
               {getTitle()}
             </motion.h1>
