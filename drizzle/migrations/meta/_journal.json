@@ -22,6 +22,13 @@
       "when": 1792223032866,
       "tag": "0002_post_provenance_and_dump_notes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792256823444,
+      "tag": "0003_portable_plan_access",
+      "breakpoints": true
     }
   ]
 }

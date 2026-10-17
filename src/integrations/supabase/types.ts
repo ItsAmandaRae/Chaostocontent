@@ -14,6 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_audit: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          details: Json
+          grant_id: string | null
+          id: string
+          recipient_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          created_at?: string
+          details?: Json
+          grant_id?: string | null
+          id?: string
+          recipient_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          details?: Json
+          grant_id?: string | null
+          id?: string
+          recipient_id?: string
+        }
+        Relationships: []
+      }
+      ai_usage: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          kind: string
+          payload_hash: string
+          period: string
+          request_id: string
+          reserved_until: string
+          result: Json | null
+          source_key: string
+          state: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          kind: string
+          payload_hash: string
+          period: string
+          request_id: string
+          reserved_until?: string
+          result?: Json | null
+          source_key: string
+          state?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          payload_hash?: string
+          period?: string
+          request_id?: string
+          reserved_until?: string
+          result?: Json | null
+          source_key?: string
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      billing_entitlements: {
+        Row: {
+          provider: string
+          provider_customer_id: string | null
+          provider_subscription_id: string | null
+          status: string
+          user_id: string
+          valid_until: string | null
+          verified_at: string
+        }
+        Insert: {
+          provider: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          user_id: string
+          valid_until?: string | null
+          verified_at?: string
+        }
+        Update: {
+          provider?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          user_id?: string
+          valid_until?: string | null
+          verified_at?: string
+        }
+        Relationships: []
+      }
       brand_profiles: {
         Row: {
           audience: string | null
@@ -116,6 +221,36 @@ export type Database = {
         }
         Relationships: []
       }
+      complimentary_grants: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          id: string
+          revoked_at: string | null
+          revoked_by: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          id?: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          id?: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       dump_assets: {
         Row: {
           created_at: string
@@ -164,6 +299,7 @@ export type Database = {
         Row: {
           created_at: string
           duration_seconds: number | null
+          extracted_text: string | null
           file_mime: string | null
           file_path: string | null
           file_size: number | null
@@ -171,6 +307,7 @@ export type Database = {
           kind: string
           legacy_project_id: string | null
           link_url: string | null
+          media_prepared_at: string | null
           original_notes: string | null
           processing_error: string | null
           processing_state: string
@@ -185,6 +322,7 @@ export type Database = {
         Insert: {
           created_at?: string
           duration_seconds?: number | null
+          extracted_text?: string | null
           file_mime?: string | null
           file_path?: string | null
           file_size?: number | null
@@ -192,6 +330,7 @@ export type Database = {
           kind?: string
           legacy_project_id?: string | null
           link_url?: string | null
+          media_prepared_at?: string | null
           original_notes?: string | null
           processing_error?: string | null
           processing_state?: string
@@ -206,6 +345,7 @@ export type Database = {
         Update: {
           created_at?: string
           duration_seconds?: number | null
+          extracted_text?: string | null
           file_mime?: string | null
           file_path?: string | null
           file_size?: number | null
@@ -213,6 +353,7 @@ export type Database = {
           kind?: string
           legacy_project_id?: string | null
           link_url?: string | null
+          media_prepared_at?: string | null
           original_notes?: string | null
           processing_error?: string | null
           processing_state?: string
@@ -466,14 +607,73 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      access_for: { Args: { p_at?: string; p_user: string }; Returns: Json }
+      finish_ai: {
+        Args: {
+          p_request: string
+          p_result?: Json
+          p_success: boolean
+          p_user: string
+        }
+        Returns: Json
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      manage_complimentary: {
+        Args: {
+          p_ack?: boolean
+          p_action: string
+          p_actor: string
+          p_expiry?: string
+          p_recipient: string
+        }
+        Returns: Json
+      }
+      month_period: { Args: { p_at: string }; Returns: string }
+      my_access: { Args: never; Returns: Json }
+      plan_config: { Args: { p_paid: boolean }; Returns: Json }
+      reserve_ai: {
+        Args: {
+          p_action: string
+          p_hash: string
+          p_kind: string
+          p_request: string
+          p_source: string
+          p_user: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
+      app_role: "admin"
       project_status: "draft" | "processing" | "ready" | "published"
     }
     CompositeTypes: {
@@ -602,6 +802,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin"],
       project_status: ["draft", "processing", "ready", "published"],
     },
   },
