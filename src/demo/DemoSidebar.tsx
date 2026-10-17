@@ -128,7 +128,7 @@ export default function DemoSidebar() {
       <div className="border-b border-black bg-background">
         <div className="flex items-center justify-between p-4">
           <Link to="/" className="text-foreground">
-            <Logo />
+            <Logo variant="compact" />
           </Link>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
