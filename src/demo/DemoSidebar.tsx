@@ -4,9 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import {
   Home,
   Lightbulb,
-  Radio,
+  Sparkles,
+  FileText,
   Calendar,
-  BarChart3,
   ChevronUp,
   Settings,
   LogOut,
@@ -26,9 +26,8 @@ import { useSeedData } from "./SeedDataProvider";
 const navItems = [
   { title: "Home", url: "/demo", icon: Home },
   { title: "Brain Dumps", url: "/demo/brain-dumps", icon: Lightbulb },
-  { title: "Channels", url: "/demo/channels", icon: Radio },
-  { title: "Calendar", url: "/demo/calendar", icon: Calendar },
-  { title: "Analytics", url: "/demo/analytics", icon: BarChart3 },
+  { title: "Idea Bank", url: "/demo/ideas", icon: Sparkles },
+  { title: "Planner", url: "/demo/calendar", icon: Calendar },
 ];
 
 export default function DemoSidebar() {

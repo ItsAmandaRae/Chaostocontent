@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import DemoLayout from "./demo/DemoLayout";
 import DemoHome from "./demo/pages/Home";
 import DemoRecordings from "./demo/pages/Recordings";
+import DemoIdeaBank from "./demo/pages/IdeaBank";
 import DemoRecordingDetail from "./demo/pages/RecordingDetail";
 import DemoChannels from "./demo/pages/Channels";
 import DemoCalendar from "./demo/pages/Calendar";
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="brain-dumps/:id" element={<DemoRecordingDetail />} />
             <Route path="recordings" element={<LegacyBrainDumpRedirect demo />} />
             <Route path="recordings/:id" element={<LegacyBrainDumpRedirect demo />} />
+            <Route path="ideas" element={<DemoIdeaBank />} />
             <Route path="channels" element={<DemoChannels />} />
             <Route path="calendar" element={<DemoCalendar />} />
             <Route path="analytics" element={<DemoAnalytics />} />
