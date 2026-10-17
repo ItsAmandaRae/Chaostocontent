@@ -7,7 +7,7 @@ const initialUrl = new URL(window.location.href);
 const requested = recoveryIntent(initialUrl);
 const providerError = new URLSearchParams(initialUrl.hash.slice(1)).has('error_description') || initialUrl.searchParams.has('error_description');
 type State = { status: 'none' | 'checking' | 'ready' | 'invalid' | 'complete'; userId?: string };
-let state: State = { status: requested ? 'checking' : 'none' };
+let state: State = { status: requested || readMarker() ? 'checking' : 'none' };
 const listeners = new Set<() => void>();
 function publish(next: State) { state = next; listeners.forEach(fn => fn()); }
 function readMarker(): RecoveryMarker | null {

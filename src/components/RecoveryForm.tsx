@@ -40,6 +40,6 @@ export default function RecoveryForm() {
     <p id="reset-help" className="text-sm text-muted-foreground">Use a unique password. Your old password is not needed.</p>
     {error && <p id="reset-error" role="alert" className="text-destructive text-sm">{error}</p>}
     <Button type="submit" disabled={saving} className="w-full">{saving ? 'Saving password…' : 'Save new password'}</Button>
-    {error && <Button variant="link" asChild><Link to="/auth?mode=forgot" onClick={() => recoverySession.abandon()}>Request a fresh link</Link></Button>}
+    {error && <Button variant="outline" asChild><Link to="/auth?mode=forgot" onClick={() => recoverySession.abandon()}>Request a fresh link</Link></Button>}
   </form>;
 }
