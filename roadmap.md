@@ -12,4 +12,10 @@
 - [x] Matching SVG favicon derived from the mark
 - [x] Consistent branding across landing header/footer, auth, dashboard and demo sidebars (compact variant in workspace)
 - [x] Fixed low-contrast yellow text on light backgrounds (auth links, 404)
-- [ ] Verify authenticated routes when a test account is available
+- [x] Core iteration: buckets + ideas tables, soft delete, ownership triggers (RLS + DB)
+- [x] extract-ideas function (grounded, verbatim excerpts only) and extended generate-posts (formats, destinations, my-words/reference, bring-back-my-words)
+- [x] Idea Bank page, shared Make Content dialog, Content page with autosave + undoable delete, Planner without legacy project/channel
+- [x] Demo Idea Bank with clearly-labeled fictional sample data, local-only
+- [x] Authenticated end-to-end checks: dump -> ideas -> save all; dump -> content opens immediately; autosave persists; delete/undo; bucket delete retains records; cross-owner refs rejected; planner without legacy project
+- [ ] Voice/audio end-to-end test with a real recording (only text-note path tested)
+- [ ] Optional: demo Content/Planner sample pages (demo currently covers Brain Dumps + Idea Bank)
