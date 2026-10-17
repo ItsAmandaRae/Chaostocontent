@@ -22,6 +22,27 @@
       "when": 1792223032866,
       "tag": "0002_post_provenance_and_dump_notes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792256823444,
+      "tag": "0003_portable_plan_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792256869077,
+      "tag": "0004_protected_exact_account_lookup",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792257008215,
+      "tag": "0005_atomic_media_finalization",
+      "breakpoints": true
     }
   ]
 }

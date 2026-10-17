@@ -29,6 +29,7 @@ export async function chatText(
   opts: { reasoning_effort?: string } = {},
 ): Promise<string> {
   const res = await fetch(`${GATEWAY}/chat/completions`, {
+    signal: AbortSignal.timeout(120000),
     method: "POST",
     headers: {
       Authorization: `Bearer ${gatewayKey()}`,
@@ -121,6 +122,7 @@ export async function transcribe(bytes: Blob, mime: string | null): Promise<stri
   form.append("file", bytes, `recording.${ext}`);
 
   const res = await fetch(`${GATEWAY}/audio/transcriptions`, {
+    signal: AbortSignal.timeout(120000),
     method: "POST",
     headers: { Authorization: `Bearer ${gatewayKey()}` },
     body: form,

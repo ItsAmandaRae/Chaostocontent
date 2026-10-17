@@ -1,3 +1,4 @@
+import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Mic, Square, Upload, Type, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
@@ -112,7 +113,7 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
         dumpId = await createLinkDump(user.id, url, note);
       }
 
-      toast.success("Saved. We're reading it now.");
+      toast.success("Original saved.");
       onOpenChange(false);
       onSaved?.(dumpId);
 
@@ -140,7 +141,7 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
         </DialogHeader>
 
         <p className="text-sm text-muted-foreground">
-          Throw it in half-finished. We'll title it, summarise it and keep it findable.
+          Throw it in half-finished. Your original is saved first.
         </p>
 
         <div className="grid grid-cols-4 gap-0 border border-black">
@@ -157,6 +158,8 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
             </button>
           ))}
         </div>
+
+        {(tab === "voice" || tab === "image") && <AllowanceNote media />}
 
         {tab === "voice" && (
           <div className="space-y-3">

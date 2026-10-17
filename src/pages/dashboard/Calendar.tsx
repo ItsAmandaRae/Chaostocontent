@@ -1,3 +1,4 @@
+import { usePlanAccess } from "@/lib/access";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,13 +15,14 @@ import BucketChips from "@/components/BucketChips";
 import { Bucket, loadBuckets } from "@/lib/buckets";
 
 export default function Calendar() {
+  const { access } = usePlanAccess();
   const { user } = useOutletContext<{ user: User | null }>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [posts, setPosts] = useState<Draft[]>([]);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   const [bucket, setBucket] = useState("all");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [view, setView] = useState<"month" | "list">("month");
+  const [view, setView] = useState<"month" | "list">("list");
   const [planning, setPlanning] = useState<Draft | null>(null);
   const [unplannedOpen, setUnplannedOpen] = useState(false);
 
@@ -101,7 +103,7 @@ export default function Calendar() {
       .from("posts")
       .update({ scheduled_at: day.toISOString(), status: "scheduled" })
       .eq("id", p.id);
-    if (error) return toast.error("Couldn't plan that.");
+    if (error) return toast.error(error.message);
     toast.success(`Planned for ${format(day, "MMMM d, yyyy")}`);
     fetchData();
   };
@@ -201,6 +203,7 @@ export default function Calendar() {
           </div>
         </div>
 
+        {!access?.paid && <p className="mb-5 text-sm text-muted-foreground">Your existing dates and content stay available. Adding or moving dates requires Paid access, which isn't available to purchase yet. <Link className="underline" to="/demo/calendar">Explore fictional planner preview</Link></p>}
         {user && (
           <div className="mb-6">
             <BucketChips userId={user.id} buckets={buckets} active={bucket} onSelect={setBucket} onChanged={fetchData} />
@@ -319,6 +322,7 @@ export default function Calendar() {
                       </button>
                       {selectedDate && (
                         <button
+                          disabled={!access?.paid}
                           onClick={() => planUnplanned(p, selectedDate)}
                           className="px-3 py-1.5 text-xs border border-black bg-white hover:bg-secondary uppercase"
                         >

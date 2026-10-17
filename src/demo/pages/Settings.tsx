@@ -96,23 +96,10 @@ export default function DemoSettings() {
             </div>
           </section>
 
-          <section className="border border-black bg-white p-5">
-            <h2 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
-              <CreditCard className="w-5 h-5" />
-              Billing
-            </h2>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <p className="font-display font-bold">Free Plan</p>
-                <p className="text-sm text-muted-foreground">5 Brain Dumps / 10 posts per month</p>
-              </div>
-              <button
-                onClick={() => toast.info("Billing upgrade coming soon")}
-                className="px-6 py-2 border border-black bg-highlight text-highlight-foreground font-medium hover:bg-white hover:text-black transition-colors"
-              >
-                Upgrade
-              </button>
-            </div>
+          <section className="border-t border-border py-5 space-y-2">
+            <h2 className="font-display font-bold text-lg">Plan &amp; access · sample</h2>
+            <p>Free includes 5 creations and 5 media reads per month.</p>
+            <p className="text-sm text-muted-foreground">Paid access isn't available to purchase yet. This demo does not spend an allowance.</p>
           </section>
 
           <div className="flex justify-end">

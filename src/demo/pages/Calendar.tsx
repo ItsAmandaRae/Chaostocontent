@@ -22,7 +22,7 @@ export default function DemoCalendar() {
   const { posts, projects, channels, removePost } = useSeedData();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [view, setView] = useState<"month" | "list">("month");
+  const [view, setView] = useState<"month" | "list">("list");
 
   const projectTitle = (id: string) => projects.find((p) => p.id === id)?.title || "Untitled";
 
@@ -97,7 +97,7 @@ export default function DemoCalendar() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <h1 className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-[-0.5px] text-foreground">
-            Content Calendar
+            Planner preview
           </h1>
           <div className="flex items-center gap-2">
             <button
@@ -119,11 +119,12 @@ export default function DemoCalendar() {
               className="ml-2 bg-highlight text-highlight-foreground border border-black h-10 px-4 rounded-full text-sm font-medium shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_3px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200 ease-out flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Schedule Post
+              Pick a date
             </button>
           </div>
         </div>
 
+        <p className="mb-5 text-sm text-muted-foreground">Fictional sample data · local-only preview · no automatic publishing or AI calls</p>
         {view === "month" ? (
           <div className="border border-black bg-white">
             <div className="flex items-center justify-between p-4 border-b border-black bg-secondary">

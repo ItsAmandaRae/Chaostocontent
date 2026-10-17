@@ -1,7 +1,9 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2/cors";
+const corsHeaders = { ...sdkCorsHeaders, "Access-Control-Allow-Headers": `${sdkCorsHeaders["Access-Control-Allow-Headers"]}, x-request-id` };
 import { z } from "npm:zod@3";
 import { chatText, HttpError, parseJson } from "../_shared/ai.ts";
 import { userClient } from "../_shared/auth.ts";
+import { Allowance } from "../_shared/access.ts";
 
 const BodySchema = z.object({ dumpId: z.string().uuid() });
 
@@ -15,6 +17,7 @@ const SYSTEM =
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  let allowance: Allowance | null = null;
   try {
     const { supabase, userId } = await userClient(req);
     const parsed = BodySchema.safeParse(await req.json());
@@ -33,7 +36,7 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (!dump) throw new HttpError(404, "We couldn't find that Brain Dump.");
 
-    const source = [dump.summary, dump.raw_text].filter((s) => typeof s === "string" && s.trim()).join("\n\n");
+    const source = dump.raw_text?.trim() ?? "";
     if (!source.trim()) {
       throw new HttpError(
         422,
@@ -43,6 +46,9 @@ Deno.serve(async (req) => {
       );
     }
 
+    allowance = new Allowance(userId);
+    const cached = await allowance.reserve(req, "extract", "creation", dump.id, parsed.data);
+    if (cached) return new Response(JSON.stringify(cached), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     const raw = await chatText(
       [
         { role: "system", content: SYSTEM },
@@ -64,7 +70,7 @@ Deno.serve(async (req) => {
       .filter((i) => typeof i?.title === "string" && i.title.trim())
       .slice(0, 5)
       .map((i) => ({
-        title: i.title!.trim().slice(0, 160),
+        title: (i.title ?? "").trim().slice(0, 160),
         angle: typeof i.angle === "string" ? i.angle.trim().slice(0, 400) : "",
         // Only keep the excerpt if it is a verbatim slice of the source.
         excerpt:
@@ -74,10 +80,12 @@ Deno.serve(async (req) => {
       }));
     if (!ideas.length) throw new HttpError(502, "No clear ideas came back — try again in a moment.");
 
-    return new Response(JSON.stringify({ ok: true, ideas }), {
+    const result = await allowance.finish({ ok: true, ideas });
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
+    await allowance?.release();
     const status = err instanceof HttpError ? err.status : 500;
     const message = err instanceof Error ? err.message : "Something went wrong.";
     return new Response(JSON.stringify({ error: message }), {
