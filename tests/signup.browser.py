@@ -45,7 +45,7 @@ async def main():
   await page.goto('http://localhost:8080/#access_token='+token+'&refresh_token=fictional&expires_in=3600&token_type=bearer&type=signup')
   await page.wait_for_timeout(1500);print('confirmation page:',page.url,await page.locator('body').inner_text());await page.get_by_role('button',name='Continue',exact=True).wait_for();assert await page.locator('#new-password').count()==0
   assert '#' not in page.url
-  await page.clock.resume();await page.wait_for_timeout(1500);await page.screenshot(path='/tmp/browser/signup/confirmed-mobile.png')
+  await page.clock.run_for(2000);await page.screenshot(path='/tmp/browser/signup/confirmed-mobile.png')
   await page.get_by_role('button',name='Continue',exact=True).click();await page.wait_for_url('**/dashboard')
   await page.goto('http://localhost:8080/auth#type=signup&error=access_denied&error_description=Expired')
   await page.get_by_role('alert').filter(has_text='confirmation link').wait_for();assert await page.locator('#new-password').count()==0
