@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { useNavigate, Link, useSearchParams, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { z } from "zod";
 import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
+import RecoveryForm from "@/components/RecoveryForm";
+import { recoverySession } from "@/lib/recoverySession";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -17,7 +20,7 @@ const emailSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
-type AuthView = "login" | "signup" | "forgot";
+type AuthView = "login" | "signup" | "forgot" | "reset";
 
 const TILE_SIZE = 64;
 
@@ -40,9 +43,16 @@ const FieldError = ({ message }: { message: string }) => (
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
-  const initialView = (searchParams.get("mode") as AuthView) || "login";
+  const location = useLocation();
+  const recovery = useSyncExternalStore(recoverySession.subscribe, recoverySession.getSnapshot);
+  const resetRoute = location.pathname === "/reset-password" || searchParams.get("mode") === "reset";
+  const recoveryActive = resetRoute || ["checking", "ready", "invalid", "complete"].includes(recovery.status);
+  const requestedMode = searchParams.get("mode");
+  const initialView: AuthView = requestedMode === "forgot" || requestedMode === "signup" ? requestedMode : "login";
   
-  const [view, setView] = useState<AuthView>(initialView);
+  const [normalView, setView] = useState<AuthView>(initialView);
+  const view: AuthView = recoveryActive ? "reset" : normalView;
+  const [emailSent, setEmailSent] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,33 +69,31 @@ export default function Auth() {
   }, [searchParams]);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (session?.user) {
-          navigate("/dashboard");
-        }
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        navigate("/dashboard");
-      }
+    const canRedirect = () => !resetRoute && searchParams.get("mode") !== "forgot" &&
+      !["forgot", "reset"].includes(normalView) && recoverySession.getSnapshot().status === "none";
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event !== "PASSWORD_RECOVERY" && session?.user && canRedirect()) navigate("/dashboard");
     });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    let active = true;
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (active && !error && data.user && canRedirect()) navigate("/dashboard");
+    });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, [navigate, normalView, resetRoute, searchParams]);
 
   const clearErrors = () => setErrors({});
 
   const handleViewChange = (newView: AuthView) => {
     clearErrors();
+    setEmailSent(false);
     setView(newView);
+    navigate(`/auth?mode=${newView}`, { replace: true });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErrors();
+    if (view === "reset") return;
     
     if (view === "forgot") {
       const validation = emailSchema.safeParse({ email });
@@ -101,11 +109,10 @@ export default function Auth() {
       setLoading(true);
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth`,
+          redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
-        toast.success("Check your email for a password reset link");
-        setView("login");
+        setEmailSent(true);
       } catch (error: any) {
         toast.error(error.message || "An error occurred");
       } finally {
@@ -136,7 +143,7 @@ export default function Auth() {
         if (error) throw error;
         toast.success("Welcome back!");
       } else {
-        const redirectUrl = `${window.location.origin}/dashboard`;
+        const redirectUrl = window.location.origin;
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -145,7 +152,7 @@ export default function Auth() {
           },
         });
         if (error) throw error;
-        toast.success("Account created successfully!");
+        setEmailSent(true);
       }
     } catch (error: any) {
       if (error.message === "User already registered") {
@@ -165,6 +172,7 @@ export default function Auth() {
       case "login": return "Welcome Back";
       case "signup": return "Create Account";
       case "forgot": return "Reset Password";
+      case "reset": return "New Password";
     }
   };
 
@@ -173,6 +181,7 @@ export default function Auth() {
       case "login": return "Sign in to continue creating content";
       case "signup": return "Turn your chaos into content";
       case "forgot": return "Enter your email to receive a reset link";
+      case "reset": return "Choose a new password for your account";
     }
   };
 
@@ -182,6 +191,7 @@ export default function Auth() {
       case "login": return "Sign in";
       case "signup": return "Create account";
       case "forgot": return "Send reset link";
+      case "reset": return "Save new password";
     }
   };
 
@@ -313,7 +323,7 @@ export default function Auth() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="font-display font-black text-3xl sm:text-4xl leading-tight tracking-[-1.2px] text-black text-center mb-4 sm:mb-6 uppercase"
+              className={`font-display font-black ${view === "reset" ? "text-2xl sm:text-4xl" : "text-3xl sm:text-4xl"} leading-tight tracking-normal text-foreground text-center mb-4 sm:mb-6 uppercase`}
             >
               {getTitle()}
             </motion.h1>
@@ -323,7 +333,12 @@ export default function Auth() {
             </p>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
+            {view === "reset" ? <RecoveryForm /> : emailSent ? (
+              <div className="space-y-4 text-center" role="status">
+                <p>{view === "signup" ? "Check your email to confirm your account before signing in." : "If an account matches that email, you’ll receive a password reset link. Check your inbox and spam folder."}</p>
+                <Button variant="outline" onClick={() => { setEmailSent(false); }}>Use another email</Button>
+              </div>
+            ) : <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="email" className="font-body text-black text-sm lg:text-base">
                   Email
@@ -336,8 +351,10 @@ export default function Auth() {
                     setEmail(e.target.value);
                     if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
                   }}
+                  autoComplete="email"
+                  aria-invalid={Boolean(errors.email)}
                   placeholder="you@example.com"
-                  className={`h-12 lg:h-16 bg-white border rounded-full font-body text-black text-base lg:text-lg placeholder:text-black/40 px-5 lg:px-6 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                  className={`h-12 lg:h-16 bg-white border rounded-full font-body text-black text-base lg:text-lg placeholder:text-black/40 px-5 lg:px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                     errors.email ? "border-highlight" : "border-black focus-visible:border-highlight"
                   }`}
                 />
@@ -354,13 +371,15 @@ export default function Auth() {
                   <Input
                     id="password"
                     type="password"
+                    autoComplete={view === "signup" ? "new-password" : "current-password"}
+                    aria-invalid={Boolean(errors.password)}
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
                       if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
                     }}
                     placeholder="••••••••"
-                    className={`h-12 lg:h-16 bg-white border rounded-full font-body text-black text-base lg:text-lg placeholder:text-black/40 px-5 lg:px-6 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                    className={`h-12 lg:h-16 bg-white border rounded-full font-body text-black text-base lg:text-lg placeholder:text-black/40 px-5 lg:px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                       errors.password ? "border-highlight" : "border-black focus-visible:border-highlight"
                     }`}
                   />
@@ -371,60 +390,60 @@ export default function Auth() {
               )}
 
               {view === "login" && (
-                <button
-                  type="button"
+                <Button
+                  type="button" variant="link"
                   onClick={() => handleViewChange("forgot")}
                   className="text-foreground underline hover:no-underline font-body text-left -mt-2"
                 >
                   Forgot password?
-                </button>
+                </Button>
               )}
 
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
                 className="mt-4 bg-highlight border border-black h-12 lg:h-16 px-8 font-body font-medium text-base lg:text-lg text-highlight-foreground rounded-full shadow-[4px_6px_0px_0px_black] hover:shadow-[2px_4px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-[1px_1px_0px_0px_black] active:translate-x-[5px] active:translate-y-[5px] transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {getButtonText()}
-              </button>
-            </form>
+              </Button>
+            </form>}
 
             {/* Footer text */}
             <p className="mt-6 text-center text-black font-body">
               {view === "login" && (
                 <>
                   Don't have an account?{" "}
-                  <button
-                    type="button"
+                  <Button
+                    type="button" variant="link"
                     onClick={() => handleViewChange("signup")}
                     className="text-foreground underline hover:no-underline"
                   >
                     Sign up
-                  </button>
+                  </Button>
                 </>
               )}
               {view === "signup" && (
                 <>
                   Already have an account?{" "}
-                  <button
-                    type="button"
+                  <Button
+                    type="button" variant="link"
                     onClick={() => handleViewChange("login")}
                     className="text-foreground underline hover:no-underline"
                   >
                     Sign in
-                  </button>
+                  </Button>
                 </>
               )}
               {view === "forgot" && (
                 <>
                   Remember your password?{" "}
-                  <button
-                    type="button"
+                  <Button
+                    type="button" variant="link"
                     onClick={() => handleViewChange("login")}
                     className="text-foreground underline hover:no-underline"
                   >
                     Sign in
-                  </button>
+                  </Button>
                 </>
               )}
             </p>

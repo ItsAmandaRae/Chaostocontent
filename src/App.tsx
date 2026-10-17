@@ -1,4 +1,5 @@
 import AccessAdmin from "./pages/dashboard/AccessAdmin";
+import RecoveryRedirect from "./components/RecoveryRedirect";
 import DemoContent from "./demo/pages/Content";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -41,9 +42,11 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
+        <RecoveryRedirect />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/reset-password" element={<Auth />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="brain-dumps" element={<Ideas />} />
