@@ -102,7 +102,6 @@ export default function IdeaDetail() {
     for (let i = 0; i < suggestions.length; i++) {
       if (!dismissedIdx.has(i)) await saveSuggestion(i);
     }
-    toast.success("Ideas saved to your Idea Bank");
   };
 
   const setStatus = async (status: string) => {
@@ -258,8 +257,27 @@ export default function IdeaDetail() {
                 {suggestions.map((s, idx) =>
                   dismissedIdx.has(idx) ? null : (
                     <div key={idx} className="border border-black p-3 space-y-1">
-                      <p className="font-medium text-sm">{s.title}</p>
-                      {s.angle && <p className="text-sm text-muted-foreground">{s.angle}</p>}
+                      <input
+                        value={s.title}
+                        onChange={(e) =>
+                          setSuggestions((prev) =>
+                            prev ? prev.map((x, i) => (i === idx ? { ...x, title: e.target.value } : x)) : prev,
+                          )
+                        }
+                        aria-label="Idea title"
+                        className="w-full font-medium text-sm border border-black px-2 py-1 bg-white focus:outline-none focus:border-2"
+                      />
+                      <input
+                        value={s.angle}
+                        onChange={(e) =>
+                          setSuggestions((prev) =>
+                            prev ? prev.map((x, i) => (i === idx ? { ...x, angle: e.target.value } : x)) : prev,
+                          )
+                        }
+                        placeholder="Angle (optional)"
+                        aria-label="Idea angle"
+                        className="w-full text-sm text-muted-foreground border border-black px-2 py-1 bg-white focus:outline-none focus:border-2"
+                      />
                       {s.excerpt && (
                         <blockquote className="border-l-2 border-black pl-2 text-xs text-muted-foreground italic">
                           "{s.excerpt}"
