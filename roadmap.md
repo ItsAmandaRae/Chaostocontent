@@ -36,3 +36,24 @@
 - [x] Previous pending checks completed: rewrite suggestion review/apply UI, live idempotent OCR reprocess, edited idea angle retained in generated-content provenance (wording remains AI-dependent)
 - [ ] Voice note recorded in-browser (microphone) untested; only file upload path tested
 - [x] Demo Content/Planner sample pages with fictional local-only data and navigation
+
+## Voice, access copy and visual planner refinement
+- [x] Single Brand DNA voice with add/remove custom traits in existing array; Settings summarizes voice and links to Brand DNA. Real/demo auto-posting and false password-reset controls removed; display-name saves exclude legacy tone/auto-publish fields.
+- [x] Dynamic complimentary feature access/no payment/no expiry separated from remaining/limit creations and media reads, reset and provisional test-allowance note.
+- [x] Additive bucket-color migration/backfill under unchanged ownership/allowance controls; optional create/edit color; shared Week (new-visit default), Month and List, user-scoped remembered view, accessible colored title/type/bucket/platform bars, mobile stacked days, month overflow dialog, existing-content day chooser, local-noon date writes.
+- [x] Isolated persistence checks: custom traits and samples reload, bucket name/color reload and invalid palette rejection. Shared actual create/rewrite system-prompt helper tested for custom traits/samples/source wording/reference rules; no live AI/provider call in this pass.
+- [x] Existing 44 isolated access regressions and draft queue regressions passed; new UX tests passed for week/month range, local date roundtrip, user-scoped view/default, title fallback, and mocked Instagram/TikTok/X Copy/Open (no external posting).
+- [x] Browser checks: demo Week/Month/List at 1280/390/360 with seven week days and no horizontal overflow; isolated signed-in custom trait save/reload, dynamic complimentary text, month +2 overflow exposes all five fixtures, day chooser persists date, bucket color/name edit/reload, event opens editor. Zero page errors; all fixture accounts/data cleaned up. Landing/auth desktop screenshots captured.
+- [x] Managed production build/typecheck latest log is clean. No manual build/typecheck run (project harness performs both). No auth/billing/publishing/dependency changes; owner content untouched except additive requested bucket-color backfill.
+- [ ] Live provider output quality with new custom traits not re-tested; actual shared prompt construction verified without spending AI allowance. Live microphone remains untested as before.
+
+### Exact files changed in this refinement
+- `AGENTS.md`, `roadmap.md`
+- `src/pages/dashboard/Settings.tsx`, `src/demo/pages/Settings.tsx`, `src/pages/dashboard/BrandDNA.tsx`
+- `src/components/PlanAccessSection.tsx`, `src/components/MakeContentDialog.tsx`, `src/components/BucketChips.tsx`, `src/components/AddToPlannerDialog.tsx`, `src/components/PlannerBoard.tsx`
+- `src/pages/dashboard/Calendar.tsx`, `src/demo/pages/Calendar.tsx`
+- `src/lib/voice.ts`, `src/lib/planner.ts`, `src/lib/buckets.ts`, `src/index.css`
+- `supabase/functions/generate-posts/index.ts`, `supabase/functions/_shared/voice.ts`
+- `drizzle/migrations/0006_persist_bucket_palette.sql`, tool-maintained migration metadata and regenerated `src/integrations/supabase/types.ts`
+- `tests/ux.test.ts`
+- Latest observed managed commit checkpoint: `ee719a3` (`Changes`); commits are managed by the platform, not manually created here.

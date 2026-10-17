@@ -43,6 +43,13 @@
       "when": 1792257008215,
       "tag": "0005_atomic_media_finalization",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792269347508,
+      "tag": "0006_persist_bucket_palette",
+      "breakpoints": true
     }
   ]
 }

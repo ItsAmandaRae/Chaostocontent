@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { User as UserIcon, Lock, Sliders, CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSeedData } from "../SeedDataProvider";
 
-const tones = ["casual", "professional", "witty", "inspirational"];
+
 
 export default function DemoSettings() {
   const { profile, setProfile } = useSeedData();
@@ -38,41 +39,10 @@ export default function DemoSettings() {
             </div>
           </section>
 
-          <section className="border border-black bg-white p-5">
-            <h2 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
-              <Sliders className="w-5 h-5" />
-              Preferences
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium uppercase tracking-wide mb-2">Default Tone</label>
-                <div className="flex flex-wrap gap-2">
-                  {tones.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setProfile({ ...profile, default_tone: t })}
-                      className={`px-4 py-2 border border-black text-sm font-medium capitalize transition-colors ${
-                        profile.default_tone === t ? "bg-primary" : "bg-white hover:bg-secondary"
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <input
-                  id="demo-auto-publish"
-                  type="checkbox"
-                  checked={profile.auto_publish}
-                  onChange={(e) => setProfile({ ...profile, auto_publish: e.target.checked })}
-                  className="w-5 h-5 border border-black rounded-none accent-primary"
-                />
-                <label htmlFor="demo-auto-publish" className="text-sm font-medium uppercase tracking-wide">
-                  Auto-publish ready posts to default channel
-                </label>
-              </div>
-            </div>
+          <section className="border-t border-border py-5 space-y-2">
+            <h2 className="font-display font-bold text-lg">Your voice · sample</h2>
+            <p className="text-sm">Warm · candid · story-led</p>
+            <p className="text-sm text-muted-foreground">Your traits, writing samples and words to avoid belong together in Brand DNA.</p>
           </section>
 
           <section className="border border-black bg-white p-5">
@@ -81,12 +51,7 @@ export default function DemoSettings() {
               Account
             </h2>
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => toast.info("Account actions are disabled in the demo")}
-                className="px-4 py-2 border border-black bg-white hover:bg-secondary transition-colors font-medium"
-              >
-                Reset Password
-              </button>
+              <Button variant="outline" disabled>Password reset unavailable in demo</Button>
               <button
                 onClick={() => toast.info("Account actions are disabled in the demo")}
                 className="px-4 py-2 border border-black text-destructive hover:bg-destructive hover:text-white transition-colors font-medium"

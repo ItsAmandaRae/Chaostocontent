@@ -7,3 +7,5 @@
 - Enforce bucket counts and personal planner-date access with database triggers, preserving existing data and date removal after downgrade.
 - Source preparation and content creation have separate allowances; snapshots preserve provenance and every rewrite is reviewable.
 - Share editor write queues across mounts keyed by authenticated user and post, so navigation cannot create parallel stale saves; recover pending work from a matching user-scoped local backup.
+- Keep brand voice prompt construction shared between create and rewrite; Brand DNA is the single persistent voice source.
+- Share planner rendering and local-date helpers between real and fictional demo views; bucket palette keys persist under existing ownership policies, and view preferences are user-scoped.

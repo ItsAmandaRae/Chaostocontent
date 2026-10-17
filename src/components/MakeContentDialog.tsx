@@ -121,7 +121,7 @@ export default function MakeContentDialog({ open, onOpenChange, dumpIds, ideaId,
 
           <div>
             <label htmlFor="mc-format" className="block text-xs uppercase tracking-wide text-muted-foreground mb-2">
-              What shape
+              Content type
             </label>
             <select
               id="mc-format"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -7,6 +7,8 @@ import { Loader2, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PLATFORMS } from "@/lib/platforms";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { addVoiceTrait } from "@/lib/voice";
 import { Textarea } from "@/components/ui/textarea";
 
 const TONE_TRAITS = [
@@ -41,11 +43,13 @@ const empty: Form = {
 };
 
 export default function BrandDNA() {
+  const reducedMotion = useReducedMotion();
   const { user } = useOutletContext<{ user: User | null }>();
   const [form, setForm] = useState<Form>(empty);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [bannedInput, setBannedInput] = useState("");
+  const [traitInput, setTraitInput] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -131,7 +135,7 @@ export default function BrandDNA() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <motion.div initial={reducedMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <h1 className="font-display font-black text-2xl sm:text-3xl tracking-[-0.5px] mb-1">Your Brand DNA</h1>
         <p className="text-sm text-muted-foreground mb-4">
           Fill in what you can. Nothing here is required, and you can add more any time.
@@ -172,6 +176,14 @@ export default function BrandDNA() {
 
           <section className="border border-black bg-white p-4 space-y-4">
             <h2 className="font-display font-bold text-lg">Your voice</h2>
+            <p className="text-sm text-muted-foreground">Presets are optional — add your own.</p>
+            <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); set("tone_traits", addVoiceTrait(form.tone_traits, traitInput)); setTraitInput(""); }}>
+              <Input aria-label="Custom tone trait" placeholder="e.g. playful but direct" maxLength={80} value={traitInput} onChange={(e) => setTraitInput(e.target.value)} />
+              <Button type="submit" variant="outline" disabled={!traitInput.trim()}>Add</Button>
+            </form>
+            <div className="flex flex-wrap gap-2">
+              {form.tone_traits.map((trait) => <Button key={trait} variant="secondary" size="sm" aria-label={`Remove ${trait}`} onClick={() => toggleIn("tone_traits", trait)}>{trait}<Trash2 /></Button>)}
+            </div>
             <div className="flex flex-wrap gap-2">
               {TONE_TRAITS.map((t) => (
                 <button

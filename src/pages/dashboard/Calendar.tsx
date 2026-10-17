@@ -1,8 +1,12 @@
+import PlannerBoard from "@/components/PlannerBoard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { planDateISO } from "@/lib/planner";
 import { usePlanAccess } from "@/lib/access";
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
@@ -15,14 +19,16 @@ import BucketChips from "@/components/BucketChips";
 import { Bucket, loadBuckets } from "@/lib/buckets";
 
 export default function Calendar() {
+  const navigate = useNavigate();
+  const [choosingDay, setChoosingDay] = useState(false);
   const { access } = usePlanAccess();
+  const reducedMotion = useReducedMotion();
   const { user } = useOutletContext<{ user: User | null }>();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [posts, setPosts] = useState<Draft[]>([]);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   const [bucket, setBucket] = useState("all");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [view, setView] = useState<"month" | "list">("list");
+
   const [planning, setPlanning] = useState<Draft | null>(null);
   const [unplannedOpen, setUnplannedOpen] = useState(false);
 
@@ -52,16 +58,6 @@ export default function Calendar() {
 
   const planned = bucketed.filter((p) => p.scheduled_at);
   const unplanned = bucketed.filter((p) => !p.scheduled_at && p.status !== "published");
-
-  const days = useMemo(() => {
-    const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 0 });
-    const end = startOfWeek(endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 0 }), { weekStartsOn: 0 });
-    void end;
-    return eachDayOfInterval({
-      start,
-      end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 0 }),
-    });
-  }, [currentMonth]);
 
   // All date handling uses the device's local timezone.
   const postsForDay = (day: Date) =>
@@ -101,10 +97,11 @@ export default function Calendar() {
   const planUnplanned = async (p: Draft, day: Date) => {
     const { error } = await supabase
       .from("posts")
-      .update({ scheduled_at: day.toISOString(), status: "scheduled" })
+      .update({ scheduled_at: planDateISO(day), status: "scheduled" })
       .eq("id", p.id);
     if (error) return toast.error(error.message);
     toast.success(`Planned for ${format(day, "MMMM d, yyyy")}`);
+    setChoosingDay(false);
     fetchData();
   };
 
@@ -171,7 +168,7 @@ export default function Calendar() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full"
@@ -185,22 +182,7 @@ export default function Calendar() {
               See your content laid out. Nothing posts itself — no deadlines, no guilt.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setView("month")}
-              aria-label="Month view"
-              className={`p-2 border border-black ${view === "month" ? "bg-primary" : "bg-white hover:bg-secondary"}`}
-            >
-              <CalendarDays className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setView("list")}
-              aria-label="List view"
-              className={`p-2 border border-black ${view === "list" ? "bg-primary" : "bg-white hover:bg-secondary"}`}
-            >
-              <List className="w-5 h-5" />
-            </button>
-          </div>
+
         </div>
 
         {!access?.paid && <p className="mb-5 text-sm text-muted-foreground">Your existing dates and content stay available. Adding or moving dates requires Paid access, which isn't available to purchase yet. <Link className="underline" to="/demo/calendar">Explore fictional planner preview</Link></p>}
@@ -210,88 +192,14 @@ export default function Calendar() {
           </div>
         )}
 
-        {view === "month" ? (
-          <div className="border border-black bg-white overflow-x-auto">
-            <div className="min-w-[560px]">
-              <div className="flex items-center justify-between p-4 border-b border-black bg-secondary">
-                <button
-                  onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                  aria-label="Previous month"
-                  className="p-2 border border-black hover:bg-white transition-colors"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <h2 className="font-display font-bold text-lg sm:text-xl">{format(currentMonth, "MMMM yyyy")}</h2>
-                <button
-                  onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                  aria-label="Next month"
-                  className="p-2 border border-black hover:bg-white transition-colors"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="grid grid-cols-7 border-b border-black">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
-                  <div key={day} className={`p-2 text-center font-display font-bold text-sm ${i < 6 ? "border-r border-black" : ""}`}>
-                    {day}
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-7 auto-rows-fr">
-                {days.map((day, index) => {
-                  const dayPosts = postsForDay(day);
-                  const isCurrentMonth = isSameMonth(day, currentMonth);
-                  const isSelected = selectedDate && isSameDay(day, selectedDate);
-                  return (
-                    <button
-                      key={day.toISOString()}
-                      onClick={() => setSelectedDate(day)}
-                      className={`min-h-[80px] p-2 border-black text-left transition-colors ${
-                        index % 7 === 6 ? "" : "border-r"
-                      } ${index >= days.length - 7 ? "" : "border-b"} ${
-                        isCurrentMonth ? "bg-white" : "bg-muted"
-                      } ${isSelected ? "bg-primary/30" : "hover:bg-secondary/50"}`}
-                    >
-                      <span className={`font-display font-bold text-sm ${isCurrentMonth ? "text-black" : "text-muted-foreground"}`}>
-                        {format(day, "d")}
-                      </span>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {dayPosts.slice(0, 4).map((p) => (
-                          <span
-                            key={p.id}
-                            className={`w-2 h-2 border border-black block ${p.status === "published" ? "bg-highlight" : "bg-primary"}`}
-                          />
-                        ))}
-                        {dayPosts.length > 4 && <span className="text-xs font-medium">+{dayPosts.length - 4}</span>}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="border border-black bg-white">
-            {planned.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
-                Nothing planned yet. Pick a date on anything below, or use "Add to planner" on a piece of content.
-              </div>
-            ) : (
-              planned.map((p) => row(p, true))
-            )}
-          </div>
-        )}
-
-        {selectedDate && view === "month" && (
-          <div className="mt-6 border border-black bg-white p-4">
-            <h3 className="font-display font-bold text-lg mb-3">{format(selectedDate, "MMMM d, yyyy")}</h3>
-            {selectedDayPosts.length === 0 ? (
-              <p className="text-muted-foreground">Nothing planned for this day.</p>
-            ) : (
-              <div className="border border-black">{selectedDayPosts.map((p) => row(p, false))}</div>
-            )}
-          </div>
-        )}
+        <PlannerBoard userKey={user?.id ?? "signed-out"} items={planned} buckets={buckets}
+          onOpen={(p) => navigate(`/dashboard/posts?open=${p.id}`)}
+          onDay={(day) => { setSelectedDate(day); setChoosingDay(true); }} />
+        {selectedDate && <section className="mt-5 border-t border-border py-4 space-y-3">
+          <h3>{format(selectedDate, "MMMM d, yyyy")}</h3>
+          {selectedDayPosts.map(p => row(p, false))}
+          <p className="text-sm text-muted-foreground">Choose existing content below for this date.</p>
+        </section>}
 
         <div className="mt-6 border border-black bg-white">
           <button
@@ -337,12 +245,22 @@ export default function Calendar() {
           )}
         </div>
 
+        <Dialog open={choosingDay} onOpenChange={setChoosingDay}>
+          <DialogContent className="max-h-[85vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{selectedDate ? `Plan for ${format(selectedDate, "MMMM d, yyyy")}` : "Choose content"}</DialogTitle><DialogDescription>Choose existing content. Its text stays unchanged.</DialogDescription></DialogHeader>
+            {!access?.paid && <p className="text-sm text-muted-foreground">Adding or moving dates requires Paid access. You can still view, edit and remove your existing dates.</p>}
+            {bucketed.map(p => <Button key={p.id} variant="outline" disabled={!access?.paid} className="h-auto whitespace-normal justify-start text-left" onClick={() => { if (selectedDate) void planUnplanned(p, selectedDate); }}>{title(p)}</Button>)}
+            {!bucketed.length && <p className="text-sm text-muted-foreground">No saved content in this bucket.</p>}
+          </DialogContent>
+        </Dialog>
+
         {planning && (
           <AddToPlannerDialog
             open={!!planning}
             onOpenChange={(open) => !open && setPlanning(null)}
             postId={planning.id}
             currentDate={planning.scheduled_at}
+            initialDate={selectedDate ?? undefined}
             onPlanned={fetchData}
           />
         )}

@@ -1,125 +1,45 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, Check, X } from "lucide-react";
 import { Bucket, createBucket, renameBucket, deleteBucket } from "@/lib/buckets";
+import { BUCKET_COLORS, BucketColor, bucketColorClass } from "@/lib/planner";
 import { Input } from "@/components/ui/input";
-
-interface Props {
-  userId: string;
-  buckets: Bucket[];
-  /** "all" | "unsorted" | bucket id */
-  active: string;
-  onSelect: (key: string) => void;
-  onChanged: () => void;
-}
-
-const chip = (on: boolean) =>
-  `px-3 py-1.5 border border-black text-sm transition-colors ${on ? "bg-primary" : "bg-white hover:bg-secondary"}`;
-
+import { Button } from "@/components/ui/button";
+interface Props { userId: string; buckets: Bucket[]; active: string; onSelect: (key: string) => void; onChanged: () => void; }
 export default function BucketChips({ userId, buckets, active, onSelect, onChanged }: Props) {
-  const [adding, setAdding] = useState(false);
-  const [name, setName] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
-  const [editName, setEditName] = useState("");
-
-  const add = async () => {
-    try {
-      await createBucket(userId, name);
-      setName("");
-      setAdding(false);
-      onChanged();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Couldn't create that bucket.");
-    }
+  const [name, setName] = useState("");
+  const [color, setColor] = useState<BucketColor | undefined>();
+  const [busy, setBusy] = useState(false);
+  const save = async () => {
+    if (!editing || busy) return;
+    setBusy(true);
+    try { if (editing === "new") await createBucket(userId, name, color); else await renameBucket(editing, name, color); setEditing(null); onChanged(); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Couldn't save bucket."); }
+    finally { setBusy(false); }
   };
-
-  const rename = async (id: string) => {
-    try {
-      await renameBucket(id, editName);
-      setEditing(null);
-      onChanged();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Couldn't rename that bucket.");
-    }
+  const remove = async (b: Bucket) => {
+    try { await deleteBucket(b.id); if (active === b.id) onSelect("all"); onChanged(); toast.success("Bucket removed — items moved to Unsorted"); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Couldn't remove bucket."); }
   };
-
-  const remove = async (id: string, bucketName: string) => {
-    try {
-      await deleteBucket(id);
-      if (active === id) onSelect("all");
-      toast.success(`"${bucketName}" removed — its items moved to Unsorted`);
-      onChanged();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Couldn't delete that bucket.");
-    }
-  };
-
-  return (
+  return <div className="space-y-3">
     <div className="flex flex-wrap items-center gap-2">
-      <button onClick={() => onSelect("all")} className={chip(active === "all")}>
-        All
-      </button>
-      <button onClick={() => onSelect("unsorted")} className={chip(active === "unsorted")}>
-        Unsorted
-      </button>
-      {buckets.map((b) =>
-        editing === b.id ? (
-          <span key={b.id} className="flex items-center gap-1">
-            <Input
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && rename(b.id)}
-              className="h-8 w-32 border border-black rounded-none focus-visible:ring-0 text-sm"
-              autoFocus
-            />
-            <button onClick={() => rename(b.id)} aria-label="Save bucket name" className="p-1 border border-black bg-accent">
-              <Check className="w-3.5 h-3.5" />
-            </button>
-          </span>
-        ) : (
-          <span key={b.id} className="flex items-center">
-            <button onClick={() => onSelect(b.id)} className={chip(active === b.id)}>
-              {b.name}
-            </button>
-            <button
-              onClick={() => {
-                setEditing(b.id);
-                setEditName(b.name);
-              }}
-              aria-label={`Rename ${b.name}`}
-              className="p-1.5 border-y border-black bg-white hover:bg-secondary"
-            >
-              <Pencil className="w-3 h-3" />
-            </button>
-            <button
-              onClick={() => remove(b.id, b.name)}
-              aria-label={`Delete ${b.name}`}
-              className="p-1.5 border border-black bg-white hover:bg-destructive hover:text-destructive-foreground"
-            >
-              <Trash2 className="w-3 h-3" />
-            </button>
-          </span>
-        ),
-      )}
-      {adding ? (
-        <span className="flex items-center gap-1">
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && add()}
-            placeholder="Bucket name"
-            className="h-8 w-32 border border-black rounded-none focus-visible:ring-0 text-sm"
-            autoFocus
-          />
-          <button onClick={add} aria-label="Create bucket" className="p-1 border border-black bg-accent">
-            <Check className="w-3.5 h-3.5" />
-          </button>
-        </span>
-      ) : (
-        <button onClick={() => setAdding(true)} className="px-3 py-1.5 border border-dashed border-black text-sm bg-white hover:bg-secondary flex items-center gap-1">
-          <Plus className="w-3.5 h-3.5" /> New bucket
-        </button>
-      )}
+      {[{ id: "all", name: "All" }, { id: "unsorted", name: "Unsorted" }, ...buckets].map(b => <span className="inline-flex items-center max-w-full" key={b.id}>
+        <Button variant="outline" size="sm" aria-pressed={active === b.id} onClick={() => onSelect(b.id)} className={`max-w-full whitespace-normal ${bucketColorClass("color" in b ? b.color : null)} ${active === b.id ? "ring-2 ring-ring ring-offset-2" : ""}`}>{b.name}</Button>
+        {"user_id" in b && <>
+          <Button variant="ghost" size="icon" aria-label={`Edit ${b.name} bucket`} title="Edit name and color" onClick={() => { setEditing(b.id); setName(b.name); setColor(BUCKET_COLORS.find(c => c === b.color)); }}><Pencil /></Button>
+          <Button variant="ghost" size="icon" aria-label={`Delete ${b.name}`} title="Delete bucket" onClick={() => remove(b)}><Trash2 /></Button>
+        </>}
+      </span>)}
+      <Button variant="outline" size="sm" onClick={() => { setEditing("new"); setName(""); setColor(undefined); }}><Plus />New bucket</Button>
     </div>
-  );
+    {editing && <form className="flex flex-wrap gap-2 items-center" onSubmit={e => { e.preventDefault(); void save(); }}>
+      <Input aria-label="Bucket name" value={name} onChange={e => setName(e.target.value)} maxLength={60} placeholder="Bucket name" className="w-48" autoFocus />
+      <div className="flex gap-1" role="group" aria-label="Bucket color (optional)">
+        {BUCKET_COLORS.map(c => <Button type="button" key={c} variant="outline" size="icon" aria-label={`${c} bucket color`} title={c} aria-pressed={color === c} onClick={() => setColor(c)} className={bucketColorClass(c)}>{color === c && <Check />}</Button>)}
+      </div>
+      <Button type="submit" variant="outline" disabled={busy || !name.trim()} aria-label="Save bucket"><Check />Save</Button>
+      <Button type="button" variant="ghost" size="icon" aria-label="Cancel bucket edit" onClick={() => setEditing(null)}><X /></Button>
+    </form>}
+  </div>;
 }
