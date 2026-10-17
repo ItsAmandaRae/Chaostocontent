@@ -46,7 +46,7 @@ export default function Auth() {
   const location = useLocation();
   const recovery = useSyncExternalStore(recoverySession.subscribe, recoverySession.getSnapshot);
   const resetRoute = location.pathname === "/reset-password" || searchParams.get("mode") === "reset";
-  const recoveryActive = resetRoute || ["checking", "ready", "invalid"].includes(recovery.status);
+  const recoveryActive = resetRoute || ["checking", "ready", "invalid", "complete"].includes(recovery.status);
   const requestedMode = searchParams.get("mode");
   const initialView: AuthView = requestedMode === "forgot" || requestedMode === "signup" ? requestedMode : "login";
   
