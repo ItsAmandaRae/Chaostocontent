@@ -50,6 +50,7 @@ export default function Posts() {
   const visible = useMemo(() => {
     const term = search.trim().toLowerCase();
     return drafts.filter((d) => {
+      if (d.id === openId) return true;
       if (bucket === "unsorted" && d.bucket_id) return false;
       if (bucket !== "all" && bucket !== "unsorted" && d.bucket_id !== bucket) return false;
       if (platform !== "all" && d.platform !== platform) return false;
@@ -57,7 +58,7 @@ export default function Posts() {
       if (term && !`${d.title ?? ""} ${d.content ?? ""}`.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [drafts, bucket, platform, format, search]);
+  }, [drafts, bucket, platform, format, search, openId]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
