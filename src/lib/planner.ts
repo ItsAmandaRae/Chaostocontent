@@ -1,9 +1,12 @@
 import { addMonths, addWeeks, eachDayOfInterval, endOfMonth, endOfWeek, startOfMonth, startOfWeek, format } from "date-fns";
 
 export type PlannerView = "week" | "month" | "list";
-export const BUCKET_COLORS = ["pink", "cyan", "mint", "yellow"] as const;
+export const BUCKET_COLORS = ["pink", "cyan", "mint", "yellow", "lavender", "peach", "sky", "lime", "rose", "periwinkle", "apricot", "silver"] as const;
 export type BucketColor = typeof BUCKET_COLORS[number];
-export const bucketColorClass = (color?: string | null) => ({ pink: "bucket-pink", cyan: "bucket-cyan", mint: "bucket-mint", yellow: "bucket-yellow" }[color ?? ""] ?? "bucket-neutral");
+export const bucketColorClass = (color?: string | null) => BUCKET_COLORS.some(c => c === color) ? `bucket-${color}` : "bucket-neutral";
+export const bucketColorLabel = (color: string) => color[0].toUpperCase() + color.slice(1);
+export const automaticBucketColor = (used: string[]) => BUCKET_COLORS.find(c => !used.includes(c)) ?? BUCKET_COLORS[0];
+export function formatUTCReset(value: string) { return new Date(value).toLocaleDateString(undefined, { timeZone: "UTC" }); }
 export function localPlanDate(value: string): Date {
   return /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T12:00:00`) : new Date(value);
 }
