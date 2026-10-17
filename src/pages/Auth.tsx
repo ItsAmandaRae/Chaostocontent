@@ -180,7 +180,7 @@ export default function Auth() {
   };
 
   const getTitle = () => {
-    if (confirmationActive) return "Email verification";
+    if (confirmationActive) return "Verify email";
     switch (view) {
       case "login": return "Welcome Back";
       case "signup": return "Create Account";
@@ -348,7 +348,7 @@ export default function Auth() {
 
             {/* Form */}
             {confirmationActive ? (
-              <div className="space-y-4 text-center">
+              <div className="flex flex-col gap-4 text-center">
                 {confirmation === "checking" ? <p role="status">Checking your confirmation link…</p> : confirmation === "confirmed" ? <><p role="status">Your email is verified. You can continue to your workspace.</p><Button onClick={async () => { const { data, error } = await supabase.auth.getUser(); if (!error && data.user) { confirmationSession.clear(); navigate("/dashboard"); } }}>Continue</Button></> : <><p role="alert">This confirmation link is missing, expired or already used. Sign in if you already verified, or request another confirmation from sign up.</p><Button onClick={() => { confirmationSession.clear(); handleViewChange("signup"); }}>Back to sign up</Button></>}
                 {confirmation !== "checking" && <Button variant="outline" onClick={() => { confirmationSession.clear(); handleViewChange("login"); }}>Back to sign in</Button>}
               </div>
