@@ -193,6 +193,11 @@
 }
 
 @layer utilities {
+  .bucket-pink { background: oklch(var(--primary)); color: oklch(var(--primary-foreground)); }
+  .bucket-cyan { background: oklch(var(--secondary)); color: oklch(var(--secondary-foreground)); }
+  .bucket-mint { background: oklch(var(--accent)); color: oklch(var(--accent-foreground)); }
+  .bucket-yellow { background: oklch(var(--highlight)); color: oklch(var(--highlight-foreground)); }
+  .bucket-neutral { background: oklch(var(--muted)); color: oklch(var(--foreground)); }
   .text-balance {
     text-wrap: balance;
   }
