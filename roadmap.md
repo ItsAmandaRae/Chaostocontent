@@ -46,3 +46,14 @@
 - [x] Browser checks: demo Week/Month/List at 1280/390/360 with seven week days and no horizontal overflow; isolated signed-in custom trait save/reload, dynamic complimentary text, month +2 overflow exposes all five fixtures, day chooser persists date, bucket color/name edit/reload, event opens editor. Zero page errors; all fixture accounts/data cleaned up. Landing/auth desktop screenshots captured.
 - [x] Managed production build/typecheck latest log is clean. No manual build/typecheck run (project harness performs both). No auth/billing/publishing/dependency changes; owner content untouched except additive requested bucket-color backfill.
 - [ ] Live provider output quality with new custom traits not re-tested; actual shared prompt construction verified without spending AI allowance. Live microphone remains untested as before.
+
+### Exact files changed in this refinement
+- `AGENTS.md`, `roadmap.md`
+- `src/pages/dashboard/Settings.tsx`, `src/demo/pages/Settings.tsx`, `src/pages/dashboard/BrandDNA.tsx`
+- `src/components/PlanAccessSection.tsx`, `src/components/MakeContentDialog.tsx`, `src/components/BucketChips.tsx`, `src/components/AddToPlannerDialog.tsx`, `src/components/PlannerBoard.tsx`
+- `src/pages/dashboard/Calendar.tsx`, `src/demo/pages/Calendar.tsx`
+- `src/lib/voice.ts`, `src/lib/planner.ts`, `src/lib/buckets.ts`, `src/index.css`
+- `supabase/functions/generate-posts/index.ts`, `supabase/functions/_shared/voice.ts`
+- `drizzle/migrations/0006_persist_bucket_palette.sql`, tool-maintained migration metadata and regenerated `src/integrations/supabase/types.ts`
+- `tests/ux.test.ts`
+- Latest observed managed commit checkpoint: `ee719a3` (`Changes`); commits are managed by the platform, not manually created here.
