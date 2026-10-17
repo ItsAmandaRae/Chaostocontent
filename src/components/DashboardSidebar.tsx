@@ -224,7 +224,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
       {/* Logo */}
       <div className="p-6 border-b border-black">
         <Link to="/">
-          <Logo className="text-black" />
+          <Logo variant="compact" />
         </Link>
       </div>
       <SidebarContent />

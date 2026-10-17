@@ -295,7 +295,7 @@ export default function Auth() {
           className="mb-10"
         >
           <Link to="/" className="block hover:opacity-70 transition-opacity">
-            <Logo className="w-28 h-5 text-black" />
+            <Logo />
           </Link>
         </motion.div>
 
