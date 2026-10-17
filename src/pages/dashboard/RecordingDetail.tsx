@@ -27,7 +27,7 @@ const statusColors: Record<string, string> = {
   draft: "bg-secondary text-black",
   processing: "bg-accent text-black",
   ready: "bg-primary text-black",
-  published: "bg-highlight text-white",
+  published: "bg-highlight text-highlight-foreground",
 };
 
 export default function RecordingDetail() {

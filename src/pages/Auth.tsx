@@ -295,7 +295,7 @@ export default function Auth() {
           className="mb-10"
         >
           <Link to="/" className="block hover:opacity-70 transition-opacity">
-            <Logo className="w-28 h-5 text-black" />
+            <Logo />
           </Link>
         </motion.div>
 
@@ -374,7 +374,7 @@ export default function Auth() {
                 <button
                   type="button"
                   onClick={() => handleViewChange("forgot")}
-                  className="text-highlight hover:underline font-body text-left -mt-2"
+                  className="text-foreground underline hover:no-underline font-body text-left -mt-2"
                 >
                   Forgot password?
                 </button>
@@ -397,7 +397,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={() => handleViewChange("signup")}
-                    className="text-highlight hover:underline"
+                    className="text-foreground underline hover:no-underline"
                   >
                     Sign up
                   </button>
@@ -409,7 +409,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={() => handleViewChange("login")}
-                    className="text-highlight hover:underline"
+                    className="text-foreground underline hover:no-underline"
                   >
                     Sign in
                   </button>
@@ -421,7 +421,7 @@ export default function Auth() {
                   <button
                     type="button"
                     onClick={() => handleViewChange("login")}
-                    className="text-highlight hover:underline"
+                    className="text-foreground underline hover:no-underline"
                   >
                     Sign in
                   </button>

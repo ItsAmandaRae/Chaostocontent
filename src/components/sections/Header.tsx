@@ -20,7 +20,10 @@ export default function Header() {
       <div className="w-full px-6 lg:px-0">
         <div className="container mx-auto max-w-[1152px] flex items-center justify-between h-20 w-full">
           {/* Logo */}
-          <Link to="/" className="text-black flex-shrink-0"><Logo /></Link>
+          <Link to="/" className="text-black flex-shrink-0">
+            <Logo className="hidden sm:inline-flex" />
+            <Logo variant="compact" className="sm:hidden" />
+          </Link>
 
           {/* Navigation Menu - Desktop */}
           <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">

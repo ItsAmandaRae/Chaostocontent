@@ -45,7 +45,7 @@ const statusColors: Record<string, string> = {
   draft: "bg-secondary text-black border-black",
   processing: "bg-accent text-black border-black",
   ready: "bg-primary text-black border-black",
-  published: "bg-highlight text-white border-black",
+  published: "bg-highlight text-highlight-foreground border-black",
 };
 
 const statusLabels: Record<string, string> = {

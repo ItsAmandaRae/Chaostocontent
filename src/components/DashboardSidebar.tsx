@@ -190,7 +190,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         {/* Mobile Header */}
         <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background border-b border-black flex items-center justify-between px-4">
           <Link to="/">
-            <Logo className="text-black" />
+            <Logo variant="compact" />
           </Link>
           
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -224,7 +224,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
       {/* Logo */}
       <div className="p-6 border-b border-black">
         <Link to="/">
-          <Logo className="text-black" />
+          <Logo variant="compact" />
         </Link>
       </div>
       <SidebarContent />

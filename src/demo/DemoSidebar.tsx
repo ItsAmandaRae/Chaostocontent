@@ -128,7 +128,7 @@ export default function DemoSidebar() {
       <div className="border-b border-black bg-background">
         <div className="flex items-center justify-between p-4">
           <Link to="/" className="text-foreground">
-            <Logo />
+            <Logo variant="compact" />
           </Link>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -138,7 +138,7 @@ export default function DemoSidebar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-0 bg-background border-r border-black flex flex-col">
               <div className="p-4 border-b border-black flex items-center justify-between">
-                <Logo />
+                <Logo variant="compact" />
                 <button onClick={() => setIsSheetOpen(false)} aria-label="Close menu">
                   <X className="w-5 h-5" />
                 </button>
@@ -155,7 +155,7 @@ export default function DemoSidebar() {
     <aside className="w-64 shrink-0 border-r border-black bg-background flex flex-col min-h-screen">
       <div className="p-4 border-b border-black">
         <Link to="/" className="text-foreground">
-          <Logo />
+          <Logo variant="compact" />
         </Link>
       </div>
       <SidebarContent />
