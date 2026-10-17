@@ -330,9 +330,9 @@ export default function IdeaDetail() {
           onOpenChange={setMakeOpen}
           dumpIds={[dump.id]}
           suggestReference={dump.kind === "image" || dump.kind === "link"}
-          onCreated={() => {
+          onCreated={(postId) => {
             setMakeOpen(false);
-            load();
+            navigate(`/dashboard/posts?open=${postId}`);
           }}
         />
       </motion.div>
