@@ -1,8 +1,13 @@
 # Roadmap
 
-- [ ] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, owner-only gifts and audit
-- [ ] Plan/access UI, honest pricing, demo Content/Planner, setup documentation
-- [ ] Targeted security/concurrency/reset regressions and remaining rewrite/OCR/idea verification; isolated fixtures only
+- [x] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, admin-authorized gifts and audit; no real owner role assigned
+- [x] Plan/access UI, honest Free / Paid coming soon pricing with no price, demo Content/Planner, portable setup documentation
+- [x] 44 isolated-fixture access regressions passed: direct-call authorization, forged state, creation/media concurrency and refunds, idempotency, expiry/revocation, billing coexistence, UTC/reset, bucket cap and downgrade/planner preservation. Serialized draft-queue tests passed.
+- [x] Live fictional screenshot OCR/retry without another charge; edited idea angle persisted as generation focus; reference rewrite returns suggestion. Signed-in rapid edit/navigation persistence and suggestion apply verified (suggestion UI used a mocked response matching the verified live rewrite).
+- [x] Browser checks: landing/auth/demo Content/Planner at 1280, 390 and 360px; fixture Settings/Content/Free Planner at desktop; no page errors. Latest preview build log clean. Dedicated manual production build/typecheck not run (managed build workflow).
+- [ ] Owner bootstrap: blocked pending confirmation of exact verified app auth user ID; never inferred from identity
+- [ ] Billing launch: blocked pending final USD price, Paid allowances and later explicitly approved provider setup; no checkout or credentials configured
+- [ ] Aggregate upload storage policy/enforcement: pending owner policy decision before launch; per-file audio 25 MB/image 20 MB enforced
 
 - [x] Rename LOUDIO to Chaos To Content
 - [x] Reframe visible recording language as Brain Dumps
@@ -26,6 +31,6 @@
 - [x] process-dump: faithful OCR (no invented takeaway), idempotent reprocess via original_notes column, server audio limit aligned to 25 MB
 - [x] MakeContentDialog simplified to labelled selectors + optional details; state resets per source
 - [x] Verified with isolated fixture account (deleted after): text dump with reference mode -> factual content + provenance; screenshot upload -> OCR + own note kept; speech WAV -> transcribed; pull-out-ideas -> save all; idea -> blog content with no caption limit; autosave Saved state; reload recovery of unsaved edits (server confirmed)
-- [ ] Rewrite-nudge suggestion panel and reprocess-idempotency checks scripted but not completed (browser timeouts); edited-angle-in-content unverified
+- [x] Previous pending checks completed: rewrite suggestion review/apply UI, live idempotent OCR reprocess, edited idea angle retained in generated-content provenance (wording remains AI-dependent)
 - [ ] Voice note recorded in-browser (microphone) untested; only file upload path tested
-- [ ] Optional: demo Content/Planner sample pages (demo currently covers Brain Dumps + Idea Bank)
+- [x] Demo Content/Planner sample pages with fictional local-only data and navigation

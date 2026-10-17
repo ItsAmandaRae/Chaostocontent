@@ -19,9 +19,11 @@ export function usePlanAccess() {
   const [error, setError] = useState(false);
   useEffect(() => {
     let active = true;
+    let generation = 0;
     const load = async () => {
+      const current = ++generation;
       const { data, error: failure } = await supabase.rpc("my_access");
-      if (active) { setError(!!failure); setAccess(failure ? null : data as unknown as PlanAccess); }
+      if (active && current === generation) { setError(!!failure); setAccess(failure ? null : data as unknown as PlanAccess); }
     };
     void load();
     const { data: auth } = supabase.auth.onAuthStateChange(() => { setAccess(null); void load(); });

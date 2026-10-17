@@ -18,7 +18,7 @@ export default function AccessAdmin() {
   const submit = async (action: "lookup" | "grant" | "revoke") => {
     setBusy(true); setError("");
     try {
-      const expiresAt = duration === "none" ? null : duration === "30" ? new Date(Date.now() + 30 * 86400000).toISOString() : new Date(expiry).toISOString();
+      const expiresAt = action !== "grant" || duration === "none" ? null : duration === "30" ? new Date(Date.now() + 30 * 86400000).toISOString() : new Date(expiry).toISOString();
       const { data, error: failure } = await supabase.functions.invoke("admin-access", { body: action === "lookup" ? { action, query: query.trim() } : { action, userId: account?.user.id, expiresAt, acknowledgeBilling: ack } });
       if (failure || data?.error) throw new Error(data?.error || "Couldn't update access. Check the account and try again.");
       setAccount(data); if (action === "lookup") setAck(false);

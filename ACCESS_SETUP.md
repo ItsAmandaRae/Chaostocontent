@@ -32,3 +32,11 @@ No real account has been assigned by this pass. Admin UI: `/dashboard/access`, a
 
 ## Regression checks
 Run `bun run test:access` for isolated fixture direct-call, concurrency, month-reset and downgrade tests. Requires server credentials available in the sandbox; never logs tokens. It creates/deletes only explicitly isolated fixture accounts and records. Browser review and live AI fixture checks are tracked separately in roadmap.
+
+Run `bun run test:drafts` for shared serialized write queues, coalescing, navigation/remount, review-suggestion apply, failure recovery and user-scoped backups.
+
+### Verification completed in this pass
+- 44 access regression assertions passed, including atomic creation/media limits, refunds, duplicate request and finalization, UTC/leap-month reset, denied forged state, admin authorization, gifting with active billing and downgrade preservation.
+- Live isolated fixtures verified fictional screenshot OCR, completed-read retry without another charge, edited idea angle in stored generation focus/provenance, and reference rewrite without overwriting saved content.
+- Browser verified rapid edit → navigate → return persistence and suggestion application; suggestion-panel UI used a mocked response matching the live-verified rewrite. Public/auth/demo reviewed at 1280/390/360px; fixture Settings/Content/Free Planner reviewed at desktop with no page errors. Fixtures and uploaded file were removed; existing users were untouched.
+- Managed preview build log is clean. Separate manually invoked production build/typecheck is not claimed. Live microphone recording and admin grant-screen click-through remain unverified; admin endpoint/database flows are tested. Owner bootstrap, final price/allowances, provider integration and aggregate storage enforcement remain pending.
