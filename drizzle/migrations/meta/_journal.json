@@ -50,6 +50,13 @@
       "when": 1792269347508,
       "tag": "0006_persist_bucket_palette",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792271333812,
+      "tag": "0007_unified_palette_and_content_reuse",
+      "breakpoints": true
     }
   ]
 }
