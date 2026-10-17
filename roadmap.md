@@ -1,11 +1,12 @@
 # Roadmap
 
-- [x] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, admin-authorized gifts and audit; no real owner role assigned
+- [x] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, admin-authorized gifts and audit
 - [x] Plan/access UI, honest Free / Paid coming soon pricing with no price, demo Content/Planner, portable setup documentation
 - [x] 44 isolated-fixture access regressions passed: direct-call authorization, forged state, creation/media concurrency and refunds, idempotency, expiry/revocation, billing coexistence, UTC/reset, bucket cap and downgrade/planner preservation. Serialized draft-queue tests passed.
 - [x] Live fictional screenshot OCR/retry without another charge; edited idea angle persisted as generation focus; reference rewrite returns suggestion. Signed-in rapid edit/navigation persistence and suggestion apply verified (suggestion UI used a mocked response matching the verified live rewrite).
 - [x] Browser checks: landing/auth/demo Content/Planner at 1280, 390 and 360px; fixture Settings/Content/Free Planner at desktop; no page errors. Latest preview build log clean. Dedicated manual production build/typecheck not run (managed build workflow).
-- [ ] Owner bootstrap: blocked pending confirmation of exact verified app auth user ID; never inferred from identity
+- [x] Owner access: read-only verification of the explicitly supplied existing account confirmed verified email, admin role and active no-expiry complimentary grant; no bootstrap or account mutation
+- [ ] Ordinary signup: hosted settings confirm signup disabled, email sign-in enabled and email verification required. Targeted Cloud UI toggle needed because available agent configuration also rewrites a protection setting whose current value cannot be read. No settings changed; real signup fixture verification pending.
 - [ ] Billing launch: blocked pending final USD price, Paid allowances and later explicitly approved provider setup; no checkout or credentials configured
 - [ ] Aggregate upload storage policy/enforcement: pending owner policy decision before launch; per-file audio 25 MB/image 20 MB enforced
 

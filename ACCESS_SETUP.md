@@ -9,8 +9,10 @@
 - Free retains all existing work and buckets after downgrade. Adding/moving personal planner dates requires Paid; viewing/editing/copying/removing remains available. The planner preview uses fictional local-only data.
 - Audio per-file 25 MB, images 20 MB are enforced in private storage and source preparation. **Aggregate upload storage is not enforced**: define/enforce aggregate storage policy before launch. No unlimited storage claim.
 
-## Owner bootstrap — pending exact account confirmation
-Do not infer an owner from an email, first signup or metadata. Verify the owner in app Auth, then use their exact auth user UUID in a privileged database session:
+## Owner access — verified existing assignment
+Read-only verification on 2026-10-17 confirmed the explicitly identified owner account has verified email, an admin role and an active no-expiry complimentary grant. No role or grant was created or changed during this check. Do not bootstrap this owner again.
+
+For a future independently verified owner only, use their exact auth user UUID in a privileged database session; never infer ownership from email, first signup or metadata:
 
 ```sql
 -- Replace VERIFIED_AUTH_USER_UUID only after identity confirmation.
@@ -20,10 +22,13 @@ where id = 'VERIFIED_AUTH_USER_UUID'::uuid
 on conflict (user_id, role) do nothing;
 ```
 
-No real account has been assigned by this pass. Admin UI: `/dashboard/access`, also linked in Settings for an authorized admin. Exact email/user-ID lookup is protected server-side. Grants support 30 days, explicit future expiry or no expiry; revocation preserves billing/data. Active billing requires acknowledgement that a gift does not cancel it. Audit records include actor/recipient/time. Never expose the account directory publicly.
+Admin UI: `/dashboard/access`, also linked in Settings for an authorized admin. Exact email/user-ID lookup is protected server-side. Grants support 30 days, explicit future expiry or no expiry; revocation preserves billing/data. Active billing requires acknowledgement that a gift does not cancel it. Audit records include actor/recipient/time. Never expose the account directory publicly.
+
+## Signup blocker — hosted setting requires targeted change
+Read-only hosted Auth settings on 2026-10-17: `disable_signup=true`, email provider enabled, email auto-confirm disabled (verification required), anonymous users disabled. No settings were changed. The available configure-auth tool also rewrites password leaked-password protection, whose current value is not exposed by the available settings read; do not guess it. Change only **Disable sign-up** to off in **More → Cloud → Users → Auth settings**, keeping email confirmation enabled. A real ordinary-signup fixture test remains pending this change; no emails were sent and no fixture account was created in this check.
 
 ## Later billing boundary — not activated
-1. Confirm verified owner app account, final USD monthly price and Paid AI/media allowances.
+1. Owner app access is verified; confirm final USD monthly price and Paid AI/media allowances.
 2. Revisit payment-provider setup in an interactive editor; built-in payments are the recommended supported option. The requested own-account Stripe connection is not configured here; confirm that choice and portability requirements before proceeding.
 3. If proceeding with own-account credentials, use a secure settings form for sandbox/restricted credentials; never paste secrets into source or chat. No placeholder secrets exist.
 4. Implement signed, idempotent webhook subscription sync into `billing_entitlements`; derive access from verified server events, never checkout success URLs or client emails. Handle cancellation, expiry, payment failure and reconciliation.
@@ -39,4 +44,4 @@ Run `bun run test:drafts` for shared serialized write queues, coalescing, naviga
 - 44 access regression assertions passed, including atomic creation/media limits, refunds, duplicate request and finalization, UTC/leap-month reset, denied forged state, admin authorization, gifting with active billing and downgrade preservation.
 - Live isolated fixtures verified fictional screenshot OCR, completed-read retry without another charge, edited idea angle in stored generation focus/provenance, and reference rewrite without overwriting saved content.
 - Browser verified rapid edit → navigate → return persistence and suggestion application; suggestion-panel UI used a mocked response matching the live-verified rewrite. Public/auth/demo reviewed at 1280/390/360px; fixture Settings/Content/Free Planner reviewed at desktop with no page errors. Fixtures and uploaded file were removed; existing users were untouched.
-- Managed preview build log is clean. Separate manually invoked production build/typecheck is not claimed. Live microphone recording and admin grant-screen click-through remain unverified; admin endpoint/database flows are tested. Owner bootstrap, final price/allowances, provider integration and aggregate storage enforcement remain pending.
+- Managed preview build log is clean. Separate manually invoked production build/typecheck is not claimed. Live microphone recording and admin grant-screen click-through remain unverified; admin endpoint/database flows are tested. Owner access is now verified; signup setting correction, final price/allowances, provider integration and aggregate storage enforcement remain pending.
