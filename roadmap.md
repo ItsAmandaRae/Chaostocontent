@@ -3,7 +3,7 @@
 ## Signup guidance follow-up (auth only)
 - [x] No-session signup retains persistent email-verification guidance, address, spam/confirmation/sign-in next steps, Edit email and Back to sign in; no delivery/account-existence claims. Confirmation remains enabled.
 - [x] Resend is an explicit signup-confirmation request with a 60-second cooldown, inflight guard and persistent errors/rate-limit guidance. Signup callbacks are separate from recovery and require server-validated confirmation before Continue.
-- [ ] Run isolated signup/resend/confirmation fixtures and rerun pending recovery regressions; inspect desktop/mobile verification state and latest managed build signal.
+- [x] `bun tests/signup.test.ts`, `bun tests/recovery.test.ts`, mocked signup browser flow and `python3 tests/recovery.browser.py` passed. Mocks covered no-session state/reload, no automatic resend, cooldown/inflight, resend success and 429, edit/back, validated signup callback -> Continue -> dashboard, expired confirmation without reset form, recovery regressions, 1280/360 no overflow. Latest managed build: OK. No live email, account or password changes.
 - [ ] Real confirmation delivery and real recovery -> changed-password login remain blocked on supported isolated email/link access; never email owner/real people or change their passwords. No billing, publishing or planner work in this pass.
 
 ## Priority password recovery blocker
