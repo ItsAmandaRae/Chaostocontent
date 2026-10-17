@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Logo from "@/components/Logo";
 
 const imgSparklePink = "/images/d1900bb633828b5f083acf134975649dfb4dc629.svg";
 const imgEllipse7 = "/images/8b9a354c470d993df59a559e865c54bdb1aa638d.svg";
@@ -79,6 +80,7 @@ export default function Footer() {
                 </motion.div>
               </div>
 
+              <Logo inverse />
               <p className="text-sm sm:text-base leading-6 sm:leading-7 text-white opacity-75">
                 Turning scattered thoughts into authentic, on-brand content.
               </p>
@@ -146,6 +148,7 @@ export default function Footer() {
               <p className="font-display font-black uppercase text-white text-[clamp(3rem,10vw,8rem)] leading-[0.8] text-center">
                 Chaos To Content
               </p>
+              <p className="font-body text-white/70 text-sm text-center mt-3">by Amanda Rae</p>
             </div>
           </div>
         </div>
