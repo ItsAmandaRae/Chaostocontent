@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -43,6 +43,7 @@ const empty: Form = {
 };
 
 export default function BrandDNA() {
+  const reducedMotion = useReducedMotion();
   const { user } = useOutletContext<{ user: User | null }>();
   const [form, setForm] = useState<Form>(empty);
   const [loading, setLoading] = useState(true);
@@ -134,7 +135,7 @@ export default function BrandDNA() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <motion.div initial={reducedMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <h1 className="font-display font-black text-2xl sm:text-3xl tracking-[-0.5px] mb-1">Your Brand DNA</h1>
         <p className="text-sm text-muted-foreground mb-4">
           Fill in what you can. Nothing here is required, and you can add more any time.

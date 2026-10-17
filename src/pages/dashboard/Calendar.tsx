@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { planDateISO } from "@/lib/planner";
 import { usePlanAccess } from "@/lib/access";
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Link, useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
@@ -19,6 +19,7 @@ import { Bucket, loadBuckets } from "@/lib/buckets";
 
 export default function Calendar() {
   const { access } = usePlanAccess();
+  const reducedMotion = useReducedMotion();
   const { user } = useOutletContext<{ user: User | null }>();
   const [posts, setPosts] = useState<Draft[]>([]);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
@@ -163,7 +164,7 @@ export default function Calendar() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full"
@@ -195,16 +196,6 @@ export default function Calendar() {
           {selectedDayPosts.map(p => row(p, false))}
           <p className="text-sm text-muted-foreground">Choose existing content below for this date.</p>
         </section>}
-
-        <div className="mt-6 border border-black bg-white p-4">
-            <h3 className="font-display font-bold text-lg mb-3">{format(selectedDate, "MMMM d, yyyy")}</h3>
-            {selectedDayPosts.length === 0 ? (
-              <p className="text-muted-foreground">Nothing planned for this day.</p>
-            ) : (
-              <div className="border border-black">{selectedDayPosts.map((p) => row(p, false))}</div>
-            )}
-          </div>
-        )}
 
         <div className="mt-6 border border-black bg-white">
           <button

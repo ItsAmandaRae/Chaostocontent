@@ -122,7 +122,7 @@ export default function Settings() {
             <section className="border-t border-border py-5 space-y-3">
               <h2 className="font-display font-bold text-lg">Your voice</h2>
               <p className="text-sm">{voiceTraits.length ? voiceTraits.join(" · ") : "Your voice is yours to define."}</p>
-              <Button variant="outline" asChild><Link to="/dashboard/brand-dna">Edit Brand DNA</Link></Button>
+              <Button variant="outline" asChild><Link to="/dashboard/brand">Edit Brand DNA</Link></Button>
             </section>
 
             <section className="border border-black bg-white p-5">
