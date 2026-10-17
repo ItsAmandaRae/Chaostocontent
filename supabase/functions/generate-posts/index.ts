@@ -1,4 +1,5 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2/cors";
+const corsHeaders = { ...sdkCorsHeaders, "Access-Control-Allow-Headers": `${sdkCorsHeaders["Access-Control-Allow-Headers"]}, x-request-id` };
 import { z } from "npm:zod@3";
 import { chatText, HttpError, parseJson } from "../_shared/ai.ts";
 import { userClient } from "../_shared/auth.ts";
@@ -220,7 +221,7 @@ Deno.serve(async (req) => {
     if (!body.dumpIds?.length && !body.ideaId) throw new HttpError(400, "Pick something to create from.");
 
     const ideaLoad = body.ideaId ? await loadSource(null, body.ideaId) : null;
-    if (ideaLoad?.missing) throw new HttpError(404, "That idea no longer exists.");
+    if (ideaLoad && !ideaLoad.source.trim()) throw new HttpError(404, "That idea no longer exists.");
     let { source: ideaSource, kind, linkUrl } = ideaLoad
       ? { source: ideaLoad.source, kind: ideaLoad.kind, linkUrl: ideaLoad.linkUrl }
       : { source: "", kind: null as string | null, linkUrl: null as string | null };

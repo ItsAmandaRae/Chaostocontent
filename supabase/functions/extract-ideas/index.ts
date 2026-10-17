@@ -1,4 +1,5 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders as sdkCorsHeaders } from "npm:@supabase/supabase-js@2/cors";
+const corsHeaders = { ...sdkCorsHeaders, "Access-Control-Allow-Headers": `${sdkCorsHeaders["Access-Control-Allow-Headers"]}, x-request-id` };
 import { z } from "npm:zod@3";
 import { chatText, HttpError, parseJson } from "../_shared/ai.ts";
 import { userClient } from "../_shared/auth.ts";
