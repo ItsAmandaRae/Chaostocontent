@@ -15,6 +15,13 @@
       "when": 1792221545716,
       "tag": "0001_enforce_cross_row_ownership",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792223032866,
+      "tag": "0002_post_provenance_and_dump_notes",
+      "breakpoints": true
     }
   ]
 }

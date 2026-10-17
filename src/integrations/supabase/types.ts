@@ -171,6 +171,7 @@ export type Database = {
           kind: string
           legacy_project_id: string | null
           link_url: string | null
+          original_notes: string | null
           processing_error: string | null
           processing_state: string
           raw_text: string | null
@@ -191,6 +192,7 @@ export type Database = {
           kind?: string
           legacy_project_id?: string | null
           link_url?: string | null
+          original_notes?: string | null
           processing_error?: string | null
           processing_state?: string
           raw_text?: string | null
@@ -211,6 +213,7 @@ export type Database = {
           kind?: string
           legacy_project_id?: string | null
           link_url?: string | null
+          original_notes?: string | null
           processing_error?: string | null
           processing_state?: string
           raw_text?: string | null
@@ -293,12 +296,15 @@ export type Database = {
           project_id: string | null
           prompt_notes: string | null
           published_at: string | null
+          reference_note: string | null
           scheduled_at: string | null
+          source_snapshot: string | null
           status: string
           title: string | null
           updated_at: string
           user_id: string
           variant: string | null
+          voice_mode: string | null
         }
         Insert: {
           bucket_id?: string | null
@@ -315,12 +321,15 @@ export type Database = {
           project_id?: string | null
           prompt_notes?: string | null
           published_at?: string | null
+          reference_note?: string | null
           scheduled_at?: string | null
+          source_snapshot?: string | null
           status?: string
           title?: string | null
           updated_at?: string
           user_id: string
           variant?: string | null
+          voice_mode?: string | null
         }
         Update: {
           bucket_id?: string | null
@@ -337,12 +346,15 @@ export type Database = {
           project_id?: string | null
           prompt_notes?: string | null
           published_at?: string | null
+          reference_note?: string | null
           scheduled_at?: string | null
+          source_snapshot?: string | null
           status?: string
           title?: string | null
           updated_at?: string
           user_id?: string
           variant?: string | null
+          voice_mode?: string | null
         }
         Relationships: [
           {

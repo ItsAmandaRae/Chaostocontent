@@ -17,5 +17,11 @@
 - [x] Idea Bank page, shared Make Content dialog, Content page with autosave + undoable delete, Planner without legacy project/channel
 - [x] Demo Idea Bank with clearly-labeled fictional sample data, local-only
 - [x] Authenticated end-to-end checks: dump -> ideas -> save all; dump -> content opens immediately; autosave persists; delete/undo; bucket delete retains records; cross-owner refs rejected; planner without legacy project
-- [ ] Voice/audio end-to-end test with a real recording (only text-note path tested)
+- [x] Correctness pass: reference mode offered on all sources with persisted provenance (voice_mode/reference_note/source_snapshot on posts); REFERENCE_RULES on all rewrite paths incl. rawMode; idea-focused generation with parent dump as background; snapshot fallback if source deleted
+- [x] Serialized/coalesced autosave in DraftCard with localStorage backup + recovery, unmount flush, rewrites as reviewable suggestions; long-form formats no longer warned against social caption limits
+- [x] process-dump: faithful OCR (no invented takeaway), idempotent reprocess via original_notes column, server audio limit aligned to 25 MB
+- [x] MakeContentDialog simplified to labelled selectors + optional details; state resets per source
+- [x] Verified with isolated fixture account (deleted after): text dump with reference mode -> factual content + provenance; screenshot upload -> OCR + own note kept; speech WAV -> transcribed; pull-out-ideas -> save all; idea -> blog content with no caption limit; autosave Saved state; reload recovery of unsaved edits (server confirmed)
+- [ ] Rewrite-nudge suggestion panel and reprocess-idempotency checks scripted but not completed (browser timeouts); edited-angle-in-content unverified
+- [ ] Voice note recorded in-browser (microphone) untested; only file upload path tested
 - [ ] Optional: demo Content/Planner sample pages (demo currently covers Brain Dumps + Idea Bank)

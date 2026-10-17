@@ -46,8 +46,10 @@ async function readImage(signedUrl: string): Promise<string> {
         {
           type: "text",
           text:
-            "Read this screenshot or photo. Write out every piece of text you can read, then on a new line " +
-            'starting with "IDEA:" say in one sentence what the idea or takeaway is. No other commentary.',
+            "Transcribe this screenshot or photo faithfully: write out every piece of visible text you can read, " +
+            "in reading order. Do not summarise, interpret, or add any takeaway of your own. If parts are " +
+            "illegible or unclear, mark them as [unclear]. If no text is readable at all, reply with exactly: " +
+            "NO READABLE TEXT.",
         },
         { type: "image_url", image_url: { url: signedUrl } },
       ],
@@ -76,7 +78,7 @@ Deno.serve(async (req) => {
 
     const { data: dump, error } = await supabase
       .from("dumps")
-      .select("*")
+      .select("*, original_notes")
       .eq("id", dumpId)
       .eq("user_id", userId)
       .maybeSingle();
@@ -96,8 +98,8 @@ Deno.serve(async (req) => {
         .from("recordings")
         .download(dump.file_path);
       if (dlError || !file) throw new HttpError(422, "We couldn't open that audio file.");
-      if (file.size > 14 * 1024 * 1024) {
-        throw new HttpError(413, "That recording is too long to transcribe — try one under about 15 MB.");
+      if (file.size > 25 * 1024 * 1024) {
+        throw new HttpError(413, "That recording is too long to transcribe — keep voice notes under 25 MB.");
       }
       text = await transcribe(file, dump.file_mime);
     }
@@ -108,7 +110,12 @@ Deno.serve(async (req) => {
         .createSignedUrl(dump.file_path, 600);
       if (signError || !signed?.signedUrl) throw new HttpError(422, "We couldn't open that image.");
       const read = await readImage(signed.signedUrl);
-      text = [text, read].filter(Boolean).join("\n\n").trim();
+      if (read === "NO READABLE TEXT") {
+        throw new HttpError(422, "We couldn't read any text in that image — try a sharper screenshot or add a note.");
+      }
+      // Idempotent: rebuild from the user's own saved note plus the fresh read, never append onto previous output.
+      const ownNote = (dump.original_notes ?? "").trim();
+      text = [ownNote, read].filter(Boolean).join("\n\n").trim();
     }
 
     if (dump.kind === "link" && dump.link_url && !text) {
