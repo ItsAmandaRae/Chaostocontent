@@ -1,5 +1,9 @@
 # Roadmap
 
+## Priority password recovery blocker
+- [ ] Implement SDK-owned recovery callback handling, validated recovery-session form, refresh-safe state and explicit forgot-password route; preserve normal auth and protections.
+- [ ] Verify recovery/error/mobile and normal-auth regressions; inspect supported redirect settings and document any isolated live-test restriction. No owner password changes or real emails.
+
 - [x] Plan/access foundation: protected portable entitlements, atomic creation/media allowances, bucket/planner enforcement, admin-authorized gifts and audit
 - [x] Plan/access UI, honest Free / Paid coming soon pricing with no price, demo Content/Planner, portable setup documentation
 - [x] 44 isolated-fixture access regressions passed: direct-call authorization, forged state, creation/media concurrency and refunds, idempotency, expiry/revocation, billing coexistence, UTC/reset, bucket cap and downgrade/planner preservation. Serialized draft-queue tests passed.
