@@ -7,6 +7,7 @@ import Auth from "./pages/Auth";
 import DashboardLayout from "./pages/DashboardLayout";
 import DashboardHome from "./pages/dashboard/Home";
 import Ideas from "./pages/dashboard/Ideas";
+import IdeaBank from "./pages/dashboard/IdeaBank";
 import IdeaDetail from "./pages/dashboard/IdeaDetail";
 import Posts from "./pages/dashboard/Posts";
 import BrandDNA from "./pages/dashboard/BrandDNA";
@@ -18,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import DemoLayout from "./demo/DemoLayout";
 import DemoHome from "./demo/pages/Home";
 import DemoRecordings from "./demo/pages/Recordings";
+import DemoIdeaBank from "./demo/pages/IdeaBank";
 import DemoRecordingDetail from "./demo/pages/RecordingDetail";
 import DemoChannels from "./demo/pages/Channels";
 import DemoCalendar from "./demo/pages/Calendar";
@@ -44,8 +46,7 @@ const App = () => (
             <Route index element={<DashboardHome />} />
             <Route path="brain-dumps" element={<Ideas />} />
             <Route path="brain-dumps/:id" element={<IdeaDetail />} />
-            <Route path="ideas" element={<LegacyBrainDumpRedirect />} />
-            <Route path="ideas/:id" element={<LegacyBrainDumpRedirect />} />
+            <Route path="ideas" element={<IdeaBank />} />
             <Route path="posts" element={<Posts />} />
             <Route path="brand" element={<BrandDNA />} />
             <Route path="recordings" element={<LegacyBrainDumpRedirect />} />
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="brain-dumps/:id" element={<DemoRecordingDetail />} />
             <Route path="recordings" element={<LegacyBrainDumpRedirect demo />} />
             <Route path="recordings/:id" element={<LegacyBrainDumpRedirect demo />} />
+            <Route path="ideas" element={<DemoIdeaBank />} />
             <Route path="channels" element={<DemoChannels />} />
             <Route path="calendar" element={<DemoCalendar />} />
             <Route path="analytics" element={<DemoAnalytics />} />

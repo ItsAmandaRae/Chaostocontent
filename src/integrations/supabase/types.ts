@@ -65,6 +65,27 @@ export type Database = {
         }
         Relationships: []
       }
+      buckets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       channels: {
         Row: {
           connected_at: string
@@ -202,15 +223,72 @@ export type Database = {
         }
         Relationships: []
       }
+      ideas: {
+        Row: {
+          angle: string | null
+          bucket_id: string | null
+          created_at: string
+          deleted_at: string | null
+          dump_id: string | null
+          id: string
+          source_excerpt: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          angle?: string | null
+          bucket_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          dump_id?: string | null
+          id?: string
+          source_excerpt?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          angle?: string | null
+          bucket_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          dump_id?: string | null
+          id?: string
+          source_excerpt?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ideas_bucket_id_fkey"
+            columns: ["bucket_id"]
+            isOneToOne: false
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ideas_dump_id_fkey"
+            columns: ["dump_id"]
+            isOneToOne: false
+            referencedRelation: "dumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
+          bucket_id: string | null
           channel_id: string | null
           char_count: number | null
           content: string | null
           created_at: string
+          deleted_at: string | null
           dump_id: string | null
           external_url: string | null
           id: string
+          idea_id: string | null
           platform: string | null
           project_id: string | null
           prompt_notes: string | null
@@ -223,13 +301,16 @@ export type Database = {
           variant: string | null
         }
         Insert: {
+          bucket_id?: string | null
           channel_id?: string | null
           char_count?: number | null
           content?: string | null
           created_at?: string
+          deleted_at?: string | null
           dump_id?: string | null
           external_url?: string | null
           id?: string
+          idea_id?: string | null
           platform?: string | null
           project_id?: string | null
           prompt_notes?: string | null
@@ -242,13 +323,16 @@ export type Database = {
           variant?: string | null
         }
         Update: {
+          bucket_id?: string | null
           channel_id?: string | null
           char_count?: number | null
           content?: string | null
           created_at?: string
+          deleted_at?: string | null
           dump_id?: string | null
           external_url?: string | null
           id?: string
+          idea_id?: string | null
           platform?: string | null
           project_id?: string | null
           prompt_notes?: string | null
@@ -262,6 +346,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "posts_bucket_id_fkey"
+            columns: ["bucket_id"]
+            isOneToOne: false
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "posts_channel_id_fkey"
             columns: ["channel_id"]
             isOneToOne: false
@@ -273,6 +364,13 @@ export type Database = {
             columns: ["dump_id"]
             isOneToOne: false
             referencedRelation: "dumps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_idea_id_fkey"
+            columns: ["idea_id"]
+            isOneToOne: false
+            referencedRelation: "ideas"
             referencedColumns: ["id"]
           },
           {

@@ -149,6 +149,74 @@ export async function regeneratePost(postId: string, notes: string) {
   return data as { content: string };
 }
 
+export interface ExtractedIdea {
+  title: string;
+  angle: string;
+  excerpt: string;
+}
+
+export async function extractIdeas(dumpId: string): Promise<ExtractedIdea[]> {
+  const { data, error } = await supabase.functions.invoke("extract-ideas", {
+    body: { dumpId },
+  });
+  if (error) {
+    throw new Error(
+      (data as { error?: string } | null)?.error ??
+        (error as { message?: string }).message ??
+        "Couldn't pull out ideas.",
+    );
+  }
+  return ((data as { ideas?: ExtractedIdea[] })?.ideas ?? []) as ExtractedIdea[];
+}
+
+export interface CreateContentOptions {
+  dumpIds?: string[];
+  ideaId?: string;
+  platform: string;
+  format?: string;
+  voiceMode?: "my_words" | "reference";
+  referenceNote?: string;
+  notes?: string;
+}
+
+export async function generateContent(opts: CreateContentOptions) {
+  const { data, error } = await supabase.functions.invoke("generate-posts", {
+    body: {
+      mode: "create",
+      dumpIds: opts.dumpIds,
+      ideaId: opts.ideaId,
+      platforms: [opts.platform],
+      format: opts.format,
+      voiceMode: opts.voiceMode,
+      referenceNote: opts.referenceNote?.trim() || undefined,
+      notes: opts.notes?.trim() || undefined,
+    },
+  });
+  if (error) {
+    throw new Error(
+      (data as { error?: string } | null)?.error ??
+        (error as { message?: string }).message ??
+        "Couldn't create the content.",
+    );
+  }
+  return (data as { posts: { id: string; platform: string; content: string }[] }).posts[0];
+}
+
+/** "Too polished. Bring back my words." — returns a suggestion; nothing is saved. */
+export async function regenerateFromSource(postId: string): Promise<string> {
+  const { data, error } = await supabase.functions.invoke("generate-posts", {
+    body: { mode: "regenerate", postId, rawMode: true },
+  });
+  if (error) {
+    throw new Error(
+      (data as { error?: string } | null)?.error ??
+        (error as { message?: string }).message ??
+        "Couldn't bring back your words.",
+    );
+  }
+  return (data as { content: string }).content;
+}
+
 export const KIND_LABELS: Record<string, string> = {
   audio: "Voice",
   text: "Note",

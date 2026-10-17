@@ -32,9 +32,10 @@ export const LogoMark = ({ className = "", inverse = false }: { className?: stri
       stroke={inverse ? "oklch(var(--background))" : "oklch(var(--foreground))"}
       strokeWidth="2.5"
     />
-    <line x1="29" y1="20" x2="39" y2="20" stroke={inverse ? "oklch(var(--background))" : "oklch(var(--foreground))"} strokeWidth="2" strokeLinecap="round" />
-    <line x1="29" y1="25.5" x2="36" y2="25.5" stroke={inverse ? "oklch(var(--background))" : "oklch(var(--foreground))"} strokeWidth="2" strokeLinecap="round" />
-    <circle cx="38.5" cy="30" r="2" fill="oklch(var(--highlight))" stroke={inverse ? "oklch(var(--background))" : "oklch(var(--foreground))"} strokeWidth="1.5" />
+    {/* card interior stays dark — the card fill is pale cyan even on dark pages */}
+    <line x1="29" y1="20" x2="39" y2="20" stroke="oklch(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
+    <line x1="29" y1="25.5" x2="36" y2="25.5" stroke="oklch(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="38.5" cy="30" r="2" fill="oklch(var(--highlight))" stroke="oklch(var(--foreground))" strokeWidth="1.5" />
   </svg>
 );
 
