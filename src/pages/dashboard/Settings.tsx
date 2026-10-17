@@ -2,11 +2,12 @@ import PlanAccessSection from "@/components/PlanAccessSection";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { User as UserIcon, Lock, Sliders, CreditCard } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { displayNameSchema } from "@/lib/validation";
 
 interface Profile {
@@ -17,14 +18,13 @@ interface Profile {
   auto_publish: boolean | null;
 }
 
-const tones = ["casual", "professional", "witty", "inspirational"];
+
 
 export default function Settings() {
   const { user } = useOutletContext<{ user: User | null }>();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [displayName, setDisplayName] = useState("");
-  const [tone, setTone] = useState("casual");
-  const [autoPublish, setAutoPublish] = useState(false);
+  const [voiceTraits, setVoiceTraits] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -38,14 +38,16 @@ export default function Settings() {
     if (data) {
       setProfile(data as Profile);
       setDisplayName(data.display_name || "");
-      setTone(data.default_tone || "casual");
-      setAutoPublish(data.auto_publish || false);
+
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    if (user) fetchProfile();
+    if (user) {
+      fetchProfile();
+      supabase.from("brand_profiles").select("tone_traits").eq("user_id", user.id).maybeSingle().then(({ data }) => setVoiceTraits(data?.tone_traits ?? []));
+    }
   }, [user]);
 
   const saveProfile = async () => {
@@ -55,17 +57,11 @@ export default function Settings() {
       toast.error(parsedName.error.issues[0].message);
       return;
     }
-    if (!tones.includes(tone)) {
-      toast.error("Invalid tone");
-      return;
-    }
     setSaving(true);
 
     const payload = {
       user_id: user.id,
       display_name: parsedName.data || null,
-      default_tone: tone,
-      auto_publish: autoPublish,
     };
 
     const { error } = profile
@@ -123,41 +119,10 @@ export default function Settings() {
               </div>
             </section>
 
-            <section className="border border-black bg-white p-5">
-              <h2 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
-                <Sliders className="w-5 h-5" />
-                Preferences
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium uppercase tracking-wide mb-2">Default Tone</label>
-                  <div className="flex flex-wrap gap-2">
-                    {tones.map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setTone(t)}
-                        className={`px-4 py-2 border border-black text-sm font-medium capitalize transition-colors ${
-                          tone === t ? "bg-primary" : "bg-white hover:bg-secondary"
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    id="auto-publish"
-                    type="checkbox"
-                    checked={autoPublish}
-                    onChange={(e) => setAutoPublish(e.target.checked)}
-                    className="w-5 h-5 border border-black rounded-none accent-primary"
-                  />
-                  <label htmlFor="auto-publish" className="text-sm font-medium uppercase tracking-wide">
-                    Auto-publish ready posts to default channel
-                  </label>
-                </div>
-              </div>
+            <section className="border-t border-border py-5 space-y-3">
+              <h2 className="font-display font-bold text-lg">Your voice</h2>
+              <p className="text-sm">{voiceTraits.length ? voiceTraits.join(" · ") : "Your voice is yours to define."}</p>
+              <Button variant="outline" asChild><Link to="/dashboard/brand-dna">Edit Brand DNA</Link></Button>
             </section>
 
             <section className="border border-black bg-white p-5">
@@ -166,12 +131,7 @@ export default function Settings() {
                 Account
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => toast.info("Password reset link sent")}
-                  className="px-4 py-2 border border-black bg-white hover:bg-secondary transition-colors font-medium"
-                >
-                  Reset Password
-                </button>
+                <Button variant="outline" disabled>Password reset unavailable</Button>
                 <button
                   onClick={() => toast.info("Account deletion is not available yet")}
                   className="px-4 py-2 border border-black text-destructive hover:bg-destructive hover:text-white transition-colors font-medium"

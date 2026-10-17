@@ -7,6 +7,8 @@ import { Loader2, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PLATFORMS } from "@/lib/platforms";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { addVoiceTrait } from "@/lib/voice";
 import { Textarea } from "@/components/ui/textarea";
 
 const TONE_TRAITS = [
@@ -46,6 +48,7 @@ export default function BrandDNA() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [bannedInput, setBannedInput] = useState("");
+  const [traitInput, setTraitInput] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -172,6 +175,14 @@ export default function BrandDNA() {
 
           <section className="border border-black bg-white p-4 space-y-4">
             <h2 className="font-display font-bold text-lg">Your voice</h2>
+            <p className="text-sm text-muted-foreground">Presets are optional — add your own.</p>
+            <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); set("tone_traits", addVoiceTrait(form.tone_traits, traitInput)); setTraitInput(""); }}>
+              <Input aria-label="Custom tone trait" placeholder="e.g. playful but direct" maxLength={80} value={traitInput} onChange={(e) => setTraitInput(e.target.value)} />
+              <Button type="submit" variant="outline" disabled={!traitInput.trim()}>Add</Button>
+            </form>
+            <div className="flex flex-wrap gap-2">
+              {form.tone_traits.map((trait) => <Button key={trait} variant="secondary" size="sm" aria-label={`Remove ${trait}`} onClick={() => toggleIn("tone_traits", trait)}>{trait}<Trash2 /></Button>)}
+            </div>
             <div className="flex flex-wrap gap-2">
               {TONE_TRAITS.map((t) => (
                 <button
