@@ -1,3 +1,4 @@
+import { persistedDrafts } from "@/lib/persistedDrafts";
 import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -47,95 +48,26 @@ export default function DraftCard({ draft, buckets, onChanged }: Props) {
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [plannerOpen, setPlannerOpen] = useState(false);
 
-  const saveTimer = useRef<number | null>(null);
+  const queue = useRef<ReturnType<typeof persistedDrafts.open> | null>(null);
   const latestRequested = useRef(content);
-  const lastSaved = useRef(draft.content ?? "");
-  const saving = useRef(false);
-
-  const backupKey = `ctc-unsaved-draft:${draft.id}`;
-  const writeBackup = (text: string) => {
-    try {
-      if (text === lastSaved.current) window.localStorage.removeItem(backupKey);
-      else window.localStorage.setItem(backupKey, JSON.stringify({ text, at: Date.now() }));
-    } catch { /* storage full/blocked — in-memory state still holds the text */ }
-  };
-
-  // Reset local state when a different draft is shown; recover any unsaved work.
   useEffect(() => {
-    let recovered: string | null = null;
-    try {
-      const raw = window.localStorage.getItem(`ctc-unsaved-draft:${draft.id}`);
-      if (raw) {
-        const parsed = JSON.parse(raw) as { text?: string };
-        if (typeof parsed.text === "string" && parsed.text !== (draft.content ?? "")) recovered = parsed.text;
-      }
-    } catch { /* ignore corrupt backup */ }
-    const initial = recovered ?? draft.content ?? "";
-    setContent(initial);
-    lastSaved.current = draft.content ?? "";
-    latestRequested.current = initial;
-    setSaveState("idle");
-    if (recovered !== null) {
-      toast.info("Recovered changes that hadn't finished saving");
-      scheduleSave(recovered);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let active = true;
+    let unsubscribe: (() => void) | undefined;
+    supabase.auth.getUser().then(({ data }) => {
+      if (!active || !data.user) return;
+      const handle = persistedDrafts.open(data.user.id, draft.id, draft.content ?? "");
+      queue.current = handle;
+      const sync = () => { if (active) { const value = handle.get(); latestRequested.current = value.text; setContent(value.text); setSaveState(value.state); } };
+      unsubscribe = handle.subscribe(sync);
+      sync();
+      if (handle.recovered) { toast.info("Recovered changes that hadn't finished saving"); void handle.flush(); }
+    });
+    const unload = () => { void queue.current?.flush(); };
+    window.addEventListener("pagehide", unload);
+    return () => { active = false; unsubscribe?.(); window.removeEventListener("pagehide", unload); void queue.current?.flush(); queue.current = null; };
   }, [draft.id]);
-
-  // Serialized writes: at most one request in flight; newer text is coalesced
-  // and saved after the in-flight one finishes, so a slow save never overwrites newer edits.
-  const persist = async (text: string) => {
-    if (saving.current) return; // latestRequested already holds the newest text
-    saving.current = true;
-    setSaveState("saving");
-    try {
-      for (;;) {
-        const toSave = latestRequested.current;
-        const { error } = await supabase
-          .from("posts")
-          .update({ content: toSave, char_count: toSave.length })
-          .eq("id", draft.id);
-        if (error) {
-          setSaveState("error");
-          writeBackup(toSave);
-          return;
-        }
-        lastSaved.current = toSave;
-        if (latestRequested.current === toSave) break; // nothing newer queued
-      }
-      try { window.localStorage.removeItem(backupKey); } catch { /* ignore */ }
-      setSaveState("saved");
-    } finally {
-      saving.current = false;
-    }
-  };
-
-  const scheduleSave = (text: string) => {
-    latestRequested.current = text;
-    writeBackup(text);
-    if (saveTimer.current) window.clearTimeout(saveTimer.current);
-    saveTimer.current = window.setTimeout(() => persist(text), 900);
-  };
-
-  // On unmount (filtering/navigation), flush the newest text instead of dropping it.
-  useEffect(() => () => {
-    if (saveTimer.current) window.clearTimeout(saveTimer.current);
-    const pending = latestRequested.current;
-    if (pending !== lastSaved.current) {
-      writeBackup(pending);
-      void supabase
-        .from("posts")
-        .update({ content: pending, char_count: pending.length })
-        .eq("id", draft.id)
-        .then(({ error }) => {
-          if (!error) {
-            lastSaved.current = pending;
-            try { window.localStorage.removeItem(backupKey); } catch { /* ignore */ }
-          }
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft.id]);
+  const persist = async (_text: string) => { await queue.current?.flush(); };
+  const scheduleSave = (text: string) => { latestRequested.current = text; queue.current?.edit(text); };
 
   const onEdit = (text: string) => {
     setContent(text);
@@ -153,6 +85,7 @@ export default function DraftCard({ draft, buckets, onChanged }: Props) {
   const rewrite = async (nudge: string) => {
     setBusy(true);
     try {
+      await queue.current?.flush();
       const { content: next } = await regeneratePost(draft.id, nudge);
       setSuggestion(next);
       setNotes("");
