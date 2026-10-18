@@ -1,5 +1,22 @@
 # Roadmap
 
+## Mobile planner redesign + pre-invite readiness audit
+- [x] Shared PlannerBoard mobile: true 7-column month grid and week strip at 360/390px with weekday headings, bounded cells, visible bucket-colored mini bars (not dots), all buckets together; tap selects a day, single selected-day panel (owned by PlannerBoard; removed Calendar's duplicate section) lists ALL day records with full titles/bucket labels and explicit "Add content to this day" chooser action. Selected (ring + aria-pressed) and Today (bold/underline + aria-current) distinct beyond color. Desktop bounded 180px/190px views, overflow dialog, view memory, local dates and legend preserved. List view unchanged.
+- [x] Dependency patches: react-router-dom 6.30.6 / react-router 6.30.6 / @remix-run/router 1.23.3, lodash 4.18.1, ws 8.21.0 via package.json overrides + regenerated package-lock; rescan clean for ws/lodash/open-redirect advisories. UNRESOLVED: two moderate react-router advisories (SSR deserializeErrors constructor injection; backslash open redirect) fixed only in react-router 7.18 — major migration, not done in this pass; both require SSR or attacker-crafted links, and this app is a client-rendered SPA.
+- [x] Landing 360px horizontal overflow fixed (BentoGrid section now clips); public/auth/demo pages 0 overflow at 1280/390/360.
+- [x] AI provider confirmed Lovable gateway only (shared helper, all three functions). Customer-facing 402/403 text replaced with plain temporary-unavailability wording (no workspace-credit instructions); upstream error body no longer echoed to users. Functions redeployed.
+- [x] Legacy audio client limit aligned to the real 25 MB storage cap (was 50 MB, which storage rejected). Upload caps: audio 25 MB, images 20 MB enforced client+server. GAP (report only): no aggregate per-user storage cap exists; pending owner policy decision.
+- [x] Read-only owner access check (projectfindingfreedom@gmail.com): email confirmed, admin role, active no-expiry complimentary grant, no billing row, effective plan Complimentary (paid: true, billing_active: false), allowances 97/100 creations and 99/100 media reads. No paid checkout/subscription/webhook is implemented — billing_entitlements comment states "No billing integration enabled"; do not invite paying users yet.
+- [x] Allowance recovery confirmed: all three functions release reservations on failure; unreleased reservations expire after 10 minutes. Minor caveat: release() ignores the refund RPC's own error (expiry bounds impact).
+- [x] Recovery hardening: bare `?code=` callback no longer treated as recovery intent (avoids misrouting OAuth/signup PKCE callbacks); recovery tests updated.
+- [x] Tests: recovery/signup/ux/contentReuse unit suites passed; recovery.browser.py, signup.browser.py passed; plannerReuse.browser.py updated (mobile month/week selected-day panel assertions; Edmonton-local date fix) and passed at 1280/390/360 including landing overflow == 0. Managed build OK. Real signed-in planner viewed read-only at 390/360/1280 (owner session, no writes): grid, legend, mini bars, no overflow, no console errors.
+- Limits: live email delivery/confirmation and recovery end-to-end remain unverified (no isolated inbox); mocked suites cover the flows. Owner has no profiles row (pre-existing; onboarding creates it if needed). Preview URL contains these changes; the published site (chaostocontent.lovable.app) is unchanged until you publish.
+
+### Files for this iteration
+- `src/components/PlannerBoard.tsx`, `src/pages/dashboard/Calendar.tsx`, `src/components/sections/Hero.tsx`, `src/components/sections/BentoGrid.tsx`
+- `src/lib/audio.ts`, `src/lib/recovery.ts`, `supabase/functions/_shared/ai.ts` (redeployed process-dump/extract-ideas/generate-posts)
+- `package.json`, `package-lock.json`, `tests/plannerReuse.browser.py`, `tests/recovery.test.ts`, `AGENTS.md`, `roadmap.md`
+
 ## Unified planner and no-AI platform reuse
 - [x] Every bucket together in shared Week/Month/List planner, date chooser and unplanned list; non-filtering labelled legend and separate bucket manager (demo changes local-only).
 - [x] Three 32px single-line bars plus reachable overflow, bounded month 180px/week 190px days; twelve named preset colors, unused-first locked default, original four keys/styles/assignments untouched. Month height includes date and overflow actions.

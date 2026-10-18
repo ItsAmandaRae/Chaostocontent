@@ -12,7 +12,8 @@ export function validRecovery(marker: RecoveryMarker | null, userId: string, ses
 export function recoveryIntent(url: URL) {
   const hash = new URLSearchParams(url.hash.slice(1));
   if (hash.get('type') === 'signup' || url.searchParams.get('type') === 'signup' || url.searchParams.get('mode') === 'confirm') return false;
-  return url.pathname === '/reset-password' || url.searchParams.get('mode') === 'reset' || hash.get('type') === 'recovery' || hash.has('error_description') || url.searchParams.has('error_description') || url.searchParams.has('code');
+  // A bare ?code is not recovery intent: OAuth and signup PKCE callbacks also carry codes.
+  return url.pathname === '/reset-password' || url.searchParams.get('mode') === 'reset' || hash.get('type') === 'recovery' || hash.has('error_description') || url.searchParams.has('error_description');
 }
 export function passwordErrors(password: string, confirm: string) {
   if (password.length < 6) return 'Use at least 6 characters. A longer, unique password is safer.';

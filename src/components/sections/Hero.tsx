@@ -58,7 +58,7 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.55, delay: 0.15 }} className="relative mx-auto h-[430px] w-full min-w-0 max-w-[620px] sm:h-[540px] lg:h-[650px]" aria-label="Scattered ideas becoming organized content">
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.55, delay: 0.15 }} className="relative mx-auto h-[430px] w-full min-w-0 max-w-[620px] overflow-hidden sm:h-[540px] lg:h-[650px]" aria-label="Scattered ideas becoming organized content">
           <div className="absolute left-[14%] top-[15%] h-[68%] w-[68%] rounded-full border border-dashed border-foreground/30" />
           <div className="absolute left-[24%] top-[25%] h-[48%] w-[48%] rounded-full border border-foreground/20" />
 
