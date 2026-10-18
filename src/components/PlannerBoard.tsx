@@ -119,9 +119,9 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex gap-1" role="group" aria-label="Planner view">{(["week", "month", "list"] as const).map(v => <Button key={v} variant={view === v ? "default" : "outline"} aria-pressed={view === v} onClick={() => selectView(v)}>{v[0].toUpperCase() + v.slice(1)}</Button>)}</div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="icon" aria-label={`Previous ${view === "week" ? "week" : "month"}`} onClick={() => setAnchor(movePlanner(anchor, view, -1))}><ChevronLeft /></Button>
+        <Button variant="outline" size="icon" aria-label={`Previous ${view === "week" ? "week" : "month"}`} onClick={() => shift(-1)}><ChevronLeft /></Button>
         <Button variant="outline" onClick={() => { const now = new Date(); setAnchor(now); setSelected(now); }}>Today</Button>
-        <Button variant="outline" size="icon" aria-label={`Next ${view === "week" ? "week" : "month"}`} onClick={() => setAnchor(movePlanner(anchor, view, 1))}><ChevronRight /></Button>
+        <Button variant="outline" size="icon" aria-label={`Next ${view === "week" ? "week" : "month"}`} onClick={() => shift(1)}><ChevronRight /></Button>
       </div>
     </div>
     <h2 className="font-display text-lg">{view === "week" ? `${format(days[0], "MMM d")} – ${format(days[6], "MMM d, yyyy")}` : format(anchor, "MMMM yyyy")}</h2>
