@@ -7,7 +7,7 @@ const imgCentralIcon3 = "/images/af37e1fa785053213344e411bbb07eed5678b1fa.svg";
 
 export default function BentoGrid() {
   return (
-    <section id="features" className="bg-white py-32 px-6 lg:px-0">
+    <section id="features" className="bg-white py-32 px-6 lg:px-0 overflow-hidden">
       <div className="container mx-auto max-w-[1152px]">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

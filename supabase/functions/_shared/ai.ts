@@ -16,11 +16,10 @@ export class HttpError extends Error {
 }
 
 function friendly(status: number, body: string) {
-  if (status === 402) return "This workspace is out of AI credits. Add credits to keep generating.";
-  if (status === 403) return "AI access is blocked for this workspace.";
+  if (status === 402 || status === 403) return "AI generation is temporarily unavailable. Your original material is saved — please try again later.";
   if (status === 429) return "The AI is busy right now — try again in a moment.";
   if (status >= 500) return "The AI service had a hiccup — try again.";
-  return `AI request failed (${status}). ${body.slice(0, 300)}`;
+  return `AI request failed (${status}). Please try again.`;
 }
 
 /** Streams a chat completion and returns the full text. */

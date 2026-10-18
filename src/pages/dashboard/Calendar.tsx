@@ -188,11 +188,7 @@ export default function Calendar() {
         <PlannerBoard userKey={user?.id ?? "signed-out"} items={planned} buckets={buckets}
           onOpen={(p) => navigate(`/dashboard/posts?open=${p.id}`)}
           onDay={(day) => { setSelectedDate(day); setChoosingDay(true); }} />
-        {selectedDate && <section className="mt-5 border-t border-border py-4 space-y-3">
-          <h3>{format(selectedDate, "MMMM d, yyyy")}</h3>
-          {selectedDayPosts.map(p => row(p, false))}
-          <p className="text-sm text-muted-foreground">Choose existing content below for this date.</p>
-        </section>}
+        {/* Selected-day detail and editing live in PlannerBoard's single panel to avoid duplicates. */}
 
         <div className="mt-6 border border-black bg-white">
           <button

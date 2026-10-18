@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export const MAX_AUDIO_BYTES = 50 * 1024 * 1024;
+// Matches the storage bucket cap so accepted files are never rejected on upload.
+export const MAX_AUDIO_BYTES = 25 * 1024 * 1024;
 
 const ALLOWED_AUDIO_EXT = /\.(mp3|m4a|wav|ogg|webm|aac|flac)$/i;
 
@@ -43,7 +44,7 @@ export function readDuration(file: File): Promise<number | null> {
 
 export async function uploadRecordingAudio(userId: string, projectId: string, file: File) {
   if (!isAudioFile(file)) throw new Error("Please choose an audio file (mp3, m4a, wav, ogg…).");
-  if (file.size > MAX_AUDIO_BYTES) throw new Error("Audio files must be 50 MB or smaller.");
+  if (file.size > MAX_AUDIO_BYTES) throw new Error("Audio files must be 25 MB or smaller.");
   if (file.size === 0) throw new Error("That file is empty.");
   if (!/^[0-9a-f-]{36}$/i.test(userId) || !/^[0-9a-f-]{36}$/i.test(projectId)) {
     throw new Error("Invalid upload target.");

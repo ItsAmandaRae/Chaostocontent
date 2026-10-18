@@ -3,7 +3,7 @@ import { recoveryIntent, validRecovery, passwordErrors, sessionIdentity } from '
 
 assert.equal(recoveryIntent(new URL('https://app.test/auth#type=recovery&access_token=fixture')), true);
 assert.equal(recoveryIntent(new URL('https://app.test/reset-password')), true);
-assert.equal(recoveryIntent(new URL('https://app.test/auth?code=fixture')), true);
+assert.equal(recoveryIntent(new URL('https://app.test/auth?code=fixture')), false);
 assert.equal(recoveryIntent(new URL('https://app.test/auth?mode=forgot')), false);
 assert.equal(validRecovery(null, 'owner', 'session'), false, 'Direct reset URL cannot authorize an ordinary session');
 const marker = { userId: 'fixture', sessionId: 'recovery-session', expiresAt: 2000 };

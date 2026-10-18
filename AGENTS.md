@@ -12,5 +12,6 @@
 - Classify signup confirmation separately from recovery before auth redirects; validate confirmation through the auth server and keep no-session signup guidance with user-initiated, guarded resend, so email intent never implies a session or delivery.
 - Share planner rendering and local-date helpers between real and fictional demo views; bucket palette keys persist under existing ownership policies, and view preferences are user-scoped.
 - Planner supplies all content to every view and chooser; bucket legends are non-interactive, with management separate from Ideas/Content filtering.
+- Mobile planner renders a compact seven-column month grid and week strip with bucket-colored mini bars; tapping selects a day and a single shared selected-day panel (owned by PlannerBoard, never duplicated by pages) lists all its records with the add-content action.
 - Preset bucket defaults are assigned unused-first under the existing user advisory lock; expanding the palette never rewrites existing assignments.
 - Platform reuse uses an owner-scoped security-invoker transaction after a failure-signalling queue flush, verifies expected saved wording and uses a retry-stable copy UUID; neither action touches AI reservations or usage.
