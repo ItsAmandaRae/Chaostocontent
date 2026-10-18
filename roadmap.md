@@ -105,3 +105,10 @@
 - `drizzle/migrations/0006_persist_bucket_palette.sql`, tool-maintained migration metadata and regenerated `src/integrations/supabase/types.ts`
 - `tests/ux.test.ts`
 - Latest observed managed commit checkpoint: `ee719a3` (`Changes`); commits are managed by the platform, not manually created here.
+
+## Planner follow-up: coherent selection and tablet breakpoint
+- [x] Prev/Next moves the selected day into the new period (same weekday ±7 days in Week; same day-of-month with clamping in Month), so the selected-day panel never shows an off-screen date. Switching Week/Month/List anchors the calendar to the selected day; Today still resets both.
+- [x] Compact 7-column mini-bar layout now applies below 1024px (matching the desktop grid's lg breakpoint) via a local planner media query, so 768-1023px tablets no longer get giant stacked days. The shared 768px sidebar hook is unchanged.
+- [x] Modest mobile spacing reduction in real and demo Planner (page padding, header and legend margins, board section spacing); type sizes and touch targets unchanged.
+- [x] Browser checks at 360/390/820/1280 on the demo planner: tap day → next/prev month keeps panel in the new month (Oct 5 → Nov 5), Month→Week anchors to the selected day, next week moves selection +7 days, zero horizontal overflow at all widths, 7-column grid with mini bars at 820 and 360, zero stacked day sections. Latest build log entry is clean.
+- Files changed: `src/components/PlannerBoard.tsx`, `src/pages/dashboard/Calendar.tsx`, `src/demo/pages/Calendar.tsx`.
