@@ -157,14 +157,14 @@ export default function Calendar() {
   );
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="p-3 sm:p-6 lg:p-8">
       <motion.div
         initial={reducedMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
           <div>
             <h1 className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-[-0.5px] text-foreground">
               Planner
@@ -178,7 +178,7 @@ export default function Calendar() {
 
         {!access?.paid && <p className="mb-5 text-sm text-muted-foreground">Your existing dates and content stay available. Adding or moving dates requires Paid access, which isn't available to purchase yet. <Link className="underline" to="/demo/calendar">Explore fictional planner preview</Link></p>}
         {user && (
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <BucketLegend buckets={buckets} />
             <Button variant="ghost" size="sm" className="mt-2" onClick={() => setManagingBuckets(true)}>Manage buckets</Button>
             <Dialog open={managingBuckets} onOpenChange={setManagingBuckets}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>Manage buckets</DialogTitle><DialogDescription>All buckets remain visible together in your planner.</DialogDescription></DialogHeader><BucketChips managementOnly userId={user.id} buckets={buckets} active="all" onSelect={() => {}} onChanged={fetchData} /></DialogContent></Dialog>

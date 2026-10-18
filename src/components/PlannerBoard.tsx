@@ -1,23 +1,40 @@
 import { useEffect, useState } from "react";
-import { format, isSameDay, isSameMonth, isToday } from "date-fns";
+import { addDays, addMonths, format, isSameDay, isSameMonth, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Bucket } from "@/lib/buckets";
 import { bucketColorClass, dayKey, localPlanDate, movePlanner, plannerDays, PlannerView, plannerTitle, savedPlannerView } from "@/lib/planner";
 import { formatLabel, platformLabel } from "@/lib/platforms";
-import { useIsMobile } from "@/hooks/use-mobile";
+// Compact (7-column mini) layout must match the desktop grid's lg (1024px) breakpoint,
+// so tablets at 768-1023px get the compact grid instead of giant stacked days.
+function useCompactPlanner() {
+  const [compact, setCompact] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setCompact(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return compact;
+}
 export interface PlannerItem { id: string; title?: string | null; content?: string | null; variant?: string | null; platform?: string | null; bucket_id?: string | null; scheduled_at?: string | null; }
 interface Props { userKey: string; items: PlannerItem[]; buckets: Bucket[]; onOpen: (item: PlannerItem) => void; onDay: (day: Date) => void; }
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }: Props) {
-  const isMobile = useIsMobile();
+  const isCompact = useCompactPlanner();
   const [view, setView] = useState<PlannerView>(() => savedPlannerView(userKey));
   const [anchor, setAnchor] = useState(new Date());
   const [selected, setSelected] = useState<Date>(new Date());
   const [overflowDay, setOverflowDay] = useState<Date | null>(null);
   useEffect(() => { setView(savedPlannerView(userKey)); }, [userKey]);
-  const selectView = (next: PlannerView) => { setView(next); try { localStorage.setItem(`ctc-planner-view:${userKey}`, next); } catch { /* View memory is optional. */ } };
+  const selectView = (next: PlannerView) => { setView(next); setAnchor(selected); try { localStorage.setItem(`ctc-planner-view:${userKey}`, next); } catch { /* View memory is optional. */ } };
+  // Move the anchor and the selected day together so the selected-day panel stays in the visible period.
+  const shift = (dir: 1 | -1) => {
+    setAnchor(movePlanner(anchor, view, dir));
+    setSelected(day => view === "week" ? addDays(day, dir * 7) : addMonths(day, dir));
+  };
   const days = plannerDays(anchor, view);
   const forDay = (day: Date) => items.filter(item => item.scheduled_at && dayKey(localPlanDate(item.scheduled_at)) === dayKey(day));
   const bar = (item: PlannerItem, compact = true) => {
@@ -98,18 +115,18 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
       })}
     </div>
   );
-  return <section className="space-y-4 min-w-0">
+  return <section className="space-y-3 sm:space-y-4 min-w-0">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex gap-1" role="group" aria-label="Planner view">{(["week", "month", "list"] as const).map(v => <Button key={v} variant={view === v ? "default" : "outline"} aria-pressed={view === v} onClick={() => selectView(v)}>{v[0].toUpperCase() + v.slice(1)}</Button>)}</div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="icon" aria-label={`Previous ${view === "week" ? "week" : "month"}`} onClick={() => setAnchor(movePlanner(anchor, view, -1))}><ChevronLeft /></Button>
+        <Button variant="outline" size="icon" aria-label={`Previous ${view === "week" ? "week" : "month"}`} onClick={() => shift(-1)}><ChevronLeft /></Button>
         <Button variant="outline" onClick={() => { const now = new Date(); setAnchor(now); setSelected(now); }}>Today</Button>
-        <Button variant="outline" size="icon" aria-label={`Next ${view === "week" ? "week" : "month"}`} onClick={() => setAnchor(movePlanner(anchor, view, 1))}><ChevronRight /></Button>
+        <Button variant="outline" size="icon" aria-label={`Next ${view === "week" ? "week" : "month"}`} onClick={() => shift(1)}><ChevronRight /></Button>
       </div>
     </div>
     <h2 className="font-display text-lg">{view === "week" ? `${format(days[0], "MMM d")} – ${format(days[6], "MMM d, yyyy")}` : format(anchor, "MMMM yyyy")}</h2>
-    {isMobile && view === "month" ? mobileMonth : isMobile && view === "week" ? mobileWeek : desktopGrid}
-    {!isMobile && view !== "list" && selectedPanel}
+    {isCompact && view === "month" ? mobileMonth : isCompact && view === "week" ? mobileWeek : desktopGrid}
+    {!isCompact && view !== "list" && selectedPanel}
     {view === "list" && !days.some(day => isSameMonth(day, anchor) && forDay(day).length) && <p className="text-sm text-muted-foreground">Nothing planned this month.</p>}
     <Dialog open={!!overflowDay} onOpenChange={open => !open && setOverflowDay(null)}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>{overflowDay ? format(overflowDay, "MMMM d, yyyy") : "Day plans"}</DialogTitle><DialogDescription>Planned content · all buckets</DialogDescription></DialogHeader>{overflowDay && forDay(overflowDay).map(item => bar(item, false))}{overflowDay && <Button variant="outline" onClick={() => { onDay(overflowDay); setOverflowDay(null); }}>Add content to this day</Button>}</DialogContent></Dialog>
   </section>;
