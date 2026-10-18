@@ -18,7 +18,7 @@ export default function DemoCalendar() {
   const [items, setItems] = useState<PlannerItem[]>(() => posts.map((p, i) => ({ ...p, title: p.content.split(".")[0], platform: channels.find(c => c.id === p.channel_id)?.platform, variant: ["text_post", "carousel", "reel_script", "email"][i % 4], bucket_id: buckets[i % 4].id })));
   const [day, setDay] = useState<Date | null>(null);
   const [detail, setDetail] = useState<PlannerItem | null>(null);
-  return <div className="p-4 sm:p-6 lg:p-8 space-y-5 min-w-0">
+  return <div className="p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-5 min-w-0">
     <h1 className="font-display font-black text-3xl">Planner preview</h1>
     <p className="text-sm text-muted-foreground">Fictional sample data · local-only changes · no automatic publishing or AI calls</p>
     <BucketLegend buckets={buckets} />
