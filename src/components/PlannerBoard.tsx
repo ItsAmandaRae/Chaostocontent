@@ -29,7 +29,12 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
   const [selected, setSelected] = useState<Date>(new Date());
   const [overflowDay, setOverflowDay] = useState<Date | null>(null);
   useEffect(() => { setView(savedPlannerView(userKey)); }, [userKey]);
-  const selectView = (next: PlannerView) => { setView(next); try { localStorage.setItem(`ctc-planner-view:${userKey}`, next); } catch { /* View memory is optional. */ } };
+  const selectView = (next: PlannerView) => { setView(next); setAnchor(selected); try { localStorage.setItem(`ctc-planner-view:${userKey}`, next); } catch { /* View memory is optional. */ } };
+  // Move the anchor and the selected day together so the selected-day panel stays in the visible period.
+  const shift = (dir: 1 | -1) => {
+    setAnchor(movePlanner(anchor, view, dir));
+    setSelected(day => view === "week" ? addDays(day, dir * 7) : addMonths(day, dir));
+  };
   const days = plannerDays(anchor, view);
   const forDay = (day: Date) => items.filter(item => item.scheduled_at && dayKey(localPlanDate(item.scheduled_at)) === dayKey(day));
   const bar = (item: PlannerItem, compact = true) => {
