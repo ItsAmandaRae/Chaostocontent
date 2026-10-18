@@ -23,7 +23,7 @@ export interface PlannerItem { id: string; title?: string | null; content?: stri
 interface Props { userKey: string; items: PlannerItem[]; buckets: Bucket[]; onOpen: (item: PlannerItem) => void; onDay: (day: Date) => void; }
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }: Props) {
-  const isMobile = useIsMobile();
+  const isCompact = useCompactPlanner();
   const [view, setView] = useState<PlannerView>(() => savedPlannerView(userKey));
   const [anchor, setAnchor] = useState(new Date());
   const [selected, setSelected] = useState<Date>(new Date());
