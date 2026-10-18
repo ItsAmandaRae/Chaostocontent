@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
-import { format, isSameDay, isSameMonth, isToday } from "date-fns";
+import { addDays, addMonths, format, isSameDay, isSameMonth, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Bucket } from "@/lib/buckets";
 import { bucketColorClass, dayKey, localPlanDate, movePlanner, plannerDays, PlannerView, plannerTitle, savedPlannerView } from "@/lib/planner";
 import { formatLabel, platformLabel } from "@/lib/platforms";
-import { useIsMobile } from "@/hooks/use-mobile";
+// Compact (7-column mini) layout must match the desktop grid's lg (1024px) breakpoint,
+// so tablets at 768-1023px get the compact grid instead of giant stacked days.
+function useCompactPlanner() {
+  const [compact, setCompact] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setCompact(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return compact;
+}
 export interface PlannerItem { id: string; title?: string | null; content?: string | null; variant?: string | null; platform?: string | null; bucket_id?: string | null; scheduled_at?: string | null; }
 interface Props { userKey: string; items: PlannerItem[]; buckets: Bucket[]; onOpen: (item: PlannerItem) => void; onDay: (day: Date) => void; }
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
