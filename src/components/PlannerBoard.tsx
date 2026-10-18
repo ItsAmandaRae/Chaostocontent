@@ -115,7 +115,7 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
       })}
     </div>
   );
-  return <section className="space-y-4 min-w-0">
+  return <section className="space-y-3 sm:space-y-4 min-w-0">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex gap-1" role="group" aria-label="Planner view">{(["week", "month", "list"] as const).map(v => <Button key={v} variant={view === v ? "default" : "outline"} aria-pressed={view === v} onClick={() => selectView(v)}>{v[0].toUpperCase() + v.slice(1)}</Button>)}</div>
       <div className="flex items-center gap-1">
@@ -125,8 +125,8 @@ export default function PlannerBoard({ userKey, items, buckets, onOpen, onDay }:
       </div>
     </div>
     <h2 className="font-display text-lg">{view === "week" ? `${format(days[0], "MMM d")} – ${format(days[6], "MMM d, yyyy")}` : format(anchor, "MMMM yyyy")}</h2>
-    {isMobile && view === "month" ? mobileMonth : isMobile && view === "week" ? mobileWeek : desktopGrid}
-    {!isMobile && view !== "list" && selectedPanel}
+    {isCompact && view === "month" ? mobileMonth : isCompact && view === "week" ? mobileWeek : desktopGrid}
+    {!isCompact && view !== "list" && selectedPanel}
     {view === "list" && !days.some(day => isSameMonth(day, anchor) && forDay(day).length) && <p className="text-sm text-muted-foreground">Nothing planned this month.</p>}
     <Dialog open={!!overflowDay} onOpenChange={open => !open && setOverflowDay(null)}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>{overflowDay ? format(overflowDay, "MMMM d, yyyy") : "Day plans"}</DialogTitle><DialogDescription>Planned content · all buckets</DialogDescription></DialogHeader>{overflowDay && forDay(overflowDay).map(item => bar(item, false))}{overflowDay && <Button variant="outline" onClick={() => { onDay(overflowDay); setOverflowDay(null); }}>Add content to this day</Button>}</DialogContent></Dialog>
   </section>;
