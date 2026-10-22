@@ -34,6 +34,9 @@ async def main():
   await page.goto('http://localhost:8080/auth#error=access_denied&error_code=otp_expired&error_description=Expired')
   await page.get_by_role('link',name='Request a fresh link').wait_for()
   assert '#' not in page.url and not updates
+  # Each emailed callback is a fresh document, not hash-only navigation in an
+  # already initialized auth SDK. Do not hide first-load bugs with a reload.
+  await page.goto('about:blank')
   await page.goto('http://localhost:8080/auth#access_token='+access+'&refresh_token=fictional-refresh&expires_in=3600&token_type=bearer&type=recovery')
   await page.locator('#new-password').wait_for(); assert '#' not in page.url
   await page.reload();await page.locator('#new-password').wait_for()
