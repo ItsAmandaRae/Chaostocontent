@@ -33,7 +33,7 @@ export default function Analytics() {
     if (!user) return;
     const [{ data: projectsData }, { data: postsData }] = await Promise.all([
       supabase.from("projects").select("*").eq("user_id", user.id),
-      supabase.from("posts").select("*").eq("user_id", user.id),
+      supabase.from("posts").select("*").eq("user_id", user.id).is("deleted_at", null),
     ]);
     if (projectsData) setProjects(projectsData as Project[]);
     if (postsData) setPosts(postsData as Post[]);

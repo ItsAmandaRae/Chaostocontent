@@ -127,3 +127,6 @@
 - [x] Fixed clipped "Total transformation" heading on phones.
 - [ ] Real signup email, password reset and live signed-in new-user journey unverified (no isolated inbox or test account; no emails sent).
 - [ ] Paid checkout not implemented; only Free and complimentary access exist.
+- [x] Signed-in new-user walk (Oct 22, fictional `@example.invalid` fixture created and deleted via admin API, no email): empty states, Brand DNA, first note, Pull out ideas → Save all (2 rows), Make content → opens editor, edit autosaves and survives reload, Change platform and Also use on (double-click → one copy, same words, unscheduled), Copy & open intercepted, Delete → Undo, Free planner gate, complimentary planner, Free settings with no admin link and /dashboard/access refused. 390 and 1280, no overflow. AI responses were mocked; saving was real.
+- [x] Fixed: sidebar "Dump it" didn't refresh Home/Brain Dumps; Home said "Latest ideas" for Brain Dumps; deleted content counted on Home/Analytics/legacy recording; Home Brand DNA % used a different formula; mobile menu button had no name and the menu had no dialog title; removed "Lovable builder credits" wording from user plan text.
+- [ ] Real AI generation for a new Free account not exercised (mocked) to avoid spending.

@@ -35,7 +35,10 @@ export default function Ideas() {
   };
 
   useEffect(() => {
-    if (user) load();
+    if (!user) return;
+    load();
+    window.addEventListener("ctc-dumps-changed", load);
+    return () => window.removeEventListener("ctc-dumps-changed", load);
   }, [user]);
 
   // Keep polling while anything is still being read.

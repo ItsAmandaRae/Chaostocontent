@@ -23,8 +23,8 @@ export default function DashboardHome() {
     if (!user) return;
     const [{ data: dumpData }, { data: postData }, { data: brand }] = await Promise.all([
       supabase.from("dumps").select("*").order("created_at", { ascending: false }),
-      supabase.from("posts").select("id, status"),
-      supabase.from("brand_profiles").select("what_you_do, audience, tone_traits, voice_samples").maybeSingle(),
+      supabase.from("posts").select("id, status").is("deleted_at", null),
+      supabase.from("brand_profiles").select("what_you_do, audience, audience_problem, tone_traits, voice_samples, offers, cta_style, platforms").maybeSingle(),
     ]);
     setDumps((dumpData ?? []) as Dump[]);
     setPosts((postData ?? []) as Post[]);
@@ -32,17 +32,24 @@ export default function DashboardHome() {
       const done = [
         brand.what_you_do,
         brand.audience,
+        brand.audience_problem,
         brand.tone_traits?.length ? "y" : "",
-        brand.voice_samples?.length ? "y" : "",
-      ].filter(Boolean).length;
-      setCompleteness(Math.round((done / 4) * 100));
+        brand.voice_samples?.some((v: string) => v.trim()) ? "y" : "",
+        brand.offers,
+        brand.cta_style,
+        brand.platforms?.length ? "y" : "",
+      ].filter((v) => v && String(v).trim()).length;
+      setCompleteness(Math.round((done / 8) * 100));
     } else {
       setCompleteness(0);
     }
   };
 
   useEffect(() => {
-    if (user) load();
+    if (!user) return;
+    load();
+    window.addEventListener("ctc-dumps-changed", load);
+    return () => window.removeEventListener("ctc-dumps-changed", load);
   }, [user]);
 
   const stats = [
@@ -104,7 +111,7 @@ export default function DashboardHome() {
 
         <div className="mt-8 sm:mt-12">
           <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest ideas</h2>
+            <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest Brain Dumps</h2>
              <Link to="/dashboard/brain-dumps" className="text-sm underline uppercase tracking-wide">
               See all
             </Link>
