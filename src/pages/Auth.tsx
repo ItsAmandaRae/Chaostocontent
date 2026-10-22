@@ -12,7 +12,7 @@ import RecoveryForm from "@/components/RecoveryForm";
 import { recoverySession } from "@/lib/recoverySession";
 import { confirmationSession } from "@/lib/confirmationSession";
 import SignupVerification from "@/components/SignupVerification";
-import { pendingSignup, setPendingSignup } from "@/lib/signup";
+import { normalizeEmail, pendingSignup, setPendingSignup } from "@/lib/signup";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -90,6 +90,8 @@ export default function Auth() {
   const clearErrors = () => setErrors({});
 
   const handleViewChange = (newView: AuthView) => {
+    recoverySession.abandon();
+    confirmationSession.clear();
     clearErrors();
     setPassword("");
     setPendingSignup(null);
@@ -102,9 +104,11 @@ export default function Auth() {
     e.preventDefault();
     clearErrors();
     if (view === "reset") return;
+    const normalizedEmail = normalizeEmail(email);
+    setEmail(normalizedEmail);
     
     if (view === "forgot") {
-      const validation = emailSchema.safeParse({ email });
+      const validation = emailSchema.safeParse({ email: normalizedEmail });
       if (!validation.success) {
         const fieldErrors: { email?: string } = {};
         validation.error.errors.forEach((err) => {
@@ -116,20 +120,20 @@ export default function Auth() {
 
       setLoading(true);
       try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
         setEmailSent(true);
       } catch (error: any) {
-        toast.error(error.message || "An error occurred");
+        setErrors({ email: error.status === 429 ? "Too many requests. Please wait before requesting another link." : error.message || "Could not request a link. Please try again." });
       } finally {
         setLoading(false);
       }
       return;
     }
 
-    const validation = authSchema.safeParse({ email, password });
+    const validation = authSchema.safeParse({ email: normalizedEmail, password });
     if (!validation.success) {
       const fieldErrors: { email?: string; password?: string } = {};
       validation.error.errors.forEach((err) => {
@@ -145,7 +149,7 @@ export default function Auth() {
     try {
       if (view === "login") {
         const { error } = await supabase.auth.signInWithPassword({
-          email,
+          email: normalizedEmail,
           password,
         });
         if (error) throw error;
@@ -153,7 +157,7 @@ export default function Auth() {
       } else {
         const redirectUrl = window.location.origin;
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: normalizedEmail,
           password,
           options: {
             emailRedirectTo: redirectUrl,
@@ -162,15 +166,15 @@ export default function Auth() {
         if (error) throw error;
         setPassword("");
         if (data.session) navigate("/dashboard");
-        else { setPendingSignup(email); setEmailSent(true); }
+        else { setPendingSignup(normalizedEmail); setEmailSent(true); }
       }
     } catch (error: any) {
       if (error.message === "User already registered") {
         setPassword("");
-        setPendingSignup(email);
+        setPendingSignup(normalizedEmail);
         setEmailSent(true);
       } else if (error.message === "Invalid login credentials") {
-        toast.error("Invalid email or password. Please try again.");
+        setErrors({ password: "Email or password not recognised. Use Set or reset password if you haven't set one or don't remember it." });
       } else {
         toast.error(error.message || "An error occurred");
       }
@@ -184,7 +188,7 @@ export default function Auth() {
     switch (view) {
       case "login": return "Welcome Back";
       case "signup": return "Create Account";
-      case "forgot": return "Reset Password";
+      case "forgot": return "Set or reset password";
       case "reset": return "New Password";
     }
   };
@@ -194,7 +198,7 @@ export default function Auth() {
     switch (view) {
       case "login": return "Sign in to continue creating content";
       case "signup": return "Turn your chaos into content";
-      case "forgot": return "Enter your email to receive a reset link";
+      case "forgot": return "Request a link to choose a password. Your old password is not needed.";
       case "reset": return "Choose a new password for your account";
     }
   };
@@ -318,7 +322,7 @@ export default function Auth() {
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <Link to="/" className="block hover:opacity-70 transition-opacity">
+          <Link to="/" onClick={() => { recoverySession.abandon(); confirmationSession.clear(); }} className="block hover:opacity-70 transition-opacity">
             <Logo />
           </Link>
         </motion.div>
@@ -349,13 +353,14 @@ export default function Auth() {
             {/* Form */}
             {confirmationActive ? (
               <div className="flex flex-col gap-4 text-center">
-                {confirmation === "checking" ? <p role="status">Checking your confirmation link…</p> : confirmation === "confirmed" ? <><p role="status">Your email is verified. You can continue to your workspace.</p><Button onClick={async () => { const { data, error } = await supabase.auth.getUser(); if (!error && data.user) { confirmationSession.clear(); navigate("/dashboard"); } }}>Continue</Button></> : <><p role="alert">This confirmation link is missing, expired or already used. Sign in if you already verified, or request another confirmation from sign up.</p><Button onClick={() => { confirmationSession.clear(); handleViewChange("signup"); }}>Back to sign up</Button></>}
+                {confirmation === "checking" ? <p role="status">Checking your confirmation link…</p> : confirmation === "confirmed" ? <><p role="status">Your email is verified. You can continue to your workspace.</p><Button onClick={async () => { const { data, error } = await supabase.auth.getUser(); if (!error && data.user) { confirmationSession.clear(); navigate("/dashboard"); } else { handleViewChange("login"); setErrors({ email: "Your session has expired. Please sign in to continue." }); } }}>Continue</Button></> : <><p role="alert">This confirmation link is missing, expired or already used. Sign in if you already verified, or request another confirmation from sign up.</p><Button onClick={() => { confirmationSession.clear(); handleViewChange("signup"); }}>Back to sign up</Button></>}
                 {confirmation !== "checking" && <Button variant="outline" onClick={() => { confirmationSession.clear(); handleViewChange("login"); }}>Back to sign in</Button>}
               </div>
             ) : view === "reset" ? <RecoveryForm /> : emailSent && view === "signup" ? <SignupVerification email={email} onEdit={() => { setPendingSignup(null); setEmailSent(false); setPassword(""); }} onSignIn={() => handleViewChange("login")} /> : emailSent ? (
               <div className="space-y-4 text-center" role="status">
                 <p>{view === "signup" ? "Check your email to confirm your account before signing in." : "If an account matches that email, you’ll receive a password reset link. Check your inbox and spam folder."}</p>
                 <Button variant="outline" onClick={() => { setEmailSent(false); }}>Use another email</Button>
+                <Button variant="outline" onClick={() => handleViewChange("login")}>Back to sign in</Button>
               </div>
             ) : <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
               <div className="flex flex-col gap-2">
@@ -414,7 +419,7 @@ export default function Auth() {
                   onClick={() => handleViewChange("forgot")}
                   className="text-foreground underline hover:no-underline font-body text-left -mt-2"
                 >
-                  Forgot password?
+                  Set or reset password
                 </Button>
               )}
 

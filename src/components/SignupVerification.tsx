@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { canResend, RESEND_COOLDOWN_MS } from '@/lib/signup';
+import { canResend, normalizeEmail, RESEND_COOLDOWN_MS } from '@/lib/signup';
 
 export default function SignupVerification({ email, onEdit, onSignIn }: { email: string; onEdit: () => void; onSignIn: () => void }) {
   const [until, setUntil] = useState(Date.now() + RESEND_COOLDOWN_MS);
@@ -16,7 +16,7 @@ export default function SignupVerification({ email, onEdit, onSignIn }: { email:
     inflight.current = true; setSending(true); setError(''); setMessage('');
     setUntil(Date.now() + RESEND_COOLDOWN_MS);
     try {
-      const { error: failure } = await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: window.location.origin } });
+      const { error: failure } = await supabase.auth.resend({ type: 'signup', email: normalizeEmail(email), options: { emailRedirectTo: window.location.origin } });
       if (failure) { setError(failure.status === 429 ? 'Too many requests. Wait before requesting another confirmation email.' : 'Could not request confirmation. Please wait and try again, or sign in if you have already verified.'); }
       else setMessage('If this address needs verification, a new confirmation email has been requested. Delivery may take a few minutes.');
     } catch { setError('Could not request another email. Please try again after the countdown.'); }
