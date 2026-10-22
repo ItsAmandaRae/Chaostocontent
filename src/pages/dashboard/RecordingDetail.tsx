@@ -50,7 +50,7 @@ export default function RecordingDetail() {
     if (!id || !user) return;
     const [{ data: projectData }, { data: postsData }, { data: channelsData }] = await Promise.all([
       supabase.from("projects").select("*").eq("id", id).eq("user_id", user.id).maybeSingle(),
-      supabase.from("posts").select("*").eq("project_id", id).eq("user_id", user.id).order("created_at", { ascending: false }),
+      supabase.from("posts").select("*").eq("project_id", id).eq("user_id", user.id).is("deleted_at", null).order("created_at", { ascending: false }),
       supabase.from("channels").select("id, platform, handle").eq("user_id", user.id),
     ]);
 
