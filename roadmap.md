@@ -120,3 +120,10 @@
 - [x] Modest mobile spacing reduction in real and demo Planner (page padding, header and legend margins, board section spacing); type sizes and touch targets unchanged.
 - [x] Browser checks at 360/390/820/1280 on the demo planner: tap day → next/prev month keeps panel in the new month (Oct 5 → Nov 5), Month→Week anchors to the selected day, next week moves selection +7 days, zero horizontal overflow at all widths, 7-column grid with mini bars at 820 and 360, zero stacked day sections. Latest build log entry is clean.
 - Files changed: `src/components/PlannerBoard.tsx`, `src/pages/dashboard/Calendar.tsx`, `src/demo/pages/Calendar.tsx`.
+
+## First-time user walkthrough (Oct 22)
+- [x] Live site checked: published bundle still lacks signup-verification, "Set or reset password" and /reset-password code — owner must Publish > Update.
+- [x] Preview walk at 390/1280 of landing, sign-in, sign-up, reset, and all demo pages: no overflow, no page errors.
+- [x] Fixed clipped "Total transformation" heading on phones.
+- [ ] Real signup email, password reset and live signed-in new-user journey unverified (no isolated inbox or test account; no emails sent).
+- [ ] Paid checkout not implemented; only Free and complimentary access exist.

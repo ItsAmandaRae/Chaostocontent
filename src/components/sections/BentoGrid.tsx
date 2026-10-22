@@ -13,7 +13,7 @@ export default function BentoGrid() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-display font-black text-3xl sm:text-4xl lg:text-5xl leading-[0.9] tracking-[-0.96px] text-black uppercase mb-12 text-center"
+          className="font-display font-black text-[1.35rem] min-[400px]:text-3xl sm:text-4xl lg:text-5xl leading-[0.9] tracking-[-0.96px] text-foreground uppercase mb-12 text-center"
         >
           Total
           <br />
