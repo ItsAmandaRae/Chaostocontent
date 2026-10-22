@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import AllowanceNote from "@/components/AllowanceNote";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -34,9 +35,12 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   user: User | null;
   onSaved?: (dumpId: string) => void;
+  /** Navigate to the saved Brain Dump once, right after the original is saved. */
+  openAfterSave?: boolean;
 }
 
-export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props) {
+export default function DumpDialog({ open, onOpenChange, user, onSaved, openAfterSave = false }: Props) {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("voice");
   const [saving, setSaving] = useState(false);
   const [text, setText] = useState("");
@@ -50,9 +54,28 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<number | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  /** Bumped whenever a recording is abandoned; stale permission results and onstop callbacks compare against it. */
+  const sessionRef = useRef(0);
+
+  const cancelRecording = () => {
+    sessionRef.current += 1;
+    const recorder = recorderRef.current;
+    recorderRef.current = null;
+    if (recorder && recorder.state !== "inactive") { try { recorder.stop(); } catch { /* already stopped */ } }
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    if (timerRef.current) window.clearInterval(timerRef.current);
+    timerRef.current = null;
+    setRecording(false);
+  };
+
+  useEffect(() => () => cancelRecording(), []);
+  useEffect(() => { if (tab !== "voice") cancelRecording(); }, [tab]);
 
   useEffect(() => {
     if (!open) {
+      cancelRecording();
       setText("");
       setUrl("");
       setNote("");
@@ -68,13 +91,18 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
   };
 
   const startRecording = async () => {
+    const session = ++sessionRef.current;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (session !== sessionRef.current) { stream.getTracks().forEach((t) => t.stop()); return; }
+      streamRef.current = stream;
       const recorder = new MediaRecorder(stream);
       chunksRef.current = [];
       recorder.ondataavailable = (e) => e.data.size && chunksRef.current.push(e.data);
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
+        if (streamRef.current === stream) streamRef.current = null;
+        if (session !== sessionRef.current) return;
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
         const ext = (recorder.mimeType || "audio/webm").includes("mp4") ? "mp4" : "webm";
         setAudioFile(new File([blob], `voice-note.${ext}`, { type: blob.type }));
@@ -85,6 +113,7 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
       setSeconds(0);
       timerRef.current = window.setInterval(() => setSeconds((s) => s + 1), 1000);
     } catch {
+      if (session !== sessionRef.current) return;
       toast.error("We couldn't reach your microphone. You can upload a voice note instead.");
     }
   };
@@ -116,6 +145,7 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
       toast.success("Original saved.");
       onOpenChange(false);
       onSaved?.(dumpId);
+      if (openAfterSave) navigate(`/dashboard/brain-dumps/${dumpId}`);
       window.dispatchEvent(new Event("ctc-dumps-changed"));
 
       processDump(dumpId)
