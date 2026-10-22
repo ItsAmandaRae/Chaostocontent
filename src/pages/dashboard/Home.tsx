@@ -23,7 +23,7 @@ export default function DashboardHome() {
     if (!user) return;
     const [{ data: dumpData }, { data: postData }, { data: brand }] = await Promise.all([
       supabase.from("dumps").select("*").order("created_at", { ascending: false }),
-      supabase.from("posts").select("id, status"),
+      supabase.from("posts").select("id, status").is("deleted_at", null),
       supabase.from("brand_profiles").select("what_you_do, audience, tone_traits, voice_samples").maybeSingle(),
     ]);
     setDumps((dumpData ?? []) as Dump[]);
@@ -104,7 +104,7 @@ export default function DashboardHome() {
 
         <div className="mt-8 sm:mt-12">
           <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest ideas</h2>
+            <h2 className="font-display font-black text-xl sm:text-2xl tracking-[-0.5px]">Latest Brain Dumps</h2>
              <Link to="/dashboard/brain-dumps" className="text-sm underline uppercase tracking-wide">
               See all
             </Link>

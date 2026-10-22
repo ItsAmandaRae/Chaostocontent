@@ -26,6 +26,7 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import Logo from "./Logo";
 import DumpDialog from "./DumpDialog";
@@ -195,16 +196,17 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <button className="p-2 border border-black hover:bg-muted transition-colors">
-                <Menu className="w-6 h-6" />
+              <button aria-label="Open menu" className="p-2 border border-black hover:bg-muted transition-colors">
+                <Menu className="w-6 h-6" aria-hidden="true" />
               </button>
             </SheetTrigger>
             <SheetContent 
               side="right" 
               className="w-72 p-0 border-l border-black bg-background flex flex-col"
+              aria-describedby={undefined}
             >
               <div className="p-4 border-b border-black flex items-center justify-between">
-                <span className="font-display font-bold text-lg">Menu</span>
+                <SheetTitle className="font-display font-bold text-lg">Menu</SheetTitle>
               </div>
               <SidebarContent />
             </SheetContent>
