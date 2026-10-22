@@ -51,6 +51,9 @@ supabase.auth.onAuthStateChange((event, session) => {
     clearMarker(); ++validation;
     if (state.status !== 'complete') publish({ status: 'none' });
   } else if (event === 'SIGNED_IN') {
+    // SDK restores a saved recovery session with SIGNED_IN on reload; preserve only
+    // its existing user/session-bound marker, never create one from this event.
+    if (state.status === 'checking' && session && validRecovery(readMarker(), session.user.id, sessionIdentity(session.access_token))) return;
     // Ordinary sign-in never inherits reset permission or an expired-link screen.
     clearMarker(); ++validation;
     publish({ status: 'none' });

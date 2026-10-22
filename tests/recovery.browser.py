@@ -35,7 +35,7 @@ async def main():
   await page.get_by_role('link',name='Request a fresh link').wait_for()
   assert '#' not in page.url and not updates
   await page.goto('http://localhost:8080/auth#access_token='+access+'&refresh_token=fictional-refresh&expires_in=3600&token_type=bearer&type=recovery')
-  await page.reload(); await page.locator('#new-password').wait_for(); assert '#' not in page.url
+  await page.locator('#new-password').wait_for(); assert '#' not in page.url
   await page.reload();await page.locator('#new-password').wait_for()
   await page.locator('#new-password').fill('LongFixturePassword-1!')
   await page.locator('#confirm-password').fill('mismatch')
@@ -63,7 +63,7 @@ async def main():
   await page.set_viewport_size({'width':360,'height':800})
   await page.goto('http://localhost:8080/reset-password');await page.get_by_role('link',name='Request a fresh link').wait_for();await page.screenshot(path=str(OUT/'missing-mobile.png'))
   assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-  await page.goto('http://localhost:8080/auth#access_token='+access+'&refresh_token=fictional-refresh&expires_in=3600&token_type=bearer&type=recovery');await page.reload();await page.locator('#new-password').wait_for();await page.wait_for_timeout(800);await page.screenshot(path=str(OUT/'valid-mobile.png'));assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+  await page.goto('http://localhost:8080/auth#access_token='+access+'&refresh_token=fictional-refresh&expires_in=3600&token_type=bearer&type=recovery');await page.locator('#new-password').wait_for();await page.wait_for_timeout(800);await page.screenshot(path=str(OUT/'valid-mobile.png'));assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')
   assert not errors,errors
   print('PASS browser MOCKS: legacy recovery, SDK token cleanup, refresh, validation, visibility, password-only update, local signout, missing/expired links, forgot explicit request/check-email, signup confirmation, desktop/mobile. No live email or account changes.')
   await browser.close()
