@@ -10,6 +10,7 @@
 - Keep brand voice prompt construction shared between create and rewrite; Brand DNA is the single persistent voice source.
 - Let the auth SDK alone consume recovery callbacks; register recovery handling before redirects and require a validated, session-scoped recovery marker for password changes, so normal sessions and URL intent cannot authorize the recovery form.
 - Classify signup confirmation separately from recovery before auth redirects; validate confirmation through the auth server and keep no-session signup guidance with user-initiated, guarded resend, so email intent never implies a session or delivery.
+- Explicit departures from auth callbacks invalidate pending validations and clear callback UI state; ordinary sign-in clears recovery markers, so stale callbacks cannot trap navigation or confer reset permission.
 - Share planner rendering and local-date helpers between real and fictional demo views; bucket palette keys persist under existing ownership policies, and view preferences are user-scoped.
 - Planner supplies all content to every view and chooser; bucket legends are non-interactive, with management separate from Ideas/Content filtering.
 - Mobile planner renders a compact seven-column month grid and week strip with bucket-colored mini bars; tapping selects a day and a single shared selected-day panel (owned by PlannerBoard, never duplicated by pages) lists all its records with the add-content action.

@@ -23,6 +23,8 @@ function stripCallback() {
   window.history.replaceState(window.history.state, '', url.pathname + url.search);
 }
 let validation = 0;
+let generation = 0;
+let recoveryEventReceived = false;
 async function validate(session: Session | null, fromRecovery = false) {
   const run = ++validation;
   if (!session || providerError) { clearMarker(); publish({ status: 'invalid' }); return; }
@@ -41,23 +43,30 @@ async function validate(session: Session | null, fromRecovery = false) {
 // Register once at module startup, before components can redirect on INITIAL_SESSION.
 supabase.auth.onAuthStateChange((event, session) => {
   if (event === 'PASSWORD_RECOVERY') {
+    recoveryEventReceived = true;
+    const currentGeneration = generation;
     publish({ status: 'checking' });
-    setTimeout(() => { stripCallback(); void validate(session, true); }, 0);
+    setTimeout(() => { if (generation !== currentGeneration) return; stripCallback(); void validate(session, true); }, 0);
   } else if (event === 'SIGNED_OUT') {
     clearMarker(); ++validation;
-    if (state.status !== 'complete') publish({ status: requested ? 'invalid' : 'none' });
+    if (state.status !== 'complete') publish({ status: 'none' });
+  } else if (event === 'SIGNED_IN') {
+    // Ordinary sign-in never inherits reset permission or an expired-link screen.
+    clearMarker(); ++validation;
+    publish({ status: 'none' });
   } else if (event === 'TOKEN_REFRESHED' && state.status === 'ready') {
     setTimeout(() => { void validate(session); }, 0);
   }
 });
 // The SDK alone consumes implicit tokens or PKCE codes. Never exchange a second time.
+const initialGeneration = generation;
 void supabase.auth.initialize().then(async ({ error }) => {
-  if (!requested && !readMarker()) return;
+  if (generation !== initialGeneration || (!requested && !readMarker())) return;
   stripCallback();
   if (error || providerError) { clearMarker(); publish({ status: 'invalid' }); return; }
   const { data } = await supabase.auth.getSession();
   // PASSWORD_RECOVERY is emitted on the SDK's next timer tick.
-  setTimeout(() => { if (state.status !== 'ready') void validate(data.session); }, 10);
+  setTimeout(() => { if (generation === initialGeneration && !recoveryEventReceived && state.status !== 'ready') void validate(data.session); }, 10);
 });
 
 export const recoverySession = {
@@ -69,6 +78,6 @@ export const recoverySession = {
     const { data: user, error } = await supabase.auth.getUser();
     return !error && Boolean(user.user && validRecovery(readMarker(), user.user.id, sessionIdentity(data.session.access_token)));
   },
-  complete() { clearMarker(); ++validation; publish({ status: 'complete' }); },
-  abandon() { clearMarker(); ++validation; publish({ status: 'none' }); },
+  complete() { clearMarker(); ++generation; ++validation; publish({ status: 'complete' }); },
+  abandon() { clearMarker(); ++generation; ++validation; publish({ status: 'none' }); },
 };

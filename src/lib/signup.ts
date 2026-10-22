@@ -1,4 +1,5 @@
 export const RESEND_COOLDOWN_MS = 60000;
+export function normalizeEmail(email: string) { return email.trim(); }
 const PENDING_KEY = 'ctc-signup-verification';
 export function pendingSignup(): string | null {
   try { return sessionStorage.getItem(PENDING_KEY); } catch { return null; }
