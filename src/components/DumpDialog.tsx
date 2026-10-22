@@ -116,9 +116,10 @@ export default function DumpDialog({ open, onOpenChange, user, onSaved }: Props)
       toast.success("Original saved.");
       onOpenChange(false);
       onSaved?.(dumpId);
+      window.dispatchEvent(new Event("ctc-dumps-changed"));
 
       processDump(dumpId)
-        .then(() => onSaved?.(dumpId))
+        .then(() => { onSaved?.(dumpId); window.dispatchEvent(new Event("ctc-dumps-changed")); })
         .catch((e) => toast.error(e instanceof Error ? e.message : "We couldn't read that one."));
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't save that.");
