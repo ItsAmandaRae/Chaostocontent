@@ -24,7 +24,7 @@ export default function DashboardHome() {
     const [{ data: dumpData }, { data: postData }, { data: brand }] = await Promise.all([
       supabase.from("dumps").select("*").order("created_at", { ascending: false }),
       supabase.from("posts").select("id, status").is("deleted_at", null),
-      supabase.from("brand_profiles").select("what_you_do, audience, tone_traits, voice_samples").maybeSingle(),
+      supabase.from("brand_profiles").select("what_you_do, audience, audience_problem, tone_traits, voice_samples, offers, cta_style, platforms").maybeSingle(),
     ]);
     setDumps((dumpData ?? []) as Dump[]);
     setPosts((postData ?? []) as Post[]);
@@ -32,10 +32,14 @@ export default function DashboardHome() {
       const done = [
         brand.what_you_do,
         brand.audience,
+        brand.audience_problem,
         brand.tone_traits?.length ? "y" : "",
-        brand.voice_samples?.length ? "y" : "",
-      ].filter(Boolean).length;
-      setCompleteness(Math.round((done / 4) * 100));
+        brand.voice_samples?.some((v: string) => v.trim()) ? "y" : "",
+        brand.offers,
+        brand.cta_style,
+        brand.platforms?.length ? "y" : "",
+      ].filter((v) => v && String(v).trim()).length;
+      setCompleteness(Math.round((done / 8) * 100));
     } else {
       setCompleteness(0);
     }
